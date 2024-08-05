@@ -1,7 +1,6 @@
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { compare } from 'bcryptjs';
 import { AuthUserDto } from '../dtos/auth-user-dto';
-import { AuthServiceInterface } from '../interfaces/auth-service-interface';
 import { UsersServiceInterface } from '../interfaces/users-service-interface';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
 import { Session } from '@infra/config/constants/session';
@@ -10,6 +9,10 @@ type AuthResponse = {
   accessToken: string;
   refreshToken: string;
 };
+
+export abstract class AuthServiceInterface {
+  abstract auth({ email, password }: AuthUserDto): Promise<any>;
+}
 
 export class AuthService implements AuthServiceInterface {
   constructor(

@@ -1,10 +1,10 @@
 import { UsersService } from '@core/application/services/users-service';
 import { User } from '@core/domain/entities/user.entity';
+import { UsersController } from '@infra/api/controllers/users-controller';
 import { sessionMiddleware } from '@infra/api/middlewares/session.middleware';
 import config from '@infra/config/constants/multer';
 import { AppDataSource } from '@infra/database';
 import { ImplementsUsersRepository } from '@infra/repositories/implements/implements-users.repository';
-import { UsersController } from '@src/infra/api/controllers/users-controller';
 import { Router } from 'express';
 import multer from 'multer';
 
@@ -24,3 +24,4 @@ usersRoutes.post('/update-photo', upload.single('photo'), (req, res) =>
 );
 
 export { usersRoutes, usersService };
+

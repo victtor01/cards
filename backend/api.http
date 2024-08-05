@@ -23,3 +23,13 @@ Content-Type: application/json
   "email": "example3@gmail.com",
   "password": "example3"
 }
+###
+
+# @name workspaces
+
+POST {{HOST}}/workspaces HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "EXAMPLE"
+}

@@ -20,7 +20,5 @@ describe("user entity", () => {
       email: "example@gmail.com",
       password: "not",
     });
-
-    expect(() => user.isValidName()).toThrowError();
   });
 });

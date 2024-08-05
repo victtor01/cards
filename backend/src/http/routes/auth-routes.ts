@@ -1,8 +1,8 @@
 import { AuthService } from '@core/application/services/auth-service';
-import { AuthController } from '@src/infra/api/controllers/auth-controller';
 import { Router } from 'express';
 import { usersService } from './users-routers';
 import { JwtService } from '@core/application/services/jwt-service';
+import { AuthController } from '@infra/api/controllers/auth-controller';
 
 const authRoutes = Router();
 

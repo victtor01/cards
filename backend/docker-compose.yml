@@ -6,7 +6,6 @@ services:
     ports:
       - "5436:5432"
     container_name: "postgres-cards"
-    restart: always
     volumes:
       - ./postgres:/var/lib/postgresql/data
     environment:

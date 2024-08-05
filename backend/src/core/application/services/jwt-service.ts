@@ -1,8 +1,8 @@
 import { JwtConfig, secret } from '@infra/config/constants/jwt';
+import { Session } from '@infra/config/constants/session';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
 import { CookieOptions, Request, Response } from 'express';
-import { Session } from 'inspector';
-import { jwtVerify, SignJWT } from 'jose';
+import { jwtVerify, JWTVerifyResult, SignJWT } from 'jose';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
 
 const cookiesConfig = {
@@ -25,6 +25,7 @@ export class JwtService implements JwtServiceInterface {
   public async renewTokenWithPassportOrThrowError(refreshToken: string): Promise<string> {
     try {
       const { payload } = await this.verifyJWT(refreshToken);
+
       const newAccessToken = await this.signJWT({
         payload: { id: payload.id },
         expiresIn: new JwtConfig().getAccessTokenExpiration(),
@@ -36,7 +37,7 @@ export class JwtService implements JwtServiceInterface {
     }
   }
 
-  public async getSession(request: Request, response: Response): Promise<any> {
+  public async getSession(request: Request, response: Response): Promise<JWTVerifyResult<Session>> {
     const { cookies } = request;
 
     if (!cookies?.[cookiesConfig.accessToken] || !cookies?.[cookiesConfig.refreshToken]) {
@@ -45,16 +46,17 @@ export class JwtService implements JwtServiceInterface {
 
     const { __access_token, __refresh_token } = cookies;
 
-    const session = await jwtVerify(__access_token, secret)
+    const session = await this.verifyJWT(__access_token)
       .catch(async () => {
-        const token = await this.renewTokenWithPassportOrThrowError(__refresh_token);
-        response.cookie(cookiesConfig.accessToken, token, this.configCookie);
-        const payload = await this.verifyJWT(token);
+        const newToken = await this.renewTokenWithPassportOrThrowError(__refresh_token);
+        response.cookie(cookiesConfig.accessToken, newToken, this.configCookie);
+
+        const payload = await this.verifyJWT(newToken);
 
         return payload;
       })
       .catch((err) => {
-        throw new UnauthorizedException(err);
+        throw new UnauthorizedException(err.message);
       });
 
     return session;

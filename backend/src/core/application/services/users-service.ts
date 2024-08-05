@@ -1,13 +1,14 @@
 import { User } from '@core/domain/entities/user.entity';
 import { UsersRepository } from '@infra/repositories/users.repository';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
+import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
+import { unlinkUploadFile } from '@src/utils/unlink';
 import { hash } from 'bcryptjs';
 import { Multer } from 'multer';
 import { CreateUserDto } from '../dtos/create-user-dto';
+import { PropsToUpdataPhoto } from '../dtos/update-photo-user.dto';
 import { UsersServiceInterface } from '../interfaces/users-service-interface';
 import { createUserSchema } from '../validations/create-user-schema';
-import { unlinkUploadFile } from '@src/utils/unlink';
-import { PropsToUpdataPhoto } from '../dtos/update-photo-user.dto';
 
 export class UsersService implements UsersServiceInterface {
   constructor(private readonly usersRepo: UsersRepository, private readonly multer: Multer) {}
@@ -51,12 +52,7 @@ export class UsersService implements UsersServiceInterface {
         email,
         password,
       })
-      .catch((schema) => {
-        const errors = schema.errors;
-        const messageErrors = errors?.map((err: any) => err.message);
-
-        throw new BadRequestException(JSON.stringify(messageErrors));
-      });
+      .catch((err) => ThrowErrorInValidationSchema(err));
 
     if (userAlreadyExists?.email) throw new UnauthorizedException('user already exists!');
 

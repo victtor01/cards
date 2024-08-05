@@ -1,4 +1,5 @@
 import { User } from '@core/domain/entities/user.entity';
+import { UUID } from 'crypto';
 import { Repository } from 'typeorm';
 import { UsersRepository } from '../users.repository';
 
@@ -15,7 +16,7 @@ export class ImplementsUsersRepository implements UsersRepository {
     });
   }
 
-  public async findOneById(userId: string): Promise<User> {
+  public async findOneById(userId: UUID): Promise<User> {
     return await this.usersRepo.findOneBy({
       id: userId,
     });

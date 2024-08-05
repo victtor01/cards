@@ -8,10 +8,6 @@ export class AuthController {
     const { body } = request;
     const { email, password } = body;
 
-
-  Object.keys(response.cookie).forEach(cookieName => {
-    response.clearCookie(cookieName);
-  });
     const auth = await this.authService.auth({
       email,
       password,
