@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import routes from './routes';
+import cors from 'cors';
 
 class Bootstrap {
   private port = 9000;
@@ -19,6 +20,11 @@ class Bootstrap {
       app.use(cookieParser());
       app.use(express.json());
       app.use(bodyParser.json());
+      
+      app.use(cors({
+        origin: ['http://localhost:3000'],
+        credentials: true,
+      }));
 
       app.use(routes);
       app.use(ErrorMiddleware);

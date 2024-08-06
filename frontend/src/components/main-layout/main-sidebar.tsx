@@ -3,21 +3,13 @@
 import { fontFiraCode, fontInter } from "@/fonts";
 import { useSidebar } from "@/hooks/use-sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaUser } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 
-type Workspace = {
-  name: string;
-  color?: string | null;
-};
-
-const workspaces: Workspace[] = [
-  { name: "example", color: null },
-  { name: "example2", color: "rgb(22 163 74)" },
-];
-
 export function Sidebar() {
-  const { redirectTo } = useSidebar();
+  const pathname = usePathname();
+  const { redirectTo, workspaces } = useSidebar();
 
   return (
     <div className="w-full max-w-[17rem] flex flex-col gap-5 border-r border-zinc-800 bg-gradient-to-b from-zinc-900 to-transparent">
@@ -54,25 +46,31 @@ export function Sidebar() {
           </button>
         </label>
       </div>
-      <section className="flex flex-col gap-0 px-2 capitalize">
-        {workspaces?.map(({ name }, index) => {
+      <section className="flex flex-col px-2 capitalize gap-1">
+        {workspaces?.map(({ name, code }, index) => {
+          const link = `/workspaces/${code}`;
+          const selectedClassStyle = pathname.startsWith(link)
+          ? "bg-zinc-800 text-gray-200 bg-opacity-70 opacity-100 cursor-default pointer-events-none"
+          : "hover:text-gray-300 hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
+
           return (
-            <Link
+            <button
               key={index}
-              href={"#"}
-              className={`flex items-center justify-between text-gray-500 hover:text-gray-300 hover:bg-zinc-800 p-2 px-2 rounded relative opacity-80 hover:opacity-100`}
+              onClick={() => redirectTo(link)}
+              className={`${selectedClassStyle} flex items-center justify-between p-2 px-2 rounded relative`}
             >
               <div className={`${fontInter} text-sm`}>{name}</div>
               <span className="w-5 h-5 text-xs bg-indigo-600 rounded grid place-items-center text-zinc-300">
                 2
               </span>
-            </Link>
+            </button>
           );
         })}
         <div>
-          <button 
-          onClick={() => redirectTo('?md=create-workspace')}
-          className="px-4 flex p-1 bg-transparent border border-zinc-700 border-dashed rounded opacity-90 hover:opacity-100 mt-3">
+          <button
+            onClick={() => redirectTo("?md=create-workspace")}
+            className="px-4 flex p-1 bg-transparent border border-zinc-700 border-dashed rounded opacity-90 hover:opacity-100 mt-3"
+          >
             <span className="text-gray-500 text-sm">Create new</span>
           </button>
         </div>

@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/main-layout/main-sidebar";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import { ReactNode } from "react";
 
 type LayoutMainProps = {
   children: React.ReactNode;
@@ -8,9 +9,11 @@ type LayoutMainProps = {
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   return (
-    <section className="flex w-full h-screen overflow-auto">
+    <section className="flex w-full h-screen">
       <Sidebar />
-      {children}
+      <div className="flex flex-col h-screen overflow-auto w-full scroll-default">
+        {children}
+      </div>
     </section>
   );
 }

@@ -3,10 +3,18 @@
 import { fontRoboto } from "@/fonts";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { useLogin } from "./hooks";
 
 export default function Page() {
+  const { form, auth } = useLogin();
+  const { handleSubmit, formState, register } = form;
+  const { errors, isSubmitting } = formState;
+
   return (
-    <form className="w-[99%] max-w-[25rem] border p-5 m-auto rounded border-zinc-800 bg-zinc-900 flex flex-col gap-5">
+    <form
+      onSubmit={handleSubmit(auth)}
+      className="w-[99%] max-w-[25rem] border p-5 m-auto rounded border-zinc-800 bg-zinc-900 flex flex-col gap-5"
+    >
       <header className="text-zinc-400 cursor-default">
         <h1 className={`${fontRoboto} text-lg`}>Flards</h1>
       </header>
@@ -16,6 +24,7 @@ export default function Page() {
           <div className="flex w-full items-center transition-all border border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
             <input
               type="text"
+              {...register("email")}
               placeholder="jonhDoe@example.com.br"
               className="p-2 rounded bg-transparent outline-none flex-1 "
             />
@@ -26,7 +35,8 @@ export default function Page() {
           <span className="">Password</span>
           <div className="flex w-full items-center transition-all border border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
             <input
-              type="text"
+              type="password"
+              {...register("password")}
               placeholder="••••••••••"
               className="p-2 rounded bg-transparent outline-none flex-1 "
             />
@@ -35,7 +45,11 @@ export default function Page() {
         </label>
       </section>
       <footer className="w-full">
-        <button className="w-full bg-indigo-600 p-2 rounded opacity-90 hover:opacity-100">
+        <button
+          type="submit"
+          style={{ opacity: isSubmitting ? 0.6 : 0.9 }}
+          className="w-full bg-indigo-600 p-2 rounded opacity-90 hover:opacity-100"
+        >
           Login
         </button>
       </footer>
