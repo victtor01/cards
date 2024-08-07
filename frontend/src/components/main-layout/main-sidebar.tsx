@@ -4,6 +4,7 @@ import { fontFiraCode, fontInter } from "@/fonts";
 import { useSidebar } from "@/hooks/use-sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BiPlus } from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 
@@ -12,7 +13,7 @@ export function Sidebar() {
   const { redirectTo, workspaces } = useSidebar();
 
   return (
-    <div className="w-full max-w-[17rem] flex flex-col gap-5 border-r border-zinc-800 bg-gradient-to-b from-zinc-900 to-transparent">
+    <div className="w-full max-w-[17rem] flex flex-col gap-5 bg-neutral-950">
       <header className="flex items-center justify-between p-2">
         <div className={`${fontFiraCode} flex gap-2`}>
           <button className="p-2 px-3 bg-indigo-600 rounded-md text-sm border border-indigo-500 opacity-80">
@@ -50,22 +51,36 @@ export function Sidebar() {
         {workspaces?.map(({ name, code }, index) => {
           const link = `/workspaces/${code}`;
           const selectedClassStyle = pathname.startsWith(link)
-          ? "bg-zinc-800 text-gray-200 bg-opacity-70 opacity-100 cursor-default pointer-events-none"
-          : "hover:text-gray-300 hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
+            ? "bg-zinc-800 text-gray-200 bg-opacity-50 opacity-100 cursor-default"
+            : "hover:text-gray-300 hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
 
           return (
-            <button
+            <div
               key={index}
-              onClick={() => redirectTo(link)}
-              className={`${selectedClassStyle} flex items-center justify-between p-2 px-2 rounded relative`}
+              className={`${selectedClassStyle} transition-all group flex items-center justify-between p-2 rounded relative`}
             >
-              <div className={`${fontInter} text-sm`}>{name}</div>
-              <span className="w-5 h-5 text-xs bg-indigo-600 rounded grid place-items-center text-zinc-300">
-                2
-              </span>
-            </button>
+              <button
+                onClick={() => redirectTo(link)}
+                data-selected={pathname.startsWith(link)}
+                className={`${fontInter} text-sm flex-1 text-left data-[selected=true]:pointer-events-none`}
+              >
+                {name}
+              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="bg-zinc-800 w-5 h-5 place-items-center rounded hidden group-hover:grid"
+                >
+                  <BiPlus size={14} />
+                </button>
+                <span className="w-5 h-5 text-xs bg-indigo-600 rounded grid place-items-center text-zinc-300">
+                  0
+                </span>
+              </div>
+            </div>
           );
         })}
+
         <div>
           <button
             onClick={() => redirectTo("?md=create-workspace")}

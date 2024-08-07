@@ -9,7 +9,7 @@ type LayoutMainProps = {
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   return (
-    <section className="flex w-full h-screen">
+    <section className="flex w-full h-screen bg-neutral-900 bg-opacity-60">
       <Sidebar />
       <div className="flex flex-col h-screen overflow-auto w-full scroll-default">
         {children}

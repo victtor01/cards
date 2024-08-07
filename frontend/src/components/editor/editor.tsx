@@ -12,9 +12,12 @@ import {
   useEditor,
   EditorContent,
   BubbleMenu,
+  extensions,
+  isActive,
 } from "@tiptap/react";
 import { ButtonBubble } from "./button-bubble";
 import { useRef, useEffect } from "react";
+import { run } from "node:test";
 
 export function Editor() {
   const editorContentRef = useRef<HTMLDivElement>(null);
@@ -35,29 +38,24 @@ export function Editor() {
   });
 
 
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (
-        editorContentRef.current &&
-        !editorContentRef.current.contains(event.target as Node)
-      ) {
-        editor?.commands.focus();
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [editor]);
+//   useEffect(() => {
+//  const handleClick = (event: MouseEvent) => {
+//       if (editorContentRef.current && !editorContentRef.current.contains(event.target as Node)) {
+//         editor?.commands.focus();
+//       }
+//     };
+//     document.addEventListener('click', handleClick);
+//     return () => {
+//       document.removeEventListener('click', handleClick);
+//     };
+//   }, [editor]);
 
   return (
-    <div className="flex p-10">
+    <>
       <EditorContent
         ref={editorContentRef}
         editor={editor}
-        className="prose prose-invert max-w-[65rem] flex-1 px-5 text-lg"
+        className="prose prose-invert max-w-[65rem] flex-1 text-lg"
       />
 
       {editor && (
@@ -98,6 +96,6 @@ export function Editor() {
           </ButtonBubble>
         </BubbleMenu>
       )}
-    </div>
+    </>
   );
 }
