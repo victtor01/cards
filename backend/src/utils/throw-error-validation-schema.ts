@@ -1,4 +1,3 @@
-import { ZodError } from 'zod';
 import { BadRequestException } from './errors';
 
 export function ThrowErrorInValidationSchema(error: any): any {

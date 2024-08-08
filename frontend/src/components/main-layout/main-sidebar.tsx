@@ -12,6 +12,8 @@ export function Sidebar() {
   const pathname = usePathname();
   const { redirectTo, workspaces } = useSidebar();
 
+  console.log(workspaces)
+
   return (
     <div className="w-full max-w-[17rem] flex flex-col gap-5 bg-neutral-950">
       <header className="flex items-center justify-between p-2">
@@ -48,7 +50,7 @@ export function Sidebar() {
         </label>
       </div>
       <section className="flex flex-col px-2 capitalize gap-1">
-        {workspaces?.map(({ name, code }, index) => {
+        {!!workspaces && workspaces?.[0]?.name && workspaces?.map(({ name, code }, index) => {
           const link = `/workspaces/${code}`;
           const selectedClassStyle = pathname.startsWith(link)
             ? "bg-zinc-800 text-gray-200 bg-opacity-50 opacity-100 cursor-default"

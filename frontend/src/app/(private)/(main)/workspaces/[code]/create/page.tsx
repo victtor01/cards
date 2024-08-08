@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor } from "@/components/editor/editor";
+import { Editor } from "@/components/editor";
 import { useCreateCard } from "./hooks";
 import { Controller } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
@@ -37,6 +37,7 @@ export default function Create() {
           />
         </div>
       </header>
+
       <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-20">
         <header className="flex gap-4">
           <Controller
