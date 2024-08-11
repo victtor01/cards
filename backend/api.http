@@ -32,11 +32,15 @@ POST {{HOST}}/workspaces HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "my workspace 2"
+  "name": "my workspace 4",
+  "parentId": "cceef1b4-9b09-40df-9975-ae2385317d20"
 }
 ###
 
 GET {{HOST}}/workspaces HTTP/1.1
 ###
-
+GET {{HOST}}/workspaces/tree HTTP/1.1
+###
+GET {{HOST}}/workspaces/tree/577bc00a-c9eb-4f2e-a416-cc83e8d91608 HTTP/1.1
+###
 GET {{HOST}}/workspaces/FleaLUR1w0eh HTTP/1.1

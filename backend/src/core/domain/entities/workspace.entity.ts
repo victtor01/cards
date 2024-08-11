@@ -1,10 +1,15 @@
 import { CreateWorkspaceDto } from '@core/application/dtos/create-workspace-dto';
 import { randomUUID, UUID } from 'crypto';
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { nanoid } from 'nanoid';
-import { type } from 'os';
-import { nullable } from 'zod';
 
 @Entity('workspaces')
 export class Workspace {
@@ -20,9 +25,21 @@ export class Workspace {
   @Column({ type: 'varchar', length: 12, unique: true })
   public code: string;
 
-  @ManyToMany(() => User, (user) => user.workspaces)
-  @JoinColumn({ referencedColumnName: 'userId' })
+  @ManyToOne(() => User, (user) => user.workspaces)
+  @JoinColumn({ name: 'userId' })
   public user: User;
+
+  @Column({ type: 'uuid', nullable: true })
+  public parentId: string;
+
+  @ManyToOne(() => Workspace, (workspace) => workspace.workspaces, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'parentId' })
+  public parent: Workspace;
+
+  @OneToMany(() => Workspace, (workspace) => workspace.parent)
+  public workspaces: Workspace[];
 
   constructor(props: CreateWorkspaceDto, id?: UUID) {
     Object.assign(this, props);

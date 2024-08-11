@@ -4,7 +4,8 @@ import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-
 import { CreateWorkspaceDto } from '../dtos/create-workspace-dto';
 import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/create-workspace-schema';
-import { UnauthorizedException } from '@src/utils/errors';
+import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
+import { buildTree } from '@src/utils/organize-tree';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
@@ -14,20 +15,84 @@ export class WorkspacesService implements WorkspacesServiceInterface {
       .parseAsync(data)
       .catch((err) => ThrowErrorInValidationSchema(err));
 
+    const parentId = data?.parentId || null;
+
     const workspaceToCreate = new Workspace({ name, userId });
+
+    const workspaceParent = !!data?.parentId ? await this.findById(parentId) : null;
+
+    if (workspaceParent?.id && workspaceParent?.userId === userId) {
+      workspaceToCreate.parentId = parentId;
+    }
 
     const workspace = await this.workspaceRepository.save(workspaceToCreate);
 
     return workspace;
   }
 
+  private buildTree(workspaces: Workspace[]): Workspace[] {
+    const tree: Workspace[] = [];
+    const map: { [key: number]: Workspace } = {};
+
+    workspaces.forEach((node) => {
+      map[node.id] = node;
+      node.workspaces = [];
+    });
+
+    workspaces.forEach((node) => {
+      if (node.parentId) {
+        map[node.parentId].workspaces.push(node);
+      } else {
+        tree.push(node);
+      }
+    });
+
+    return tree;
+  }
+
+  public async findOneWorkspaceWithTree(workspaceId: string, userId: string): Promise<Workspace> {
+    const workspaces = await this.workspaceRepository.findByUserId(userId);
+
+    const rootWorkspace = workspaces.find((ws) => ws.id === workspaceId);
+    if (!rootWorkspace) throw new BadRequestException('Workspace not found');
+
+    const workspaceMap = new Map<string, Workspace>();
+    workspaces.forEach((workspace) => {
+      workspaceMap.set(workspace.id, { ...workspace, workspaces: [] });
+    });
+
+    workspaces.forEach((workspace) => {
+      if (workspace.parentId) {
+        const parentWorkspace = workspaceMap.get(workspace.parentId);
+        if (parentWorkspace) {
+          parentWorkspace.workspaces.push(workspaceMap.get(workspace.id));
+        }
+      }
+    });
+
+    return workspaceMap.get(rootWorkspace.id);
+  }
+
+  public async findByUserFormatTree(userId: string): Promise<any> {
+    const workspaces = await this.workspaceRepository.findByUserId(userId);
+    const build = this.buildTree(workspaces);
+
+    return build;
+  }
+
   public async findByUser(userId: string): Promise<Workspace[]> {
-    return await this.workspaceRepository.findByUserId(userId);
+    const workspaces = await this.workspaceRepository.findByUserId(userId);
+
+    return workspaces;
+  }
+
+  public async findById(workspaceId: string) {
+    return await this.workspaceRepository.findOneById(workspaceId);
   }
 
   public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
     const workspace = await this.workspaceRepository.findOneByCode(code);
-
+    
     if (workspace?.userId !== userId) {
       throw new UnauthorizedException('workspace not exists!');
     }

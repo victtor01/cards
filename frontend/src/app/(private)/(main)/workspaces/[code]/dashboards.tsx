@@ -3,8 +3,13 @@ import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useRouter } from "next/navigation";
 import { GoPlus } from "react-icons/go";
 import { useDashboards } from "./hooks";
+import { Workspace } from "@/interfaces/IWorkspace";
 
-export const Dashboards = () => {
+type DashBoardProps = {
+  workspace: Workspace
+}
+
+export const Dashboards = ({ workspace }: DashBoardProps) => {
   const { redirectToCreate } = useDashboards();
 
   return (
@@ -12,7 +17,7 @@ export const Dashboards = () => {
       <div className="w-full flex justify-between items-center gap-6 max-w-main mx-auto">
         <DashboardCard.Container title="Amount of documents">
           <div className="text-lg mt-2 font-semibold text-zinc-300">
-            <span className="text-violet-500">34</span> Documents
+            <span className="text-violet-500">{workspace?.workspaces?.length || 0}</span> Documents
           </div>
           <div className="w-full mt-4">
             <button

@@ -3,7 +3,6 @@ import { randomUUID, UUID } from 'crypto';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInterface } from '../interfaces/user-entity.interface';
 import { Workspace } from './workspace.entity';
-import { nanoid } from 'nanoid';
 
 @Entity({ name: 'users' })
 export class User implements UserInterface {

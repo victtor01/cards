@@ -7,17 +7,31 @@ export class WorkspacesController {
 
   public async create(request: Request, response: Response) {
     const { id: userId } = request.session;
+    const { body } = request;
 
-    const {
-      body: { name },
-    } = request;
-
-    await this.workspacesService.save({ name, userId });
+    await this.workspacesService.save({ userId, ...body });
 
     response.status(200).json({
       error: false,
       message: 'workspace success created!',
     });
+  }
+
+  public async findOneByIdWithTree(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    const { workspaceId } = request.params;
+
+    const workspace = await this.workspacesService.findOneWorkspaceWithTree(workspaceId, userId);
+
+    response.status(200).json(workspace);
+  }
+
+  public async findWithTree(request: Request, response: Response) {
+    const { id: userId } = request.session;
+
+    const workspaces = await this.workspacesService.findByUserFormatTree(userId);
+
+    response.status(200).json(workspaces);
   }
 
   public async findAll(request: Request, response: Response) {

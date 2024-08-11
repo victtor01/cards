@@ -1,21 +1,22 @@
 "use client";
 
-import { fontFiraCode, fontInter } from "@/fonts";
-import { useSidebar } from "@/hooks/use-sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { BiPlus } from "react-icons/bi";
+import { fontFiraCode } from "@/fonts";
+import { useResize, useSidebar } from "@/hooks/use-sidebar";
 import { FaUser } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
+import { WorkspaceLink } from "./workspace";
+import { GiField } from "react-icons/gi";
+import { HiFolderPlus } from "react-icons/hi2";
+import { PiDotsSixVerticalBold } from "react-icons/pi";
 
 export function Sidebar() {
-  const pathname = usePathname();
   const { redirectTo, workspaces } = useSidebar();
-
-  console.log(workspaces)
-
+  const { size, resizing, handler } = useResize();
   return (
-    <div className="w-full max-w-[17rem] flex flex-col gap-5 bg-neutral-950">
+    <div
+      className={`flex flex-col gap-5 bg-neutral-950 overflow-x-auto relative max-w-[50rem]`}
+      style={{ width: size.x }}
+    >
       <header className="flex items-center justify-between p-2">
         <div className={`${fontFiraCode} flex gap-2`}>
           <button className="p-2 px-3 bg-indigo-600 rounded-md text-sm border border-indigo-500 opacity-80">
@@ -28,16 +29,18 @@ export function Sidebar() {
           </button>
         </div>
       </header>
+
       <div className={`${fontFiraCode} px-2 flex justify-between`}>
         <div className="text-zinc-400">Workspaces</div>
         <div className="text-zinc-500">
           <MdSpaceDashboard />
         </div>
       </div>
+
       <div className="flex w-full px-2">
         <label
           htmlFor="search"
-          className="border border-zinc-800 rounded-md w-full flex items-center focus-within:ring-2 ring-indigo-600"
+          className="border border-zinc-800 rounded-md w-full flex items-center focus-within:ring-2 ring-indigo-600 ring-offset-1 transition-all ring-offset-zinc-900"
         >
           <input
             type="text"
@@ -49,49 +52,32 @@ export function Sidebar() {
           </button>
         </label>
       </div>
-      <section className="flex flex-col px-2 capitalize gap-1">
-        {!!workspaces && workspaces?.[0]?.name && workspaces?.map(({ name, code }, index) => {
-          const link = `/workspaces/${code}`;
-          const selectedClassStyle = pathname.startsWith(link)
-            ? "bg-zinc-800 text-gray-200 bg-opacity-50 opacity-100 cursor-default"
-            : "hover:text-gray-300 hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
 
-          return (
-            <div
-              key={index}
-              className={`${selectedClassStyle} transition-all group flex items-center justify-between p-2 rounded relative`}
-            >
-              <button
-                onClick={() => redirectTo(link)}
-                data-selected={pathname.startsWith(link)}
-                className={`${fontInter} text-sm flex-1 text-left data-[selected=true]:pointer-events-none`}
-              >
-                {name}
-              </button>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className="bg-zinc-800 w-5 h-5 place-items-center rounded hidden group-hover:grid"
-                >
-                  <BiPlus size={14} />
-                </button>
-                <span className="w-5 h-5 text-xs bg-indigo-600 rounded grid place-items-center text-zinc-300">
-                  0
-                </span>
-              </div>
-            </div>
-          );
-        })}
+      <section className="flex flex-col capitalize gap-1">
+        <div className="flex flex-1 flex-col pl-2 overflow-hidden pb-5">
+          {!!workspaces &&
+            workspaces?.[0]?.name &&
+            workspaces?.map(({ name, code, workspaces }) => {
+              return <WorkspaceLink {...{ name, code, workspaces }} />;
+            })}
+        </div>
 
-        <div>
+        <div className="px-2">
           <button
             onClick={() => redirectTo("?md=create-workspace")}
-            className="px-4 flex p-1 bg-transparent border border-zinc-700 border-dashed rounded opacity-90 hover:opacity-100 mt-3"
+            className="w-auto gap-3 px-3 h-8 flex items-center justify-center bg-transparent border border-zinc-700 border-dashed text-gray-500  rounded opacity-90 hover:opacity-100 mt-3"
           >
-            <span className="text-gray-500 text-sm">Create new</span>
+            <HiFolderPlus />
+            <span className="text-gray-500 text-sm capitalize">fold</span>
           </button>
         </div>
       </section>
+
+      <button
+        data-resizing={resizing}
+        onMouseDown={handler}
+        className="w-[0.1rem] overflow-visible hover:w-[0.3rem] data-[resizing=true]:bg-indigo-600 transition-all bg-zinc-800 hover:bg-indigo-600 right-0 h-full absolute  cursor-col-resize"
+      />
     </div>
   );
 }

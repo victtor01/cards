@@ -7,7 +7,7 @@ This project aims to create virtual ambient where is possible create cards to pe
 - [x] authentication of user.
 - [x] create workspaces.
 - [] create cards of text.
+  - [] define card relationships where cards have other cards
+  - []
 
-## Requisites
-
-
+## Requisitess

@@ -2,7 +2,6 @@
 
 import { fontFiraCode } from "@/fonts";
 import { useWorkspace } from "./hooks";
-import { useParams } from "next/navigation";
 import { GoPlus } from "react-icons/go";
 import { IoSettings } from "react-icons/io5";
 import { Dashboards } from "./dashboards";
@@ -15,8 +14,8 @@ type WorkspaceProps = {
 };
 
 export default function Workspace({ params }: WorkspaceProps) {
-  const { workspace } = useWorkspace(params.code);
-  const { code } = useParams();
+  const { workspace, isLoading } = useWorkspace(params.code);
+  const { code } = params;
 
   return (
     <div className="w-full flex flex-col flex-1">
@@ -44,8 +43,7 @@ export default function Workspace({ params }: WorkspaceProps) {
             </div>
           </header>
 
-          <Dashboards />
-
+          {workspace && <Dashboards {...{ workspace }} />}
         </div>
       </div>
     </div>
