@@ -5,13 +5,12 @@ import { useResize, useSidebar } from "@/hooks/use-sidebar";
 import { FaUser } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 import { WorkspaceLink } from "./workspace";
-import { GiField } from "react-icons/gi";
 import { HiFolderPlus } from "react-icons/hi2";
-import { PiDotsSixVerticalBold } from "react-icons/pi";
 
 export function Sidebar() {
   const { redirectTo, workspaces } = useSidebar();
   const { size, resizing, handler } = useResize();
+  
   return (
     <div
       className={`flex flex-col gap-5 bg-neutral-950 overflow-x-auto relative max-w-[50rem]`}
