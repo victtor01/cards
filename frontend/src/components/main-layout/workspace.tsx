@@ -7,29 +7,35 @@ import { FaCaretRight } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
 
 type WorkspaceLinkProps = {
+  id: string;
   name: string;
   code: string;
   workspaces: Workspace[];
 };
 
-export function WorkspaceLink({ name, code, workspaces }: WorkspaceLinkProps) {
+export function WorkspaceLink({
+  id,
+  name,
+  code,
+  workspaces,
+}: WorkspaceLinkProps) {
   const pathname = usePathname();
-  const { redirectTo } = useSidebar();
+  const { redirectTo, createFolder } = useSidebar();
 
   const link = `/workspaces/${code}`;
   const selected = pathname.startsWith(link);
   const selectedClassStyle = selected
-    ? "bg-zinc-800 text-gray-200 bg-opacity-50 opacity-100 cursor-default"
-    : "hover:text-gray-300 hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
+    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-800 text-gray-600 dark:text-gray-200 dark:bg-opacity-50 opacity-100 cursor-default"
+    : "dark:hover:text-gray-300 dark:hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
 
   const [open, setOpen] = useState<boolean>(selected);
 
   return (
-    <div className="flex flex-col w-[17rem]" key={code}>
+    <div className="flex flex-col min-w-[9rem] w-auto" key={code}>
       <div
-        className={`${selectedClassStyle} transition-all group flex gap-3 items-center justify-between p-2 rounded relative`}
+        className={`${selectedClassStyle} w-full  transition-all group flex gap-3 items-center justify-between p-1 rounded relative`}
       >
-        <div className="flex flex-1 text-left gap-3  text-sm ">
+        <div className="flex flex-1 text-left gap-3 text-sm">
           <button
             onClick={() => setOpen((prev) => !prev)}
             data-selected={pathname.startsWith(link)}
@@ -44,35 +50,38 @@ export function WorkspaceLink({ name, code, workspaces }: WorkspaceLinkProps) {
           <button
             type="button"
             onClick={() => redirectTo(link)}
-            className="flex flex-nowrap whitespace-nowrap"
+            className="flex flex-nowrap whitespace-nowrap flex-1"
           >
             {name}
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex gap-1 items-center group-hover:opacity-100">
+          <div className="hidden group-hover:flex gap-1 items-center group-hover:opacity-100">
             <button
               type="button"
-              className="bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-zinc-200 dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
             >
               <BiPlus size={16} />
             </button>
             <button
+              onClick={() => {
+                createFolder(id);
+                setOpen(true);
+              }}
               type="button"
-              className="bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-zinc-200 dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
             >
               <TbFolderPlus size={16} />
             </button>
           </div>
-
-          <span className="w-5 h-5 text-xs bg-indigo-600 rounded grid place-items-center text-zinc-300">
-            {workspaces?.length}
-          </span>
         </div>
       </div>
 
       {open && (
-        <div data-focus={selected} className="flex px-2 pt-1 ml-[0.5rem] border-l-2 transition-colors border-zinc-800 border-opacity-70 flex-nowrap flex-col w-full data-[focus=true]:border-indigo-600">
+        <div
+          data-focus={false}
+          className="flex pt-1 ml-[0.1rem] pl-1 border-l-2 transition-colors border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col w-full dark:data-[focus=true]:border-indigo-600"
+        >
           {workspaces?.map((workspace) => (
             <WorkspaceLink {...workspace} />
           ))}

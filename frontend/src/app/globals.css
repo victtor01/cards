@@ -108,3 +108,7 @@ body {
     }
   }
 }
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none; /* Oculta a barra de rolagem */
+}

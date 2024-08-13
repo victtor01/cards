@@ -3,8 +3,10 @@ import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import { queryClient } from "../providers/query-client";
 
 export type Workspace = {
+  id: string;
   name: string;
   code: string;
   workspaces: Workspace[];
@@ -26,10 +28,29 @@ export function useSidebar() {
     },
   });
 
+  const { data: i } = useQuery({
+    queryKey: ["i"],
+    queryFn: async () => {
+      return (await api.get("/users/mine")).data;
+    },
+  });
+
+  const createFolder = async (parentId: string | null = null) => {
+    const res = await api.post("/workspaces", { name: "new folder", parentId });
+
+    console.log(res);
+
+    await queryClient.invalidateQueries({
+      queryKey: ["workspaces"],
+    });
+  };
+
   return {
     redirectTo,
+    createFolder,
     pathName,
     workspaces,
+    i,
   };
 }
 
@@ -43,9 +64,14 @@ export const useResize = () => {
 
     function onMouseMove(mouseMoveEvent: any) {
       setResizing(true);
-      setSize(() => ({
-        x: startSize.x - startPosition.x + mouseMoveEvent.pageX,
-      }));
+      setSize(() => {
+        const newWidth = startSize.x - startPosition.x + mouseMoveEvent.pageX;
+        const clampedWidth = Math.max(300, Math.min(600, newWidth));
+
+        return {
+          x: clampedWidth,
+        };
+      });
     }
 
     function onMouseUp() {
@@ -59,76 +85,3 @@ export const useResize = () => {
 
   return { size, handler, resizing };
 };
-
-
-// export const useResize = () => {
-//   const elementRef = React.useRef<HTMLDivElement | null>(null);
-
-//   const handleMouseDown = (e: React.MouseEvent) => {
-//     const ele = elementRef.current;
-//     if (!ele) {
-//       return;
-//     }
-
-//     const startPos = { x: e.clientX };
-//     const styles = window.getComputedStyle(ele);
-//     const w = parseInt(styles.width, 10);
-
-//     const handleMouseMove = (e: MouseEvent) => {
-//       const dx = e.clientX - startPos.x;
-//       ele.style.width = `${w + dx}px`;
-//       updateCursor();
-//     };
-
-//     const handleMouseUp = () => {
-//       document.removeEventListener("mousemove", handleMouseMove);
-//       document.removeEventListener("mouseup", handleMouseUp);
-//       resetCursor();
-//     };
-
-//     document.addEventListener("mousemove", handleMouseMove);
-//     document.addEventListener("mouseup", handleMouseUp);
-//   };
-
-//   const handleTouchStart = (e: React.TouchEvent) => {
-//     const ele = elementRef.current;
-//     if (!ele) return;
-
-//     const touch = e.touches[0];
-//     const startPos = { x: touch.clientX };
-//     const styles = window.getComputedStyle(ele);
-//     const w = parseInt(styles.width, 10);
-
-//     const handleTouchMove = (e: TouchEvent) => {
-//       const touch = e.touches[0];
-//       const dx = touch.clientX - startPos.x;
-//       ele.style.width = `${w + dx}px`;
-//       updateCursor();
-//     };
-
-//     const handleTouchEnd = () => {
-//       document.removeEventListener("touchmove", handleTouchMove);
-//       document.removeEventListener("touchend", handleTouchEnd);
-//       resetCursor();
-//     };
-
-//     document.addEventListener("touchmove", handleTouchMove);
-//     document.addEventListener("touchend", handleTouchEnd);
-//   };
-
-//   const updateCursor = () => {
-//     document.body.style.cursor = "col-resize";
-//     document.body.style.userSelect = "none";
-//   };
-
-//   const resetCursor = () => {
-//     document.body.style.removeProperty("cursor");
-//     document.body.style.removeProperty("user-select");
-//   };
-
-//   return {
-//     elementRef,
-//     handleMouseDown,
-//     handleTouchStart,
-//   };
-// };

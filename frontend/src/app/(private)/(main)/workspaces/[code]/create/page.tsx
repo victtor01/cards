@@ -17,7 +17,7 @@ export default function Create() {
       <header className="w-full p-2 flex gap-3 items-center">
         <button 
         onClick={() => router.back()}
-        className="bg-zinc-800 opacity-70 hover:opacity-100 p-3 rounded">
+        className="bg-zinc-100 dark:bg-zinc-800 opacity-70 hover:opacity-100 p-3 rounded">
           <BiArrowBack />
         </button>
 

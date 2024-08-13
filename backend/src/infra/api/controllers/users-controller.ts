@@ -1,25 +1,23 @@
-import { CreateUserDto } from "@core/application/dtos/create-user-dto";
-import { UsersServiceInterface } from "@core/application/interfaces/users-service-interface";
-import { BadRequestException } from "@src/utils/errors";
-import { Request, Response } from "express";
+import { CreateUserDto } from '@core/application/dtos/create-user-dto';
+import { UsersServiceInterface } from '@core/application/interfaces/users-service-interface';
+import { BadRequestException } from '@src/utils/errors';
+import { Request, Response } from 'express';
 
 class UsersController {
   constructor(private readonly usersService: UsersServiceInterface) {}
 
-  public async uploadPhoto (request: Request, response: Response) {
+  public async uploadPhoto(request: Request, response: Response) {
     const { id: userId } = request.session;
     const { file } = request;
 
     const { filename } = file;
 
-    const uploaded = await this.usersService.updatePhoto({ userId, filename })
+    await this.usersService.updatePhoto({ userId, filename });
 
     return response.status(200).json({
       error: false,
-      message: 'photo updated'
-    })
-
-    throw new BadRequestException("error when trying to update user photo");
+      message: 'photo updated',
+    });
   }
 
   public async create(request: Request, response: Response) {
@@ -39,11 +37,19 @@ class UsersController {
   }
 
   public async mine(request: Request, response: Response) {
-    return response.json({ 
-      error: false
-    })
+    const {
+      session: { id: userId },
+    } = request;
+
+    const informations = await this.usersService.findOneById(userId);
+
+    return response.status(200).json({
+      firstName: informations.firstName,
+      lastName: informations.lastName,
+      email: informations.email,
+      photo: informations.photo,
+    });
   }
 }
 
 export { UsersController };
-

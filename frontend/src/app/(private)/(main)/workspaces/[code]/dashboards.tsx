@@ -13,16 +13,16 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
   const { redirectToCreate } = useDashboards();
 
   return (
-    <section className="flex m-4">
+    <section className="flex">
       <div className="w-full flex justify-between items-center gap-6 max-w-main mx-auto">
         <DashboardCard.Container title="Amount of documents">
-          <div className="text-lg mt-2 font-semibold text-zinc-300">
+          <div className="text-lg mt-2 font-semibold">
             <span className="text-violet-500">{workspace?.workspaces?.length || 0}</span> Documents
           </div>
           <div className="w-full mt-4">
             <button
             onClick={() => redirectToCreate()}
-            className="p-2 bg-gradient-to-r from-indigo-600 to-violet-600 rounded px-4 text-sm opacity-70 hover:opacity-100 flex items-center gap-2">
+            className="p-2 text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded px-4 text-sm opacity-70 hover:opacity-100 flex items-center gap-2">
               <GoPlus size={20} />
               Create
             </button>

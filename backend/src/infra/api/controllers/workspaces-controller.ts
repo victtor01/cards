@@ -1,5 +1,4 @@
 import { WorkspacesServiceInterface } from '@core/application/interfaces/workspaces-service-interface';
-import { Workspace } from '@core/domain/entities/workspace.entity';
 import { Request, Response } from 'express';
 
 export class WorkspacesController {

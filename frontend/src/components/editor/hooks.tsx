@@ -13,8 +13,6 @@ import { CustomSpan } from "./variants";
 export const useEditorConfig = () => {
   const editorContentRef = useRef<HTMLDivElement>(null);
 
-  const [marksElements] = useState();
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
