@@ -46,12 +46,12 @@ export const CustomSpan = Mark.create({
           if (isActive) {
             return commands.unsetMark("categorize", {
               class:
-                "category bg-indigo-600 shadow-lg shadow-black p-1 rounded",
+                "category bg-indigo-600 shadow-lg shadow:shadow-black p-1 rounded text-white",
             });
           } else {
             return commands.setMark("categorize", {
               class:
-                "category bg-indigo-600 shadow-lg shadow-black p-1 rounded",
+                "category bg-indigo-600 shadow-lg shadow:shadow-black p-1 rounded text-white",
             });
           }
         },

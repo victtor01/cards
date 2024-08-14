@@ -7,4 +7,5 @@ export abstract class WorkspacesServiceInterface {
   abstract findByUserFormatTree(userId: string): Promise<Workspace[]>;
   abstract findOneByCodeAndUser(code: string, userId: string): Promise<Workspace>;
   abstract findOneWorkspaceWithTree(workspaceId: string, userId: string): Promise<Workspace>;
+  abstract findOneById(id: string): Promise<Workspace>;
 }

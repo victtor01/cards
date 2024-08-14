@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <QueryProvider>
-      <html lang="en" className="light">
+      <html lang="en" className="dark">
         <body className={`${inter.className} bg-white text-zinc-700 dark:bg-zinc-950 dark:text-gray-200`}>
           {children}
         </body>

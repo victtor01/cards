@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { nanoid } from 'nanoid';
+import { Card } from './card.entity';
 
 @Entity('workspaces')
 export class Workspace {
@@ -40,6 +41,9 @@ export class Workspace {
 
   @OneToMany(() => Workspace, (workspace) => workspace.parent)
   public workspaces: Workspace[];
+
+  @OneToMany(() => Card, (card) => card.workspace)
+  cards: Card[];
 
   constructor(props: CreateWorkspaceDto, id?: UUID) {
     Object.assign(this, props);

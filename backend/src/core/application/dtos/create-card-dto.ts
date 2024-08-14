@@ -1,4 +1,5 @@
 export class CreateCardDto {
-  name: string;
+  title: string;
+  content: string;
   workspaceId: string;
 }

@@ -1,16 +1,23 @@
-import { fontInter } from "@/fonts";
+import { fontInter, fontOpenSans } from "@/fonts";
 import { useSidebar, Workspace } from "@/hooks/use-sidebar";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import { FaCaretRight } from "react-icons/fa";
+import { FaCaretRight, FaFile } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
+
+type Card = {
+  id: string;
+  title: string;
+};
 
 type WorkspaceLinkProps = {
   id: string;
   name: string;
   code: string;
   workspaces: Workspace[];
+  cards: Card[];
 };
 
 export function WorkspaceLink({
@@ -18,6 +25,7 @@ export function WorkspaceLink({
   name,
   code,
   workspaces,
+  cards,
 }: WorkspaceLinkProps) {
   const pathname = usePathname();
   const { redirectTo, createFolder } = useSidebar();
@@ -25,15 +33,15 @@ export function WorkspaceLink({
   const link = `/workspaces/${code}`;
   const selected = pathname.startsWith(link);
   const selectedClassStyle = selected
-    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-800 text-gray-600 dark:text-gray-200 dark:bg-opacity-50 opacity-100 cursor-default"
-    : "dark:hover:text-gray-300 dark:hover:bg-zinc-800 text-gray-500 hover:bg-opacity-70 opacity-80 hover:opacity-100";
+    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-800 text-zinc-800 dark:text-white opacity-100 cursor-default"
+    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 text-zinc-600 opacity-70 hover:opacity-100";
 
   const [open, setOpen] = useState<boolean>(selected);
 
   return (
     <div className="flex flex-col min-w-[9rem] w-auto" key={code}>
       <div
-        className={`${selectedClassStyle} w-full  transition-all group flex gap-3 items-center justify-between p-1 rounded relative`}
+        className={`${selectedClassStyle} ${fontOpenSans} w-full group flex gap-3 items-center justify-between p-1 rounded relative`}
       >
         <div className="flex flex-1 text-left gap-3 text-sm">
           <button
@@ -84,6 +92,16 @@ export function WorkspaceLink({
         >
           {workspaces?.map((workspace) => (
             <WorkspaceLink {...workspace} />
+          ))}
+
+          {cards?.map((card) => (
+            <Link
+              href={"#"}
+              className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
+            >
+              <FaFile size={12}/>
+              <span>{card.title}</span>
+            </Link>
           ))}
         </div>
       )}

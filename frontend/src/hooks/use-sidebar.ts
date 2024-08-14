@@ -5,11 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { queryClient } from "../providers/query-client";
 
+type Card = {
+  id: string;
+  title: string;
+}
+
 export type Workspace = {
   id: string;
   name: string;
   code: string;
   workspaces: Workspace[];
+  cards: Card[]
 };
 
 export function useSidebar() {

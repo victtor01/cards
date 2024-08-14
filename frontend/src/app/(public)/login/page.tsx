@@ -8,7 +8,7 @@ import { useLogin } from "./hooks";
 export default function Page() {
   const { form, auth } = useLogin();
   const { handleSubmit, formState, register } = form;
-  const { errors, isSubmitting } = formState;
+  const { isSubmitting } = formState;
 
   return (
     <form

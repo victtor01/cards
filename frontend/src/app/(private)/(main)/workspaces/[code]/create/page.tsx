@@ -48,7 +48,7 @@ export default function Create() {
                 <TextareaAutosize
                   {...field}
                   placeholder="This is my new project..."
-                  className="bg-transparent border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-300 resize-none"
+                  className="bg-transparent border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
                 />
               );
             }}

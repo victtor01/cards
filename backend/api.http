@@ -44,3 +44,15 @@ GET {{HOST}}/workspaces/tree HTTP/1.1
 GET {{HOST}}/workspaces/tree/577bc00a-c9eb-4f2e-a416-cc83e8d91608 HTTP/1.1
 ###
 GET {{HOST}}/workspaces/FleaLUR1w0eh HTTP/1.1
+
+###
+
+# @name cards
+POST {{HOST}}/cards HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "init project",
+  "content": "<p>example content!</p>",
+  "workspaceId": "577bc00a-c9eb-4f2e-a416-cc83e8d91608"
+}

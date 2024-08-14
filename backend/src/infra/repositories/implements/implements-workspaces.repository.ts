@@ -9,13 +9,16 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
     return await this.workspace.save({ name, userId, code, parentId });
   }
 
-  public async findByUserId(userId: string): Promise<Workspace[]> {
+  public async findByUserIdWithCards(userId: string): Promise<Workspace[]> {
     return await this.workspace.find({
       where: { userId },
+      relations: {
+        cards: true,
+      },
     });
   }
 
-  public async findOneByCode(code: string): Promise<Workspace> {
+  public async findOneByCodeWithWorkspaces(code: string): Promise<Workspace> {
     return await this.workspace.findOne({
       where: { code },
       relations: {

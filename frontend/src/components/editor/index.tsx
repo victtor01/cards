@@ -23,7 +23,7 @@ export function Editor() {
       <EditorContent
         ref={editorContentRef}
         editor={editor}
-        className="prose prose-invert prose-li:flex max-w-[60rem] flex-1 text-lg mt-10 p-0 min-h-[30rem] relative"
+        className="prose dark:prose-invert prose-li:flex max-w-[60rem] flex-1 text-lg mt-10 p-0 min-h-[30rem] relative"
       >
         {editor?.getHTML() === "<p></p>" && (
           <span className="pointer-events-none absolute  top-0 text-zinc-500 text-xl">
@@ -35,7 +35,7 @@ export function Editor() {
       {editor && (
         <BubbleMenu
           editor={editor}
-          className=" w-full flex bg-zinc-900 border border-zinc-800 text-zinc-200 rounded shadow-lg shadow-black divide-x divide-zinc-700"
+          className=" w-full flex bg-zinc-900 border border-zinc-800 text-zinc-200 rounded shadow-lg dark:shadow-black divide-x divide-zinc-700"
         >
           <ButtonBubble
             data-active={editor.isActive("bold")}
