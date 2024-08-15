@@ -1,11 +1,11 @@
 import { Card } from '@core/domain/entities/card.entity';
-import { CardsServiceInterface } from '../interfaces/cards-service-inteface';
 import { CardsRepository } from '@infra/repositories/cards.repository';
 import { CreateCardDto } from '../dtos/create-card-dto';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
-import { CreateCardSchema } from '../validations/create-card-schema';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
+import { CreateCardSchema } from '../validations/cards-schemas/create-card-schema';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
 import { UnauthorizedException } from '@src/utils/errors';
+import { CardsServiceInterface } from '../interfaces/cards-interfaces/cards-service-inteface';
 
 export class CardsService implements CardsServiceInterface {
   constructor(

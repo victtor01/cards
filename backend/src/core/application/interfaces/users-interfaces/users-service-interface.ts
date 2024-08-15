@@ -1,6 +1,6 @@
 import { User } from '@core/domain/entities/user.entity';
-import { CreateUserDto } from '../dtos/create-user-dto';
-import { PropsToUpdataPhoto } from '../dtos/update-photo-user.dto';
+import { CreateUserDto } from '../dtos/users-dtos/create-user-dto';
+import { PropsToUpdataPhoto } from '../dtos/users-dtos/update-photo-user.dto';
 
 export abstract class UsersServiceInterface {
   abstract save(data: CreateUserDto): Promise<User>;

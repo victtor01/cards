@@ -1,4 +1,4 @@
-import { CreateUserDto } from '@core/application/dtos/create-user-dto';
+import { CreateUserDto } from '@core/application/dtos/users/create-user-dto';
 import { randomUUID, UUID } from 'crypto';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInterface } from '../interfaces/user-entity.interface';

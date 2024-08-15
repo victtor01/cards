@@ -42,19 +42,27 @@ export function useSidebar() {
   });
 
   const createFolder = async (parentId: string | null = null) => {
-    const res = await api.post("/workspaces", { name: "new folder", parentId });
-
-    console.log(res);
+    await api.post("/workspaces", { name: "new folder", parentId });
 
     await queryClient.invalidateQueries({
       queryKey: ["workspaces"],
     });
   };
 
+  const createFile = async (workspaceId: string) => {
+    if(!workspaceId) return;
+    
+    await api.post("/cards", { title: "new file", workspaceId });
+    await queryClient.invalidateQueries({
+      queryKey: ["workspaces"],
+    })
+  }
+
   return {
     redirectTo,
     createFolder,
     pathName,
+    createFile,
     workspaces,
     i,
   };

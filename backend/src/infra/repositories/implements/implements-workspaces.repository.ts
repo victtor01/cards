@@ -1,6 +1,7 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { IsNull, Repository } from 'typeorm';
 import { WorkspacesRepository } from '../workspaces.repository';
+import { UpdateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/update-workspace-dto';
 
 export class ImplementsWorkspacesRepository implements WorkspacesRepository {
   constructor(private readonly workspace: Repository<Workspace>) {}
@@ -16,6 +17,10 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
         cards: true,
       },
     });
+  }
+
+  public async update(id: string, data: UpdateWorkspaceDto): Promise<any> {
+    return await this.workspace.update(id, data);
   }
 
   public async findOneByCodeWithWorkspaces(code: string): Promise<Workspace> {

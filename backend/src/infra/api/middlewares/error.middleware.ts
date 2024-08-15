@@ -22,7 +22,7 @@ export function ErrorMiddleware(
   const message = getMessageError(error.message);
   const errorText = error.error || "Internal Server Error";
 
-  return res.json({
+  return res.status(statusCode).json({
     statusCode,
     errorText,
     message,

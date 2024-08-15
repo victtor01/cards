@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { UserComponent } from "./user";
 
 export function Sidebar() {
-  const { workspaces, createFolder, i } = useSidebar();
+  const { workspaces, createFolder, createFile, i } = useSidebar();
   const { size, resizing, handler } = useResize();
   const router = useRouter();
 

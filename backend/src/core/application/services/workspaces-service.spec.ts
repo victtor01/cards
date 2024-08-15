@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
 import { WorkspacesService } from './workspaces-service';
-import { createWorkspaceSchema } from '../validations/create-workspace-schema';
-import { CreateWorkspaceDto } from '../dtos/create-workspace-dto';
+import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
+import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
 import { Workspace } from '@core/domain/entities/workspace.entity';
 
 vi.mock('../validations/create-workspace-schema', () => ({

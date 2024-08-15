@@ -28,7 +28,7 @@ export function WorkspaceLink({
   cards,
 }: WorkspaceLinkProps) {
   const pathname = usePathname();
-  const { redirectTo, createFolder } = useSidebar();
+  const { redirectTo, createFolder, createFile } = useSidebar();
 
   const link = `/workspaces/${code}`;
   const selected = pathname.startsWith(link);
@@ -66,6 +66,10 @@ export function WorkspaceLink({
         <div className="flex items-center gap-2">
           <div className="hidden group-hover:flex gap-1 items-center group-hover:opacity-100">
             <button
+              onClick={() => {
+                createFile(id);
+                setOpen(true);
+              }}
               type="button"
               className="bg-zinc-200 dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
             >
@@ -99,7 +103,7 @@ export function WorkspaceLink({
               href={"#"}
               className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
             >
-              <FaFile size={12}/>
+              <FaFile size={12} />
               <span>{card.title}</span>
             </Link>
           ))}

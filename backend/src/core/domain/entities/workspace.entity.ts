@@ -1,4 +1,3 @@
-import { CreateWorkspaceDto } from '@core/application/dtos/create-workspace-dto';
 import { randomUUID, UUID } from 'crypto';
 import {
   Column,
@@ -11,6 +10,7 @@ import {
 import { User } from './user.entity';
 import { nanoid } from 'nanoid';
 import { Card } from './card.entity';
+import { CreateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/create-workspace-dto';
 
 @Entity('workspaces')
 export class Workspace {
@@ -25,13 +25,16 @@ export class Workspace {
 
   @Column({ type: 'varchar', length: 12, unique: true })
   public code: string;
+  
+  @Column({ type: 'uuid', nullable: true })
+  public parentId: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  public background: string;
 
   @ManyToOne(() => User, (user) => user.workspaces)
   @JoinColumn({ name: 'userId' })
   public user: User;
-
-  @Column({ type: 'uuid', nullable: true })
-  public parentId: string;
 
   @ManyToOne(() => Workspace, (workspace) => workspace.workspaces, {
     nullable: true,

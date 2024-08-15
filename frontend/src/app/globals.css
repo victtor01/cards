@@ -48,11 +48,11 @@ body {
 }
 
 .scroll-default::-webkit-scrollbar-thumb {
-  @apply bg-zinc-800
+  @apply bg-zinc-200 dark:bg-zinc-800
 }
 
 .scroll-default::-webkit-scrollbar-thumb:active {
-  @apply bg-zinc-700
+  @apply dark:bg-zinc-700
 }
 
 .tiptap {

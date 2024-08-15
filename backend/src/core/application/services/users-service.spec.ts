@@ -1,8 +1,8 @@
 import { User } from "@core/domain/entities/user.entity";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { UsersRepository } from "../../../infra/repositories/users.repository";
-import { CreateUserDto } from "../dtos/create-user-dto";
-import { createUserSchema } from "../validations/create-user-schema";
+import { CreateUserDto } from "../dtos/users-dtos/create-user-dto";
+import { createUserSchema } from "../validations/users-schemas/create-user-schema";
 import { UsersService } from "./users-service";
 
 vi.mock("@core/application/validations/create-user-schema", () => ({

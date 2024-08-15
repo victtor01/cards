@@ -1,4 +1,5 @@
-import { WorkspacesServiceInterface } from '@core/application/interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '@core/application/interfaces/workspaces-interfaces/workspaces-service-interface';
+import { BadRequestException } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
 export class WorkspacesController {
@@ -23,6 +24,30 @@ export class WorkspacesController {
     const workspace = await this.workspacesService.findOneWorkspaceWithTree(workspaceId, userId);
 
     response.status(200).json(workspace);
+  }
+
+  public async updateBackgroundByCode(request: Request, response: Response) {
+    const { id: userId } = request.session;
+
+    const {
+      file: { filename: background },
+    } = request;
+    
+    const { params } = request;
+
+    if (!params?.code) {
+      throw new BadRequestException('params not found!');
+    }
+
+    const { code } = params;
+    
+    const res = await this.workspacesService.updateBackgroundByCode({
+      background,
+      userId,
+      code,
+    });
+
+    return response.status(200).json(res);
   }
 
   public async findWithTree(request: Request, response: Response) {

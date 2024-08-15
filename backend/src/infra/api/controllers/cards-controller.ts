@@ -1,4 +1,4 @@
-import { CardsServiceInterface } from '@core/application/interfaces/cards-service-inteface';
+import { CardsServiceInterface } from '@core/application/interfaces/cards-interfaces/cards-service-inteface';
 import { Request, Response } from 'express';
 
 export class CardsController {
@@ -8,12 +8,10 @@ export class CardsController {
     const { body, session } = request;
     const { id: userId } = session;
 
-    console.log(this.cardsService)
-
     const created = await this.cardsService.create(body, userId);
 
     return response.status(201).json({
-      name: created.name,
+      title: created.title,
     });
   }
 }
