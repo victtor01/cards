@@ -5,8 +5,10 @@ import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto
 import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
-import { UpdateWorkspaceDto } from '../dtos/workspaces-dtos/update-workspace-dto';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
+import path from 'path';
+import fs from 'fs';
+import { unlinkUploadFile } from '@src/utils/unlink';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
@@ -34,18 +36,16 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   public async updateBackgroundByCode(data: UpdateBackgroundWorkspaceByCodeDto): Promise<boolean> {
     if (!data?.code) throw new BadRequestException('Params not found to udpate background!');
 
-    
     const { code, background, userId } = data;
-
     const workspace = await this.findOneByCodeAndUser(code, userId);
 
     if (!workspace?.id) throw new BadRequestException('workspace not found!');
 
-    console.log(workspace);
-
     await this.workspaceRepository.update(workspace.id, {
       background,
-    })
+    });
+
+    if (workspace.background) unlinkUploadFile(workspace.background);
 
     return true;
   }
@@ -111,7 +111,7 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   }
 
   public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
-    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspaces(code);
+    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
 
     if (workspace?.userId !== userId) {
       throw new UnauthorizedException('workspace not exists!');

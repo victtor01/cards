@@ -15,7 +15,7 @@ vi.mock('../validations/create-workspace-schema', () => ({
 const WorkspacesRepositoryMock = {
   save: vi.fn(),
   findByUserIdWithCards: vi.fn(),
-  findOneByCodeWithWorkspaces: vi.fn(),
+  findOneByCodeWithWorkspacesAndCards: vi.fn(),
   findOneById: vi.fn(),
 } satisfies WorkspacesRepository;
 

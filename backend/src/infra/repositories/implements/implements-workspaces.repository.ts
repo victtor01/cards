@@ -23,11 +23,12 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
     return await this.workspace.update(id, data);
   }
 
-  public async findOneByCodeWithWorkspaces(code: string): Promise<Workspace> {
+  public async findOneByCodeWithWorkspacesAndCards(code: string): Promise<Workspace> {
     return await this.workspace.findOne({
       where: { code },
       relations: {
         workspaces: true,
+        cards: true,
       },
     });
   }

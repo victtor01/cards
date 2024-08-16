@@ -7,6 +7,7 @@ import { IoSettings } from "react-icons/io5";
 import { Dashboards } from "./dashboards";
 import Link from "next/link";
 import { Background } from "./background";
+import { Files } from "./files";
 
 type WorkspaceProps = {
   params: {
@@ -52,7 +53,10 @@ export default function Workspace({ params }: WorkspaceProps) {
           </div>
         </header>
 
-        {workspace && <Dashboards {...{ workspace }} />}
+        {!!workspace && <Dashboards workspace={workspace} />}
+        
+        {!!workspace && <Files workspace={workspace} />}
+
       </div>
     </div>
   );

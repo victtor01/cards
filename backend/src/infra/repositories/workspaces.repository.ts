@@ -5,7 +5,7 @@ import { UpdateWorkspaceDto } from '../../core/application/dtos/workspaces-dtos/
 export abstract class WorkspacesRepository {
   abstract save(workspace: Workspace): Promise<Workspace>;
   abstract findByUserIdWithCards(userId: string): Promise<Workspace[]>;
-  abstract findOneByCodeWithWorkspaces(code: string): Promise<Workspace>;
+  abstract findOneByCodeWithWorkspacesAndCards(code: string): Promise<Workspace>;
   abstract findByParentId(parentId: string): Promise<Workspace[]>;
   abstract findOneById(workspaceId: string): Promise<Workspace>;
   abstract findByRootsWithUser(userId: string): Promise<Workspace[]>;
