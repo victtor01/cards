@@ -1,5 +1,5 @@
 import StarterKit from "@tiptap/starter-kit";
-import { useEditor } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { useRef, useEffect, useState } from "react";
 
 import Document from "@tiptap/extension-document";
@@ -10,7 +10,11 @@ import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import { CustomSpan } from "./variants";
 
-export const useEditorConfig = () => {
+interface useEditorConfigProps {
+  content?: string | null;
+}
+
+export const useEditorConfig = ({ content = null }: useEditorConfigProps) => {
   const editorContentRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
@@ -30,6 +34,7 @@ export const useEditorConfig = () => {
       Text,
       TaskList,
     ],
+    content: content || "<p>This is a example...</p>",
     editorProps: {
       attributes: {
         class: `outline-none`,
@@ -38,11 +43,12 @@ export const useEditorConfig = () => {
   });
 
   useEffect(() => {
-    const el: HTMLCollectionOf<Element> = document.getElementsByClassName("category");
+    const el: HTMLCollectionOf<Element> =
+      document.getElementsByClassName("category");
 
-    if(el) {
-      Array.from(el).forEach(element => {
-        console.log(element); 
+    if (el) {
+      Array.from(el).forEach((element) => {
+        console.log(element);
       });
     }
   }, [editor?.getHTML()]);

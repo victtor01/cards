@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[25rem] border p-5 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 flex flex-col gap-5"
+      className="w-[99%] max-w-[25rem] border p-5 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
     >
       <header className="dark:text-zinc-400 text-zinc-700 cursor-default">
         <h1 className={`${fontRoboto} text-lg`}>Flards</h1>

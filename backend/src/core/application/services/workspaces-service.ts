@@ -79,6 +79,18 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
+  public async deleteBackgroundByCode(code: string, userId: string): Promise<boolean> {
+    const workspace = await this.findOneByCodeAndUser(code, userId);
+
+    unlinkUploadFile(workspace.background);
+
+    await this.workspaceRepository.update(workspace.id, {
+      background: null,
+    });
+
+    return true;
+  }
+
   private buildTree(workspaces: Workspace[]): Workspace[] {
     const tree: Workspace[] = [];
     const map: { [key: number]: Workspace } = {};

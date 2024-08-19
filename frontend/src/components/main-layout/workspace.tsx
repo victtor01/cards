@@ -106,7 +106,7 @@ export function WorkspaceLink({
           {cards?.map((card) => (
             <Link
               key={card.id}
-              href={"#"}
+              href={`/card/${card.id}`}
               className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
             >
               <FaFile size={12} />

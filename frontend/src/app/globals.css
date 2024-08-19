@@ -44,15 +44,15 @@ body {
 }
 
 .scroll-default::-webkit-scrollbar-track {
-  @apply bg-transparent
+  @apply bg-transparent;
 }
 
 .scroll-default::-webkit-scrollbar-thumb {
-  @apply bg-zinc-200 dark:bg-zinc-800
+  @apply bg-zinc-200 dark:bg-zinc-800;
 }
 
 .scroll-default::-webkit-scrollbar-thumb:active {
-  @apply dark:bg-zinc-700
+  @apply dark:bg-zinc-700;
 }
 
 .tiptap {
@@ -61,7 +61,7 @@ body {
   }
 
   mark {
-    background-color: #FAF594;
+    background-color: #faf594;
     border-radius: 0.4rem;
     box-decoration-break: clone;
     padding: 0.1rem 0.3rem;
@@ -111,4 +111,12 @@ body {
 
 .scroll-hidden::-webkit-scrollbar {
   display: none; /* Oculta a barra de rolagem */
+}
+
+.grid-image {
+  @apply absolute inset-0 top-[50%] left-[40%] translate-x-[-50%] translate-y-[-50%] h-[100vh] w-[50%] z-10 opacity-[0.15] bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)];
+}
+
+.light .grid-image {
+  @apply bg-[radial-gradient(#1f2937_1px,transparent_1px)] opacity-30; 
 }

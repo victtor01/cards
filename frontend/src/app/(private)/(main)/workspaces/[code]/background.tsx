@@ -6,19 +6,20 @@ import { IoClose } from "react-icons/io5";
 import { MdImage } from "react-icons/md";
 import { motion } from "framer-motion";
 import { getUpload } from "@/utils/get-upload";
-import { FaUser } from "react-icons/fa";
+import { useBackground } from "./hooks";
 
 type BackgroundProps = {
   photoUrl: string | null | undefined;
+  workspaceId: string;
 };
 
-type Modal = 'upload' | 'delete' | null
+type Modal = "upload" | "delete" | null;
 
 const Upload = () => {
   const router = useRouter();
 
   const params = useSearchParams();
-  const modal: Modal = params.get("md") as Modal || null;
+  const modal: Modal = (params.get("md") as Modal) || null;
 
   return (
     <div className="flex w-full border-b-2 border-dashed overflow-visible relative bg-zinc-100 px-3 dark:bg-zinc-800 dark:border-zinc-700">
@@ -31,17 +32,19 @@ const Upload = () => {
         </button>
       </div>
 
-      {modal === 'upload' && <ModalToUploadWorkspace />}
+      {modal === "upload" && <ModalToUploadWorkspace />}
     </div>
   );
 };
 
-const Show = ({ photoUrl }: { photoUrl: string | null }) => {
+const Show = ({ photoUrl }: { photoUrl: string }) => {
   const router = useRouter();
   const params = useSearchParams();
   const image = getUpload(photoUrl);
-  
-  const modal: Modal = params.get("md") as Modal || null;
+
+  const background = useBackground();
+
+  const modal: Modal = (params.get("md") as Modal) || null;
 
   return (
     <div className="bg-zinc-200 dark:bg-zinc-800 flex w-full h-[30vh] relative group/background z-10 shadow dark:shadow-black">
@@ -51,6 +54,8 @@ const Show = ({ photoUrl }: { photoUrl: string | null }) => {
       <div className="w-full top-0 left-0 h-full z-10 absolute p-2 group-hover/background:backdrop-blur-md m-auto bg-transparent flex opacity-0 group-hover/background:opacity-100 transition-all">
         <div className="flex m-auto gap-2">
           <motion.button
+            type="button"
+            onClick={() => background.deleteBackground()}
             whileHover={{ scale: 1.05 }}
             className="p-2 px-4 hover:bg-zinc-200 shadow dark:hover:bg-zinc-700 bg-white text-rose-600 dark:bg-zinc-800 rounded flex items-center gap-2"
           >
@@ -68,11 +73,11 @@ const Show = ({ photoUrl }: { photoUrl: string | null }) => {
         </div>
       </div>
 
-      {modal === 'upload' && <ModalToUploadWorkspace />}
+      {modal === "upload" && <ModalToUploadWorkspace />}
     </div>
   );
 };
 
-export function Background({ photoUrl }: BackgroundProps) {
-  return !!photoUrl ? <Show photoUrl={photoUrl} /> : <Upload />;
+export function Background({ photoUrl, workspaceId }: BackgroundProps) {
+  return !!photoUrl ? <Show {...{ photoUrl, workspaceId }} /> : <Upload />;
 }

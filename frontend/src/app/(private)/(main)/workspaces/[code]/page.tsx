@@ -22,6 +22,7 @@ export default function Workspace({ params }: WorkspaceProps) {
   const { code } = params;
 
   if (isLoading) return <>Loading...</>;
+  
   if (!workspace?.id || !workspace?.name)
     throw new Error("workspace not found!");
 
@@ -29,7 +30,7 @@ export default function Workspace({ params }: WorkspaceProps) {
 
   return (
     <div className="w-full flex flex-col flex-1 gap-6">
-      <Background photoUrl={workspace?.background} />
+      <Background photoUrl={workspace?.background} workspaceId={workspace.id} />
 
       <div className="w-full h-auto px-3">
         <header className="flex gap-4 justify-between items-center w-full max-w-main mx-auto">
@@ -46,7 +47,7 @@ export default function Workspace({ params }: WorkspaceProps) {
 
             <Link
               href={`/workspaces/${code}/create`}
-              className="text-zinc-400 hover:text-white text-lg"
+              className="text-zinc-400 hover:text-zinc-700 dark:hover:text-white text-lg"
             >
               <GoPlus size={24} />
             </Link>
