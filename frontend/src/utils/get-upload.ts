@@ -1,5 +1,5 @@
 const baseUrlBackend = "http://localhost:9000/uploads";
 
-export function GetUpload(url: string | null) {
+export function getUpload(url: string | null | undefined ) {
   return !!url ? `${baseUrlBackend}/${url}`: null;
 }

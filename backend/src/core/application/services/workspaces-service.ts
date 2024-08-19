@@ -6,8 +6,6 @@ import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
-import path from 'path';
-import fs from 'fs';
 import { unlinkUploadFile } from '@src/utils/unlink';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
@@ -71,6 +69,14 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     });
 
     return workspaceMap.get(rootWorkspace.id);
+  }
+
+  public async delete(id: string, userId: string): Promise<boolean> {
+    const workspace = await this.workspaceRepository.findOneById(id);
+    if (workspace?.userId !== userId) throw new UnauthorizedException('user don`t permission!');
+    await this.workspaceRepository.delete(id);
+
+    return true;
   }
 
   private buildTree(workspaces: Workspace[]): Workspace[] {

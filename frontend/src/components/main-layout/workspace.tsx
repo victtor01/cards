@@ -2,7 +2,7 @@ import { fontInter, fontOpenSans } from "@/fonts";
 import { useSidebar, Workspace } from "@/hooks/use-sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { FaCaretRight, FaFile } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
@@ -27,19 +27,24 @@ export function WorkspaceLink({
   workspaces,
   cards,
 }: WorkspaceLinkProps) {
-  const pathname = usePathname();
   const { redirectTo, createFolder, createFile } = useSidebar();
+  const pathname = usePathname();
 
   const link = `/workspaces/${code}`;
   const selected = pathname.startsWith(link);
+
   const selectedClassStyle = selected
     ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-800 text-zinc-800 dark:text-white opacity-100 cursor-default"
     : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 text-zinc-600 opacity-70 hover:opacity-100";
 
   const [open, setOpen] = useState<boolean>(selected);
 
+  useEffect(() => {
+    if (selected) setOpen(true);
+  }, [selected]);
+
   return (
-    <div className="flex flex-col min-w-[9rem] w-auto" key={code}>
+    <div className="flex flex-col min-w-[9rem] w-auto">
       <div
         className={`${selectedClassStyle} ${fontOpenSans} w-full group flex gap-3 items-center justify-between p-1 rounded relative`}
       >
@@ -95,11 +100,12 @@ export function WorkspaceLink({
           className="flex pt-1 ml-[0.1rem] pl-1 border-l-2 transition-colors border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col w-full dark:data-[focus=true]:border-indigo-600"
         >
           {workspaces?.map((workspace) => (
-            <WorkspaceLink {...workspace} />
+            <WorkspaceLink key={workspace.id} {...workspace} />
           ))}
 
           {cards?.map((card) => (
             <Link
+              key={card.id}
               href={"#"}
               className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
             >

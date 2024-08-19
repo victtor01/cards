@@ -1,8 +1,8 @@
-import { CreateUserDto } from '@core/application/dtos/users/create-user-dto';
 import { randomUUID, UUID } from 'crypto';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInterface } from '../interfaces/user-entity.interface';
 import { Workspace } from './workspace.entity';
+import { CreateUserDto } from '@core/application/dtos/users-dtos/create-user-dto';
 
 @Entity({ name: 'users' })
 export class User implements UserInterface {

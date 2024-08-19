@@ -19,6 +19,10 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
     });
   }
 
+  public async delete(id: string): Promise<any> {
+    return await this.workspace.delete({ id });
+  }
+
   public async update(id: string, data: UpdateWorkspaceDto): Promise<any> {
     return await this.workspace.update(id, data);
   }

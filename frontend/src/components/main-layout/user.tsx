@@ -5,9 +5,10 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { BsSoundwave } from "react-icons/bs";
+import { getUpload } from "@/utils/get-upload";
 
 type UserComponentProps = {
-  photoUrl: string;
+  photoUrl: string | null;
 };
 
 const variantsAnimation = {
@@ -50,6 +51,8 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
   const { show, handleShow } = useUserComponent();
   const { handleTheme } = useTheme();
 
+  const imageUser = getUpload(photoUrl);
+
   return (
     <>
       <button
@@ -57,13 +60,15 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
         onClick={handleShow}
         className="overflow-hidden transition-all hover:ring-2 hover:ring-indigo-400 dark:ring-indigo-600 ring-offset-none data-[focus=true]:ring-2 relative w-10 h-10 bg-white text-zinc-500 dark:bg-zinc-800 border dark:border-zinc-700 rounded-[100%] dark:text-zinc-300 grid place-items-center opacity-90 hover:opacity-100"
       >
-        <Image
-          quality={1}
-          src={`http://localhost:9000/uploads/${photoUrl}`}
-          alt="photo"
-          fill
-          objectFit="cover"
-        />
+        {imageUser && (
+          <Image
+            quality={1}
+            src={imageUser}
+            alt="photo"
+            fill
+            objectFit="cover"
+          />
+        )}
       </button>
       <AnimatePresence>
         {show && (
@@ -89,7 +94,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
               </button>
 
               <button className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700">
-                <BsSoundwave/>
+                <BsSoundwave />
                 Sons
               </button>
             </div>

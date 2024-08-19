@@ -10,4 +10,5 @@ export abstract class WorkspacesRepository {
   abstract findOneById(workspaceId: string): Promise<Workspace>;
   abstract findByRootsWithUser(userId: string): Promise<Workspace[]>;
   abstract update(id: string, data: UpdateWorkspaceDto): Promise<boolean>;
+  abstract delete(id: string): Promise<boolean>
 }

@@ -5,18 +5,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { MdImage } from "react-icons/md";
 import { motion } from "framer-motion";
-import { GetUpload } from "@/utils/get-upload";
+import { getUpload } from "@/utils/get-upload";
 import { FaUser } from "react-icons/fa";
 
 type BackgroundProps = {
   photoUrl: string | null | undefined;
 };
 
+type Modal = 'upload' | 'delete' | null
+
 const Upload = () => {
   const router = useRouter();
 
   const params = useSearchParams();
-  const modal = !!params.get("md");
+  const modal: Modal = params.get("md") as Modal || null;
 
   return (
     <div className="flex w-full border-b-2 border-dashed overflow-visible relative bg-zinc-100 px-3 dark:bg-zinc-800 dark:border-zinc-700">
@@ -29,7 +31,7 @@ const Upload = () => {
         </button>
       </div>
 
-      {modal && <ModalToUploadWorkspace />}
+      {modal === 'upload' && <ModalToUploadWorkspace />}
     </div>
   );
 };
@@ -37,9 +39,9 @@ const Upload = () => {
 const Show = ({ photoUrl }: { photoUrl: string | null }) => {
   const router = useRouter();
   const params = useSearchParams();
-  const image = GetUpload(photoUrl);
+  const image = getUpload(photoUrl);
   
-  const modal = !!params.get("md");
+  const modal: Modal = params.get("md") as Modal || null;
 
   return (
     <div className="bg-zinc-200 dark:bg-zinc-800 flex w-full h-[30vh] relative group/background z-10 shadow dark:shadow-black">
@@ -66,7 +68,7 @@ const Show = ({ photoUrl }: { photoUrl: string | null }) => {
         </div>
       </div>
 
-      {modal && <ModalToUploadWorkspace />}
+      {modal === 'upload' && <ModalToUploadWorkspace />}
     </div>
   );
 };

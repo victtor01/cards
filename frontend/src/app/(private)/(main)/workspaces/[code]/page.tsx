@@ -2,12 +2,14 @@
 
 import { fontFiraCode } from "@/fonts";
 import { useWorkspace } from "./hooks";
-import { GoPlus } from "react-icons/go";
-import { IoSettings } from "react-icons/io5";
 import { Dashboards } from "./dashboards";
-import Link from "next/link";
 import { Background } from "./background";
+import { GoPlus } from "react-icons/go";
 import { Files } from "./files";
+import Link from "next/link";
+import { Settings } from "@/components/settings-workspace";
+import { AnimatePresence } from "framer-motion";
+import { DeleteWorkspace } from "@/components/modals-workspaces/delete-workspace";
 
 type WorkspaceProps = {
   params: {
@@ -16,12 +18,14 @@ type WorkspaceProps = {
 };
 
 export default function Workspace({ params }: WorkspaceProps) {
-  const { workspace, isLoading } = useWorkspace(params.code);
+  const { workspace, modal, isLoading } = useWorkspace(params.code);
   const { code } = params;
 
-  if (isLoading) {
-    return <>Loading...</>;
-  }
+  if (isLoading) return <>Loading...</>;
+  if (!workspace?.id || !workspace?.name)
+    throw new Error("workspace not found!");
+
+  const { id, name } = workspace;
 
   return (
     <div className="w-full flex flex-col flex-1 gap-6">
@@ -38,12 +42,8 @@ export default function Workspace({ params }: WorkspaceProps) {
             </h1>
           </div>
           <div className="flex gap-2 items-center">
-            <Link
-              href={`/workspaces/${code}/create`}
-              className="text-zinc-400 hover:text-white text-lg"
-            >
-              <IoSettings size={20} />
-            </Link>
+            <Settings />
+
             <Link
               href={`/workspaces/${code}/create`}
               className="text-zinc-400 hover:text-white text-lg"
@@ -54,9 +54,11 @@ export default function Workspace({ params }: WorkspaceProps) {
         </header>
 
         {!!workspace && <Dashboards workspace={workspace} />}
-        
         {!!workspace && <Files workspace={workspace} />}
 
+        <AnimatePresence>
+          {modal === "delete" && <DeleteWorkspace {...{ id, name }} />}
+        </AnimatePresence>
       </div>
     </div>
   );

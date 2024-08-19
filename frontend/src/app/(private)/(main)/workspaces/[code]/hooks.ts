@@ -4,7 +4,9 @@ import { api } from "@/api";
 import { Workspace } from "@/interfaces/IWorkspace";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+
+type MDW = "delete" | null;
 
 export function useWorkspace(workspaceId: string) {
   const { data: workspace, isLoading } = useQuery<Workspace>({
@@ -12,7 +14,13 @@ export function useWorkspace(workspaceId: string) {
     queryFn: async () => (await api.get(`/workspaces/${workspaceId}`)).data,
   });
   
+    const searchParams = useSearchParams();
+
+  const modal = (searchParams.get("mdw") as MDW) || null;
+
+
   return {
+    modal,
     workspace,
     isLoading
   }

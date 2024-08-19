@@ -1,12 +1,5 @@
 import { randomUUID, UUID } from 'crypto';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 import { nanoid } from 'nanoid';
 import { Card } from './card.entity';
@@ -25,7 +18,7 @@ export class Workspace {
 
   @Column({ type: 'varchar', length: 12, unique: true })
   public code: string;
-  
+
   @Column({ type: 'uuid', nullable: true })
   public parentId: string;
 
@@ -38,11 +31,14 @@ export class Workspace {
 
   @ManyToOne(() => Workspace, (workspace) => workspace.workspaces, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'parentId' })
   public parent: Workspace;
 
-  @OneToMany(() => Workspace, (workspace) => workspace.parent)
+  @OneToMany(() => Workspace, (workspace) => workspace.parent, {
+    onDelete: 'CASCADE',
+  })
   public workspaces: Workspace[];
 
   @OneToMany(() => Card, (card) => card.workspace)

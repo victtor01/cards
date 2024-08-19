@@ -17,6 +17,16 @@ export class WorkspacesController {
     });
   }
 
+  public async delete(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    if (!request.params?.workspaceId) throw new BadRequestException('params not found!');
+
+    const { workspaceId } = request.params;
+    await this.workspacesService.delete(workspaceId, userId);
+
+    response.status(200).json({ error: false });
+  }
+
   public async findOneByIdWithTree(request: Request, response: Response) {
     const { id: userId } = request.session;
     const { workspaceId } = request.params;
@@ -32,7 +42,7 @@ export class WorkspacesController {
     const {
       file: { filename: background },
     } = request;
-    
+
     const { params } = request;
 
     if (!params?.code) {
@@ -40,7 +50,7 @@ export class WorkspacesController {
     }
 
     const { code } = params;
-    
+
     const res = await this.workspacesService.updateBackgroundByCode({
       background,
       userId,

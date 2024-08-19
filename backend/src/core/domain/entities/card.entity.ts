@@ -24,7 +24,7 @@ export class Card {
   @Column({ type: 'varchar' })
   workspaceId: string;
 
-  @ManyToOne(() => Workspace, (workspace) => workspace.workspaces)
+  @ManyToOne(() => Workspace, (workspace) => workspace.workspaces, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'workspaceId' })
   workspace: Workspace;
 

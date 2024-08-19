@@ -26,10 +26,13 @@ workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
   workspacesController.findOneByIdWithTree(req, res)
 );
 
+workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
+
 workspacesRoutes.get('/:code', (req, res) => workspacesController.findByCode(req, res));
 
 workspacesRoutes.put('/background/:code', upload.single('background'), (req, res) =>
   workspacesController.updateBackgroundByCode(req, res)
 );
+
 
 export { workspacesRoutes, workspacesService };
