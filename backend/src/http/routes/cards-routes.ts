@@ -16,5 +16,8 @@ const cardsService = new CardsService(cardsRepository, workspacesService);
 const cardsController = new CardsController(cardsService);
 
 cardsRoutes.post('/', (req, res) => cardsController.create(req, res));
+cardsRoutes.get('/:cardId', (req, res) => cardsController.findOneById(req, res))
+cardsRoutes.put('/:cardId', (req, res) => cardsController.update(req, res));
+
 
 export { cardsRoutes };

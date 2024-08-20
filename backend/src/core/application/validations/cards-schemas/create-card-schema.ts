@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const CreateCardSchema = z.object({
+export const CreateCardValidation = z.object({
   title: z.string({ message: 'title is required!' }).min(1, 'expect title of card!'),
   content: z.string({ message: 'content of card is required!' }).max(500).optional(),
   workspaceId: z

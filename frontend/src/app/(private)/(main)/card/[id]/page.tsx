@@ -7,10 +7,18 @@ import TextareaAutosize from "react-textarea-autosize";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 
-export default function Card() {
-  const { form } = useCreateCard();
+type CardProps = {
+  params: {
+    id: string;
+  };
+};
+
+export default function Card({ params }: CardProps) {
+  const { form, card, isLoading } = useCreateCard(params.id);
   const { control } = form;
   const router = useRouter();
+
+  if(isLoading) return
 
   return (
     <div className="w-full h-auto">
@@ -25,6 +33,7 @@ export default function Card() {
         <div className="flex">
           <Controller
             control={control}
+            defaultValue={card?.title}
             name="name"
             render={({ field }) => {
               return (
@@ -43,10 +52,12 @@ export default function Card() {
         <header className="flex gap-4">
           <Controller
             control={control}
+            defaultValue={card?.title}
             name="name"
             render={({ field }) => {
               return (
                 <TextareaAutosize
+                
                   {...field}
                   placeholder="This is my new project..."
                   className="bg-transparent border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
@@ -56,7 +67,7 @@ export default function Card() {
           />
         </header>
 
-        <Editor />
+        <Editor content={card?.content}/>
       </div>
     </div>
   );
