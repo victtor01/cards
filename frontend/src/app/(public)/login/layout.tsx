@@ -1,5 +1,4 @@
 import { fontFiraCode } from "@/fonts";
-import { ReactNode } from "react";
 import { PiCardsFill } from "react-icons/pi";
 
 type PropsLayout = {
