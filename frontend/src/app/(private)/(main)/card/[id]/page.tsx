@@ -18,7 +18,7 @@ export default function Card({ params }: CardProps) {
   const { control } = form;
   const router = useRouter();
 
-  if(isLoading) return
+  if (isLoading) return;
 
   return (
     <div className="w-full h-auto">
@@ -57,7 +57,6 @@ export default function Card({ params }: CardProps) {
             render={({ field }) => {
               return (
                 <TextareaAutosize
-                
                   {...field}
                   placeholder="This is my new project..."
                   className="bg-transparent border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
@@ -67,7 +66,7 @@ export default function Card({ params }: CardProps) {
           />
         </header>
 
-        <Editor content={card?.content}/>
+        <Editor content={card?.content} />
       </div>
     </div>
   );

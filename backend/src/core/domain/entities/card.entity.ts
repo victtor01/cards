@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { nanoid } from 'nanoid';
 import { CreateCardDto } from '@core/application/dtos/create-card-dto';
 import { User } from './user.entity';
@@ -28,6 +28,11 @@ export class Card {
   @JoinColumn({ name: 'workspaceId' })
   workspace: Workspace;
 
+  @CreateDateColumn()
+  createdAt: string;
+  
+  @UpdateDateColumn()
+  updatedAt: string;
 
   constructor(data: CreateCardDto & { userId: string }, id?: string) {
     this.id = id || nanoid(12);

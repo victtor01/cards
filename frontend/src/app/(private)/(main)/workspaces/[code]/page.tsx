@@ -33,7 +33,7 @@ export default function Workspace({ params }: WorkspaceProps) {
       <Background photoUrl={workspace?.background} workspaceId={workspace.id} />
 
       <div className="w-full h-auto px-3">
-        <header className="flex gap-4 justify-between items-center w-full max-w-main mx-auto">
+        <header className="flex gap-4 justify-between items-center w-full max-w-main mx-auto my-4">
           <div>
             <h1
               className={`${fontFiraCode} text-lg text-zinc-600 dark:text-zinc-200`}

@@ -1,5 +1,6 @@
 import { api } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,6 +12,8 @@ const loginSchema = z.object({
 type LoginInterface = z.infer<typeof loginSchema>;
 
 export function useLogin() {
+  const router = useRouter();
+
   const form = useForm<LoginInterface>({
     resolver: zodResolver(loginSchema),
   });
@@ -18,10 +21,14 @@ export function useLogin() {
   const auth = async ({ email, password }: LoginInterface) => {
     try {
       const res = await api.post("/auth", { email, password });
-      
-      console.log(res)
+
+      if (res.data.error) {
+        throw new Error("credentials incorrect!");
+      }
+
+      router.push("/home");
     } catch (error) {
-      alert("erro")
+      alert("erro");
     }
   };
 

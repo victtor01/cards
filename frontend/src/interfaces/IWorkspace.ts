@@ -1,9 +1,10 @@
-import { Card } from "../../../backend/src/core/domain/entities/card.entity";
+import { ICard } from "./ICard";
+
 export interface Workspace {
   id: string;
   code: string;
   name: string;
-  cards: Card[];
+  cards: ICard[];
   background?: string | null;
   workspaces: Workspace[];
 }

@@ -3,4 +3,5 @@ export interface ICard {
   title: string;
   parentId: string;
   content: string;
+  background: string | null | undefined;
 }

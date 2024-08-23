@@ -10,6 +10,7 @@ import { UserComponent } from "./user";
 import { BiSearch } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
 import Link from "next/link";
+import { PiCardsFill } from "react-icons/pi";
 
 const InputSearch = () => (
   <label
@@ -37,15 +38,16 @@ export function Sidebar() {
   return (
     <div className="flex group/sidebar relative">
       <div
-        className={`flex flex-col h-screen bg-neutral-100 bg-opacity-60 dark:bg-neutral-950 overflow-visible relative`}
+        className={`flex flex-col h-screen bg-gray-100 bg-opacity-50 dark:bg-neutral-950 overflow-visible relative`}
         style={{ width: size.x }}
       >
         <header className="flex items-center justify-between p-2">
           <div className={`${fontFiraCode} flex gap-2`}>
             <button
               onClick={() => router.push("/home")}
-              className="p-2 px-3 bg-indigo-600 text-white rounded-md text-sm border border-indigo-500 opacity-80"
+              className="p-2 px-3 bg-indigo-600 text-white rounded-md text-sm border flex border-indigo-500 items-center gap-2"
             >
+              <PiCardsFill className="text-white" />
               Flards
             </button>
           </div>
@@ -54,26 +56,28 @@ export function Sidebar() {
           </div>
         </header>
 
-        <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900"/>
+        <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900" />
 
         <div className="flex w-full p-2 flex-col gap-2">
           <Link
-          href={'/home'}
-          data-selected={!!pathname.startsWith('/home')}
-          className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:opacity-100">
-            <FaHome size={16}/>
+            href={"/home"}
+            data-selected={!!pathname.startsWith("/home")}
+            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:opacity-100"
+          >
+            <FaHome size={16} />
             <span className={fontFiraCode}>Home</span>
           </Link>
 
           <Link
-          href={'#'}
-          className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100">
-            <BiSearch size={16}/>
+            href={"#"}
+            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
+          >
+            <BiSearch size={16} />
             <span className={fontFiraCode}>Search</span>
           </Link>
         </div>
 
-        <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900"/>
+        <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900" />
 
         <div className={`${fontFiraCode} px-2 flex justify-between mt-1`}>
           <div className="text-zinc-400">Workspaces</div>
@@ -95,14 +99,16 @@ export function Sidebar() {
           <div className="flex-1 flex flex-col h-full max-w-auto rounded-lg bg-white dark:bg-zinc-900 p-2 overflow-auto scroll-default shadow-md dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-50 dark:bg-opacity-70">
             {!!workspaces &&
               workspaces?.[0]?.name &&
-              workspaces?.map(({ id, name, code, workspaces, cards }, index: number) => {
-                return (
-                  <WorkspaceLink
-                    key={index}
-                    {...{ id, name, code, workspaces, cards }}
-                  />
-                );
-              })}
+              workspaces?.map(
+                ({ id, name, code, workspaces, cards }, index: number) => {
+                  return (
+                    <WorkspaceLink
+                      key={index}
+                      {...{ id, name, code, workspaces, cards }}
+                    />
+                  );
+                }
+              )}
           </div>
         </section>
       </div>
