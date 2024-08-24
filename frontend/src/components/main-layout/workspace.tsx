@@ -20,17 +20,13 @@ type WorkspaceLinkProps = {
   cards: Card[];
 };
 
-export function WorkspaceLink({
-  id,
-  name,
-  code,
-  workspaces,
-  cards,
-}: WorkspaceLinkProps) {
+export function WorkspaceLink(props: WorkspaceLinkProps) {
+  const { id, name, workspaces, cards } = props;
+
   const { redirectTo, createFolder, createFile } = useSidebar();
   const pathname = usePathname();
-
-  const link = `/workspaces/${code}`;
+  
+  const link = `/workspaces/${id}`;
   const selected = pathname.startsWith(link);
 
   const selectedClassStyle = selected
@@ -63,6 +59,7 @@ export function WorkspaceLink({
           <button
             type="button"
             onClick={() => redirectTo(link)}
+            id={`${id}`}
             className="flex flex-nowrap whitespace-nowrap flex-1"
           >
             {name}
@@ -110,7 +107,7 @@ export function WorkspaceLink({
               className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
             >
               <FaFile size={12} />
-              <span>{card.title}</span>
+              <span id={card.id}>{card.title}</span>
             </Link>
           ))}
         </div>

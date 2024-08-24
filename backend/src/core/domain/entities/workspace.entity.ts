@@ -1,5 +1,13 @@
 import { randomUUID, UUID } from 'crypto';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { nanoid } from 'nanoid';
 import { Card } from './card.entity';
@@ -7,7 +15,7 @@ import { CreateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/creat
 
 @Entity('workspaces')
 export class Workspace {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar' })
   public id: string;
 
   @Column({ type: 'varchar' })
@@ -19,8 +27,8 @@ export class Workspace {
   @Column({ type: 'varchar', length: 12, unique: true })
   public code: string;
 
-  @Column({ type: 'uuid', nullable: true })
-  public parentId: string;
+  @Column({ type: 'varchar', nullable: true })
+  public parentId: string = null;
 
   @Column({ type: 'varchar', nullable: true })
   public background: string;
@@ -44,9 +52,9 @@ export class Workspace {
   @OneToMany(() => Card, (card) => card.workspace)
   cards: Card[];
 
-  constructor(props: CreateWorkspaceDto, id?: UUID) {
+  constructor(props: CreateWorkspaceDto, id?: string) {
     Object.assign(this, props);
     this.code = nanoid(12);
-    this.id = id || randomUUID();
+    this.id = id || nanoid(12);
   }
 }

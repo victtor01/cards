@@ -128,6 +128,16 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return await this.workspaceRepository.findOneById(workspaceId);
   }
 
+  public async findOneByIdAndUser(id: string, userId: string): Promise<Workspace> {
+    const workspace = await this.workspaceRepository.findOneByIdWithRelations(id);
+
+    if (workspace?.userId !== userId) {
+      throw new UnauthorizedException('workspace not exists!');
+    }
+
+    return workspace;
+  }
+
   public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
     const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
 

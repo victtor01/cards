@@ -126,3 +126,23 @@ body {
     inset 3px 3px 10px rgba(200, 200, 200, 0.2),
     inset -3px -3px 5px rgba(0, 0, 0, 0.2);
 }
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid red;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

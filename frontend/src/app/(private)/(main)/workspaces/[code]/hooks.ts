@@ -9,10 +9,10 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 type MDW = "delete" | null;
 
-export function useWorkspace(workspaceId: string) {
+export function useWorkspace(workspaceCode: string) {
   const { data: workspace, isLoading } = useQuery<Workspace>({
-    queryKey: ["workspaces", workspaceId],
-    queryFn: async () => (await api.get(`/workspaces/${workspaceId}`)).data,
+    queryKey: ["workspaces", workspaceCode],
+    queryFn: async () => (await api.get(`/workspaces/${workspaceCode}`)).data,
   });
 
   const searchParams = useSearchParams();

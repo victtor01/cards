@@ -37,7 +37,7 @@ const LinkComponent = (props: Props) => {
         )}
 
         <div className="absolute w-full h-full top-0 left-0 z-20 text-zinc-800 dark:text-zinc-500 grid place-items-center">
-          <div className="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-md relative z-20 border border-transparent shadow-light dark:border-zinc-800">
+          <div className="bg-zinc-100 dark:bg-zinc-900 p-3 rounded-md relative z-20 border border-transparent dark:border-zinc-800">
             {type === "file" ? <FaFile size={18} /> : <FaFolder size={18} />}
           </div>
         </div>

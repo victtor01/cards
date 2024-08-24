@@ -1,7 +1,7 @@
 export interface ICard {
   id: string;
   title: string;
-  parentId: string;
+  workspaceId: string;
   content: string;
   background: string | null | undefined;
 }

@@ -2,8 +2,8 @@ import { api } from "@/api";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
 import { queryClient } from "../providers/query-client";
+import { useState } from "react";
 
 type Card = {
   id: string;
@@ -21,12 +21,12 @@ export type Workspace = {
 export function useSidebar() {
   const router = useRouter();
   const pathName = usePathname();
-
+  
   const redirectTo = (link: string) => {
     GenerateSoundClick();
     router.push(link);
   };
-
+  
   const { data: workspaces } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: async () => {

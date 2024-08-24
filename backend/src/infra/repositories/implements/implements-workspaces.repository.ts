@@ -6,8 +6,8 @@ import { UpdateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/updat
 export class ImplementsWorkspacesRepository implements WorkspacesRepository {
   constructor(private readonly workspace: Repository<Workspace>) {}
 
-  public async save({ name, userId, code, parentId }: Workspace): Promise<Workspace> {
-    return await this.workspace.save({ name, userId, code, parentId });
+  public async save({ id, name, userId, code, parentId }: Workspace): Promise<Workspace> {
+    return await this.workspace.save({ id, name, userId, code, parentId });
   }
 
   public async findByUserIdWithCards(userId: string): Promise<Workspace[]> {
@@ -40,6 +40,16 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
   public async findOneById(workspaceId: string): Promise<Workspace> {
     return await this.workspace.findOneBy({
       id: workspaceId,
+    });
+  }
+
+  public async findOneByIdWithRelations(workspaceId: string): Promise<Workspace> {
+    return await this.workspace.findOne({
+      where: { id: workspaceId },
+      relations: {
+        workspaces: true,
+        cards: true,
+      },
     });
   }
 

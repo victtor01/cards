@@ -91,6 +91,17 @@ export class WorkspacesController {
     response.status(200).json(workspaces);
   }
 
+  public async findById(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    const workspaceId = request.params.workspaceId || null;
+
+    if (!workspaceId) throw new BadRequestException('not found workspace id');
+
+    const workspace = await this.workspacesService.findOneByIdAndUser(workspaceId, userId);
+
+    response.status(200).json(workspace);
+  }
+
   public async findByCode(request: Request, response: Response) {
     const {
       session: { id: userId },
