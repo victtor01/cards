@@ -1,8 +1,8 @@
 import { api } from "@/api";
 import { fontFiraCode } from "@/fonts";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { queryClient } from "../../providers/query-client";
 
@@ -17,12 +17,14 @@ const useUploadWorkspace = () => {
 
     const formData = new FormData();
     formData.append("background", file);
-    await api.put(`/workspaces/background/${code}`, formData);
+
+    await api.put(`/workspaces/background/id/${code}`, formData);
+
     await queryClient.refetchQueries({
       queryKey: ["workspaces"],
     });
 
-    router.push('?')
+    router.push("?");
   };
 
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {

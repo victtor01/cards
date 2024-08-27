@@ -86,17 +86,17 @@ export function Sidebar() {
           </div>
         </div>
 
-        <section className="gap-4 pb-5 px-2 overflow-hidden flex flex-col relative ">
-          <div>
+        <section className="gap-4 pb-5 overflow-hidden flex flex-col relative ">
+          <div className="mt-4 w-full px-2">
             <button
               onClick={() => createFolder()}
-              className="w-auto gap-3 px-3 h-8 flex items-center bg-white dark:bg-zinc-800 dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent border border-zinc-700 border-dashed text-gray-500 rounded opacity-90 hover:opacity-100"
+              className="w-auto gap-3 px-3 h-8 flex flex-1 items-center bg-white dark:bg-zinc-900 shadow dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent text-gray-500 rounded opacity-90 hover:opacity-100"
             >
               <HiFolderPlus />
               <span className="text-sm capitalize">fold</span>
             </button>
           </div>
-          <div className="flex-1 flex flex-col h-full max-w-auto rounded-lg bg-white dark:bg-zinc-900 p-2 overflow-auto scroll-default shadow-md dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-50 dark:bg-opacity-70">
+          <div className="flex-1 flex p-2 flex-col h-full max-w-auto overflow-auto scroll-default">
             {!!workspaces &&
               workspaces?.[0]?.name &&
               workspaces?.map(

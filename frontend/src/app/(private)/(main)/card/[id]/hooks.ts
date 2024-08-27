@@ -1,17 +1,11 @@
 import { api } from "@/api";
-import workspaces from "@/components/workspaces";
 import { ICard } from "@/interfaces/ICard";
 import { Workspace } from "@/interfaces/IWorkspace";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/react";
-import { all } from "axios";
-import { log } from "console";
-import { get } from "http";
 import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { BiArrowBack } from "react-icons/bi";
-import { map } from "zod";
 
 function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -42,13 +36,13 @@ const updateCardInWorkspace = (
   });
 };
 
-export function useCard(cardId: string) {
+export const useUpdateTitleCard = (
+  card: ICard | undefined | null,
+  isLoading: boolean
+) => {
   const [title, setTitle] = useState<string | null>(null);
 
-  const { data: card, isLoading } = useQuery<ICard>({
-    queryKey: ["card", cardId],
-    queryFn: async () => (await api.get(`/cards/${cardId}`)).data,
-  });
+  const cardId = card?.id || null;
 
   useEffect(() => {
     if (!isLoading) {
@@ -56,10 +50,12 @@ export function useCard(cardId: string) {
     }
   }, [isLoading]);
 
-  const onChangeName = async (
+  const onChangeTitle = async (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const value = e.currentTarget.value || "";
+
+    if (!cardId) return;
 
     const element = window.document.getElementById(cardId);
     if (element) element.innerHTML = value;
@@ -85,7 +81,7 @@ export function useCard(cardId: string) {
 
           const cards = workspace.cards || null;
           const newCards = cards?.map((cardCurrent) => {
-            if (cardCurrent.id === card?.id) {
+            if (cardCurrent.id === cardId) {
               return {
                 ...card,
                 title: value,
@@ -112,14 +108,24 @@ export function useCard(cardId: string) {
   };
 
   return {
-    onChangeName,
     title,
+    onChangeTitle,
+  };
+};
+
+export function useCard(cardId: string) {
+  const { data: card, isLoading } = useQuery<ICard>({
+    queryKey: ["card", cardId],
+    queryFn: async () => (await api.get(`/cards/${cardId}`)).data,
+  });
+
+  return {
     isLoading,
     card,
   };
 }
 
-export function useUpdateCard(
+export function useUpdateContentCard(
   editor?: Editor | null,
   content?: string | undefined | null
 ) {
@@ -139,9 +145,12 @@ export function useUpdateCard(
   useEffect(() => {
     const html = editor?.getHTML() || null;
 
+    setLoading(false);
+
     if (content) setLast(content);
-    if (last === html) return;
-    if (!content || !last) return;
+
+    if (last === html || !content || !last) return;
+
     if (timeoutId) clearTimeout(timeoutId);
 
     const min = 1,

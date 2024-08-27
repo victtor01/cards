@@ -30,13 +30,13 @@ export function Files({ workspace }: FilesProps) {
         </header>
 
         <section className="flex flex-wrap w-full mt-3">
-          {workspace?.workspaces?.map(({ name, background, code }) => {
+          {workspace?.workspaces?.map(({ name, background, id }) => {
             return (
               <LinkComponent
                 name={name}
                 background={background}
-                href={`/workspaces/${code}`}
-                key={code}
+                href={`/workspaces/${id}`}
+                key={id}
               />
             );
           })}

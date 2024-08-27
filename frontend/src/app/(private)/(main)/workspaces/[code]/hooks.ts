@@ -32,7 +32,7 @@ export function useBackground() {
   const deleteBackground = async () => {
     const { code } = params;
 
-    await api.delete(`/workspaces/background/${code}`);
+    await api.delete(`/workspaces/background/id/${code}`);
 
     await queryClient.refetchQueries({
       queryKey: ["workspaces"],

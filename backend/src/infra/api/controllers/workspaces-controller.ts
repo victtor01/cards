@@ -17,7 +17,7 @@ export class WorkspacesController {
     });
   }
 
-  public async deleteBackground(request: Request, response: Response) {
+  public async deleteBackgroundByCode(request: Request, response: Response) {
     const { id: userId } = request.session;
 
     if (!request?.params?.code) throw new BadRequestException('params not found!');
@@ -29,6 +29,21 @@ export class WorkspacesController {
     response.status(200).json({
       error: false,
       message: 'updated success!',
+    });
+  }
+
+  public async deleteBackgroundById(request: Request, response: Response) {
+    const { id: userId } = request.session;
+
+    if (!request?.params?.id) throw new BadRequestException('params not found!');
+
+    const { id } = request.params;
+
+    await this.workspacesService.deleteBackgroundById(id, userId);
+
+    response.status(200).json({
+      error: false,
+      message: 'deleted success!',
     });
   }
 
@@ -71,6 +86,30 @@ export class WorkspacesController {
       background,
       userId,
       code,
+    });
+
+    return response.status(200).json(res);
+  }
+
+  public async updateBackgroundById(request: Request, response: Response) {
+    const { id: userId } = request.session;
+
+    const {
+      file: { filename: background },
+    } = request;
+
+    const { params } = request;
+
+    if (!params?.id) {
+      throw new BadRequestException('params not found!');
+    }
+
+    const { id } = params;
+
+    const res = await this.workspacesService.updateBackgroundById({
+      background,
+      userId,
+      id,
     });
 
     return response.status(200).json(res);

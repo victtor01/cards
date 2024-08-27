@@ -1,9 +1,9 @@
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { compare } from 'bcryptjs';
 import { AuthUserDto } from '../dtos/auth-user-dto';
-import { UsersServiceInterface } from '../interfaces/users-service-interface';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
 import { Session } from '@infra/config/constants/session';
+import { UsersServiceInterface } from '../interfaces/users-interfaces/users-service-interface';
 
 type AuthResponse = {
   accessToken: string;
@@ -38,7 +38,7 @@ export class AuthService implements AuthServiceInterface {
     }
 
     try {
-      const accessToken = await this.generateJWT({ id: user.id }, '10s');
+      const accessToken = await this.generateJWT({ id: user.id }, '10m');
       const refreshToken = await this.generateJWT({ id: user.id }, '1d');
 
       return {

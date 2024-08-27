@@ -30,8 +30,8 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
   const selected = pathname.startsWith(link);
 
   const selectedClassStyle = selected
-    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-800 text-zinc-800 dark:text-white opacity-100 cursor-default"
-    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 text-zinc-600 opacity-70 hover:opacity-100";
+    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-zinc-800 dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
+    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-zinc-600 opacity-70 hover:opacity-100";
 
   const [open, setOpen] = useState<boolean>(selected);
 
@@ -73,7 +73,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-zinc-200 dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-white dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
             >
               <BiPlus size={16} />
             </button>
@@ -83,7 +83,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-zinc-200 dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-white dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
             >
               <TbFolderPlus size={16} />
             </button>
@@ -94,7 +94,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
       {open && (
         <div
           data-focus={false}
-          className="flex pt-1 ml-[0.1rem] pl-1 border-l-2 transition-colors border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col w-full dark:data-[focus=true]:border-indigo-600"
+          className="flex pt-1 ml-[0.1rem] pl-1 border-l-2 transition-colors border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col dark:data-[focus=true]:border-indigo-600"
         >
           {workspaces?.map((workspace) => (
             <WorkspaceLink key={workspace.id} {...workspace} />

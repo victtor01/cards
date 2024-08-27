@@ -30,12 +30,22 @@ workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
 
 workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
 
-workspacesRoutes.delete('/background/:code', (req, res) =>
-  workspacesController.deleteBackground(req, res)
-);
+{
+  workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>
+    workspacesController.updateBackgroundByCode(req, res)
+  );
+  workspacesRoutes.delete('/background/code/:code', (req, res) =>
+    workspacesController.deleteBackgroundByCode(req, res)
+  );
+}
 
-workspacesRoutes.put('/background/:code', upload.single('background'), (req, res) =>
-  workspacesController.updateBackgroundByCode(req, res)
-);
+{
+  workspacesRoutes.delete('/background/id/:id', (req, res) =>
+    workspacesController.deleteBackgroundById(req, res)
+  );
+  workspacesRoutes.put('/background/id/:id', upload.single('background'), (req, res) =>
+    workspacesController.updateBackgroundById(req, res)
+  );
+}
 
 export { workspacesRoutes, workspacesService };

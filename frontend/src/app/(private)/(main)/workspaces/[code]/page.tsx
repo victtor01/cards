@@ -22,7 +22,7 @@ export default function Workspace({ params }: WorkspaceProps) {
   const { code } = params;
 
   if (isLoading) return <>Loading...</>;
-  
+
   if (!workspace?.id || !workspace?.name)
     throw new Error("workspace not found!");
 
@@ -44,13 +44,6 @@ export default function Workspace({ params }: WorkspaceProps) {
           </div>
           <div className="flex gap-2 items-center">
             <Settings />
-
-            <Link
-              href={`/workspaces/${code}/create`}
-              className="text-zinc-400 hover:text-zinc-700 dark:hover:text-white text-lg"
-            >
-              <GoPlus size={24} />
-            </Link>
           </div>
         </header>
 

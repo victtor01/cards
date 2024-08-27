@@ -8,25 +8,25 @@ import { useState } from "react";
 type Card = {
   id: string;
   title: string;
-}
+};
 
 export type Workspace = {
   id: string;
   name: string;
   code: string;
   workspaces: Workspace[];
-  cards: Card[]
+  cards: Card[];
 };
 
 export function useSidebar() {
   const router = useRouter();
   const pathName = usePathname();
-  
+
   const redirectTo = (link: string) => {
     GenerateSoundClick();
     router.push(link);
   };
-  
+
   const { data: workspaces } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: async () => {
@@ -50,13 +50,13 @@ export function useSidebar() {
   };
 
   const createFile = async (workspaceId: string) => {
-    if(!workspaceId) return;
-    
+    if (!workspaceId) return;
+
     await api.post("/cards", { title: "new file", workspaceId });
     await queryClient.invalidateQueries({
       queryKey: ["workspaces"],
-    })
-  }
+    });
+  };
 
   return {
     redirectTo,
@@ -69,7 +69,10 @@ export function useSidebar() {
 }
 
 export const useResize = () => {
-  const [size, setSize] = useState({ x: 300 });
+  const min = 280;
+  const max = 600;
+
+  const [size, setSize] = useState({ x: min });
   const [resizing, setResizing] = useState<boolean>(false);
 
   const handler = (mouseDownEvent: any) => {
@@ -80,7 +83,7 @@ export const useResize = () => {
       setResizing(true);
       setSize(() => {
         const newWidth = startSize.x - startPosition.x + mouseMoveEvent.pageX;
-        const clampedWidth = Math.max(300, Math.min(600, newWidth));
+        const clampedWidth = Math.max(min, Math.min(max, newWidth));
 
         return {
           x: clampedWidth,

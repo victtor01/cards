@@ -5,10 +5,13 @@ import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useLogin } from "./hooks";
 import Link from "next/link";
+import { type } from "os";
+import { ImSpinner2 } from "react-icons/im";
+import style from "styled-jsx/style";
 
 export default function Page() {
   const { form, auth } = useLogin();
-  const { handleSubmit, formState, register,} = form;
+  const { handleSubmit, formState, register } = form;
   const { isSubmitting } = formState;
 
   return (
@@ -55,9 +58,10 @@ export default function Page() {
         <button
           type="submit"
           style={{ opacity: isSubmitting ? 0.6 : 0.9 }}
-          className="w-full bg-indigo-600 p-2 rounded opacity-90 hover:opacity-100 text-white"
+          className="w-full bg-indigo-600 p-2 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
         >
-          Login
+          {isSubmitting && <ImSpinner2 className="animate-spin" />}
+          {!isSubmitting && <>Login</>}
         </button>
       </footer>
     </form>

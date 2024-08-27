@@ -7,6 +7,7 @@ import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
 import { unlinkUploadFile } from '@src/utils/unlink';
+import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
@@ -109,6 +110,39 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     });
 
     return tree;
+  }
+
+  public async updateBackgroundById(data: UpdateBackgroundWorkspaceByIdDto): Promise<boolean> {
+    if (!data?.id) throw new BadRequestException('Params not found to udpate background!');
+
+    const { id, background, userId } = data;
+    const workspace = await this.findOneById(id);
+
+    if (!workspace?.id) throw new BadRequestException('workspace not found!');
+
+    if (workspace?.userId !== userId) throw new UnauthorizedException('workspace not found!');
+
+    await this.workspaceRepository.update(workspace.id, {
+      background,
+    });
+
+    if (workspace.background) unlinkUploadFile(workspace.background);
+
+    return true;
+  }
+
+  public async deleteBackgroundById(id: string, userId: string): Promise<boolean> {
+    const workspace = await this.findOneById(id);
+
+    if (workspace?.userId !== userId) throw new UnauthorizedException('workspace not found!');
+
+    unlinkUploadFile(workspace.background);
+
+    await this.workspaceRepository.update(workspace.id, {
+      background: null,
+    });
+
+    return true;
   }
 
   public async findByUserFormatTree(userId: string): Promise<any> {
