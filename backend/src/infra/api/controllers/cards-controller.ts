@@ -28,6 +28,20 @@ export class CardsController {
     });
   }
 
+  public async updateBackground(request: Request, response: Response) {
+    const { file, session, params } = request;
+    const { id: userId } = session;
+    const { filename } = file;
+
+    const cardId = params?.cardId || null;
+
+    await this.cardsService.updateBackground(cardId, userId, filename);
+
+    response.status(200).json({
+      error: false,
+    });
+  }
+
   public async findOneById(request: Request, response: Response) {
     const { session, params } = request;
     const { id: userId } = session;

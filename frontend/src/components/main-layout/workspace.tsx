@@ -25,7 +25,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
 
   const { redirectTo, createFolder, createFile } = useSidebar();
   const pathname = usePathname();
-  
+
   const link = `/workspaces/${id}`;
   const selected = pathname.startsWith(link);
 

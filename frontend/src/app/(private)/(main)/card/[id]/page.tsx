@@ -10,6 +10,13 @@ import { Loader } from "@/components/loader";
 import { FaCheck } from "react-icons/fa";
 import { fontFiraCode } from "@/fonts";
 import { IoIosArrowBack } from "react-icons/io";
+import { FileBackgroundUpdate } from "./background";
+import Link from "next/link";
+import { log } from "console";
+import image from "next/image";
+import src from "react-textarea-autosize";
+import { getUpload } from "@/utils/get-upload";
+import Image from "next/image";
 
 type CardProps = {
   params: {
@@ -19,11 +26,10 @@ type CardProps = {
 
 export default function Card({ params }: CardProps) {
   const router = useRouter();
-
   const { card, isLoading } = useCard(params.id);
+  const { title, onChangeTitle } = useUpdateTitleCard(card, isLoading);
 
   const content = card?.content || null;
-  const { title, onChangeTitle } = useUpdateTitleCard(card, isLoading);
   const { editor, editorContentRef } = useEditorConfig({ content });
   const { loading } = useUpdateContentCard(editor, card?.content);
 
@@ -31,14 +37,22 @@ export default function Card({ params }: CardProps) {
 
   if (!card) return;
 
+  const image = !!card?.background ? getUpload(card?.background) : null;
+
   return (
-    <div className="w-full h-auto p-5">
-      <header className="w-full p-2 flex gap-3 items-center relative">
+    <div className="w-full h-auto relative p-5">
+      {image && (
+        <div className="top-0 w-full left-0 h-[30vh] bg-indigo-50 rounded-xl shadow-lg dark:shadow-black overflow-hidden relative dark:brightness-75">
+          <Image src={image} alt="photo" fill objectFit="cover" />
+        </div>
+      )}
+
+      <header className="w-full p-2 flex gap-3 items-center relative z-30">
         <button
           onClick={() => router.back()}
           className="hover:bg-zinc-100 dark:hover:bg-zinc-800 opacity-70 hover:opacity-100 grid place-items-center w-10 h-10 rounded"
         >
-          <IoIosArrowBack size={20}/>
+          <IoIosArrowBack size={20} />
         </button>
 
         <div className="flex">
@@ -70,16 +84,21 @@ export default function Card({ params }: CardProps) {
         </div>
       </header>
 
-      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-20">
+      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-20 ">
         <div className="w-full px-1 hover:opacity-100 opacity-0 delay-[1.4s] hover:delay-0">
-          <button className="p-1 px-2 bg-zinc-50 dark:bg-zinc-800 border-2 border-dashed dark:border-zinc-800 rounded opacity-70 hover:opacity-100">
+          <Link
+            href={`?ub-card=${card.id}`}
+            className="p-1 px-2 bg-zinc-50 dark:bg-zinc-800 border-2 border-dashed dark:border-zinc-800 rounded opacity-70 hover:opacity-100"
+          >
             <span
               className={`${fontFiraCode} dark:text-zinc-100 text-zinc-600 text-sm`}
             >
               upload background
             </span>
-          </button>
+          </Link>
         </div>
+
+        <FileBackgroundUpdate />
 
         <div className="w-full" />
 

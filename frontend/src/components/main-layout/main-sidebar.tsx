@@ -11,6 +11,9 @@ import { BiSearch } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
 import Link from "next/link";
 import { PiCardsFill } from "react-icons/pi";
+import { type } from "os";
+import style from "styled-jsx/style";
+import { map } from "zod";
 
 const InputSearch = () => (
   <label
@@ -45,10 +48,10 @@ export function Sidebar() {
           <div className={`${fontFiraCode} flex gap-2`}>
             <button
               onClick={() => router.push("/home")}
-              className="p-2 px-3 bg-indigo-600 text-white rounded-md text-sm border flex border-indigo-500 items-center gap-2"
+              className="p-2 px-3 text-white dark:shadow-black rounded text-sm shadow-md shadow-zinc-400 flex bg-gradient-to-r from-violet-600 to-indigo-600 justify-center items-center gap-2 opacity-90 hover:opacity-100"
             >
-              <PiCardsFill className="text-white" />
-              Flards
+              <PiCardsFill className="text-zinc-200" />
+              <span className={`${fontFiraCode} text-zinc-200`}>Flards</span>
             </button>
           </div>
           <div className="flex gap-2 relative">

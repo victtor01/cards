@@ -1,31 +1,20 @@
-import { api } from "@/api";
 import { fontFiraCode } from "@/fonts";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { queryClient } from "../../providers/query-client";
 
-const useUploadWorkspace = () => {
-  const { code } = useParams();
-  const router = useRouter();
+interface UpdateFunctionProps {
+  file: any;
+}
+
+interface UpdateBackgroundProps {
+  update: (data: UpdateFunctionProps) => Promise<any>;
+}
+
+const useUpdateBackground = () => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
-  const update = async () => {
-    if (!file || !code) return;
-
-    const formData = new FormData();
-    formData.append("background", file);
-
-    await api.put(`/workspaces/background/id/${code}`, formData);
-
-    await queryClient.refetchQueries({
-      queryKey: ["workspaces"],
-    });
-
-    router.push("?");
-  };
 
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.currentTarget.files?.[0] || null;
@@ -42,14 +31,14 @@ const useUploadWorkspace = () => {
 
   return {
     file,
-    update,
     preview,
     onChangeFile,
   };
 };
 
-export const ModalToUploadWorkspace = () => {
-  const { file, update, onChangeFile, preview } = useUploadWorkspace();
+export const ModalToUploadBackground = ({ update }: UpdateBackgroundProps) => {
+  const router = useRouter();
+  const { file, onChangeFile, preview } = useUpdateBackground();
 
   return (
     <div className="fixed top-0 left-0 flex w-full h-screen overflow-auto bg-black bg-opacity-10 backdrop-blur-md z-30">
@@ -105,7 +94,10 @@ export const ModalToUploadWorkspace = () => {
         </section>
         <footer className="w-full mt-4">
           <button
-            onClick={update}
+            onClick={async () => {
+              await update({ file });
+              router.push('?')
+            }}
             disabled={!file}
             data-ok={!!file}
             className="p-2 bg-indigo-600 text-white w-full rounded opacity-40 transition-opacity data-[ok=true]:hover:opacity-100"

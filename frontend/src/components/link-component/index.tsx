@@ -22,7 +22,7 @@ const LinkComponent = (props: Props) => {
   return (
     <Link
       href={href}
-      className="w-full max-w-[12rem] mx-1 group/link mb-2 rotate opacity-90 hover:opacity-100 h-auto overflow-hidden min-h-[12rem] rounded-lg bg-zinc-100 dark:bg-zinc-900 shadow-md dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-60 hover:shadow-lg"
+      className="w-full max-w-[12rem] mx-1 group/link mb-2 rotate opacity-90 hover:opacity-100 h-auto overflow-hidden min-h-[12rem] rounded-lg bg-zinc-100 dark:bg-zinc-900 border dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-60 hover:shadow-lg"
     >
       <div className="bg-zinc-200 dark:bg-zinc-800 h-[50%] relative overflow-hidden">
         {backgroundImage && (

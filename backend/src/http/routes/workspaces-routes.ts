@@ -18,17 +18,23 @@ const workspacesController = new WorkspacesController(workspacesService);
 
 workspacesRoutes.use(sessionMiddleware);
 
-workspacesRoutes.post('/', (req, res) => workspacesController.create(req, res));
-workspacesRoutes.get('/', (req, res) => workspacesController.findAll(req, res));
+{
+  workspacesRoutes.post('/', (req, res) => workspacesController.create(req, res));
+  workspacesRoutes.get('/', (req, res) => workspacesController.findAll(req, res));
+}
 
-workspacesRoutes.get('/tree', (req, res) => workspacesController.findWithTree(req, res));
-workspacesRoutes.get('/:workspaceId', (req, res) => workspacesController.findById(req, res));
-workspacesRoutes.get('/code/:code', (req, res) => workspacesController.findByCode(req, res));
-workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
-  workspacesController.findOneByIdWithTree(req, res)
-);
+{
+  workspacesRoutes.get('/tree', (req, res) => workspacesController.findWithTree(req, res));
+  workspacesRoutes.get('/code/:code', (req, res) => workspacesController.findByCode(req, res));
+  workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
+    workspacesController.findOneByIdWithTree(req, res)
+  );
+}
 
-workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
+{
+  workspacesRoutes.get('/:workspaceId', (req, res) => workspacesController.findById(req, res));
+  workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
+}
 
 {
   workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>

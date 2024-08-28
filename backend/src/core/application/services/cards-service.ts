@@ -8,6 +8,7 @@ import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
 import { CardsServiceInterface } from '../interfaces/cards-interfaces/cards-service-inteface';
 import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
 import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
+import { unlinkUploadFile } from '@src/utils/unlink';
 
 export class CardsService implements CardsServiceInterface {
   constructor(
@@ -65,6 +66,28 @@ export class CardsService implements CardsServiceInterface {
     await this.cardsRepo.update(cardId, {
       title,
       content,
+    });
+
+    return true;
+  }
+
+  public async updateBackground(id: string, userId: string, background: string): Promise<boolean> {
+    const card = await this.findOneByIdAndUser(id, userId);
+
+    if (!card?.id) {
+      throw new BadRequestException('file not found!');
+    }
+
+    if (card?.userId !== userId) {
+      throw new UnauthorizedException('user does not have permission!');
+    }
+
+    if (!!card?.background) {
+      unlinkUploadFile(card.background);
+    }
+
+    await this.cardsRepo.update(id, {
+      background,
     });
 
     return true;

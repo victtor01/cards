@@ -10,8 +10,8 @@ export class ImplementsCardsRepository implements CardsRepository {
     return await this.cardsRepo.save(card);
   }
 
-  public async update(id: string, { title, content }: UpdateCardDto): Promise<any> {
-    return await this.cardsRepo.update(id, { title, content });
+  public async update(id: string, { title, content, background }: UpdateCardDto): Promise<any> {
+    return await this.cardsRepo.update(id, { title, content, background });
   }
 
   public async findOneById(id: string): Promise<Card> {

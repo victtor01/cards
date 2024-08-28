@@ -31,7 +31,7 @@ export function Modal({ children, title }: ModalProps) {
       >
         <header className="w-full border-b dark:border-zinc-700 p-2 flex justify-between items-center">
           <div
-            className={`${fontOpenSans} text-red-500 font-semibold capitalize`}
+            className={`${fontOpenSans} text-zinc-600 dark:text-zinc-100 font-semibold capitalize`}
           >
             <h1 className="text-lg">{title}</h1>
           </div>

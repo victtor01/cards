@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { nanoid } from 'nanoid';
 import { CreateCardDto } from '@core/application/dtos/create-card-dto';
 import { User } from './user.entity';
@@ -15,6 +23,9 @@ export class Card {
   @Column({ type: 'text', nullable: true })
   content: string;
 
+  @Column({ type: 'text', nullable: true })
+  background: string;
+
   @Column({ type: 'varchar' })
   userId: string;
 
@@ -30,7 +41,7 @@ export class Card {
 
   @CreateDateColumn()
   createdAt: string;
-  
+
   @UpdateDateColumn()
   updatedAt: string;
 
