@@ -3,5 +3,6 @@ export interface ICard {
   title: string;
   workspaceId: string;
   content: string;
+  createdAt?: string | null;
   background: string | null | undefined;
 }

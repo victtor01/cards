@@ -2,10 +2,14 @@ import { fontInter, fontOpenSans } from "@/fonts";
 import { useSidebar, Workspace } from "@/hooks/use-sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { type } from "os";
+import { title } from "process";
 import { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { FaCaretRight, FaFile } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
+import { map } from "zod";
+import workspaces from "../workspaces";
 
 type Card = {
   id: string;
@@ -22,16 +26,15 @@ type WorkspaceLinkProps = {
 
 export function WorkspaceLink(props: WorkspaceLinkProps) {
   const { id, name, workspaces, cards } = props;
-
-  const { redirectTo, createFolder, createFile } = useSidebar();
-  const pathname = usePathname();
-
   const link = `/workspaces/${id}`;
+
+  const pathname = usePathname();
+  const { redirectTo, createFolder, createFile } = useSidebar();
   const selected = pathname.startsWith(link);
 
   const selectedClassStyle = selected
     ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-zinc-800 dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
-    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-zinc-600 opacity-70 hover:opacity-100";
+    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-black opacity-70 hover:opacity-100";
 
   const [open, setOpen] = useState<boolean>(selected);
 
@@ -60,7 +63,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
             type="button"
             onClick={() => redirectTo(link)}
             id={`${id}`}
-            className="flex flex-nowrap whitespace-nowrap flex-1"
+            className="flex flex-nowrap flex-1 whitespace-nowrap text-ellipsis"
           >
             {name}
           </button>
@@ -104,10 +107,15 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
             <Link
               key={card.id}
               href={`/card/${card.id}`}
-              className="text-sm text-zinc-600 flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
+              className="text-sm text-black flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
             >
               <FaFile size={12} />
-              <span id={card.id}>{card.title}</span>
+              <span
+                id={card.id}
+                className="whitespace-nowrap text-ellipsis flex-1 overflow-hidden"
+              >
+                {card.title}
+              </span>
             </Link>
           ))}
         </div>

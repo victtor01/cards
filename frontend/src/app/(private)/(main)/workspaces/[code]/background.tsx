@@ -1,17 +1,14 @@
+import { api } from "@/api";
 import { ModalToUploadBackground } from "@/components/uploads-background-workspace";
 import { fontFiraCode } from "@/fonts";
+import { queryClient } from "@/providers/query-client";
+import { getUpload } from "@/utils/get-upload";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { MdImage } from "react-icons/md";
-import { motion } from "framer-motion";
-import { getUpload } from "@/utils/get-upload";
 import { useBackground } from "./hooks";
-import { queryClient } from "@/providers/query-client";
-import { api } from "@/api";
-import { get } from "http";
-import { type } from "os";
-import src from "react-textarea-autosize";
 
 type BackgroundProps = {
   photoUrl: string | null | undefined;
@@ -47,7 +44,6 @@ const Upload = () => {
           className="absolute bg-white px-2 p-1 shadow rounded text-zinc-500 bottom-0 translate-y-[50%] left-0 opacity-90 hover:opacity-100 hover:scale-[1.02] hover:shadow-lg duration-[0.2s] transition-[shadow_scale] dark:bg-zinc-800 dark:shadow-black dark:border dark:border-zinc-700 dark:text-zinc-400"
         >
           <span className={`${fontFiraCode}`}>upload image</span>
-          {code.toString()}
         </button>
       </div>
 

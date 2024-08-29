@@ -1,6 +1,6 @@
 import { api } from "@/api";
 import { ICard } from "@/interfaces/ICard";
-import { Workspace } from "@/interfaces/IWorkspace";
+import { IWorkspace } from "@/interfaces/IWorkspace";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/react";
@@ -12,10 +12,10 @@ function getRandomNumber(min: number, max: number): number {
 }
 
 const updateCardInWorkspace = (
-  nodes: Workspace[],
+  nodes: IWorkspace[],
   cardId: string,
   newCardData: Partial<ICard>
-): Workspace[] => {
+): IWorkspace[] => {
   return nodes.map((node) => {
     if (node.cards) {
       node.cards = node.cards.map((card) => {
@@ -67,7 +67,7 @@ export const useUpdateTitleCard = (
     });
 
     await Promise.all([
-      queryClient.setQueryData(["workspaces"], (workspaces: Workspace[]) => {
+      queryClient.setQueryData(["workspaces"], (workspaces: IWorkspace[]) => {
         const updated = updateCardInWorkspace(workspaces, cardId, {
           title: value,
         });
@@ -76,7 +76,7 @@ export const useUpdateTitleCard = (
       }),
       queryClient.setQueryData(
         ["workspaces", card?.workspaceId],
-        (workspace: Workspace) => {
+        (workspace: IWorkspace) => {
           if (!workspace) return;
 
           const cards = workspace.cards || null;

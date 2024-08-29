@@ -1,22 +1,19 @@
 "use client";
 
-import { useCard, useUpdateContentCard, useUpdateTitleCard } from "./hooks";
-import TextareaAutosize from "react-textarea-autosize";
-import { useRouter } from "next/navigation";
 import { Bubble } from "@/components/editor/bubble";
-import { EditorContent } from "@tiptap/react";
-import { useEditorConfig } from "@/hooks/use-editor";
 import { Loader } from "@/components/loader";
-import { FaCheck } from "react-icons/fa";
 import { fontFiraCode } from "@/fonts";
-import { IoIosArrowBack } from "react-icons/io";
-import { FileBackgroundUpdate } from "./background";
-import Link from "next/link";
-import { log } from "console";
-import image from "next/image";
-import src from "react-textarea-autosize";
+import { useEditorConfig } from "@/hooks/use-editor";
 import { getUpload } from "@/utils/get-upload";
+import { EditorContent } from "@tiptap/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FaCheck } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
+import TextareaAutosize from "react-textarea-autosize";
+import { FileBackgroundUpdate } from "./background";
+import { useCard, useUpdateContentCard, useUpdateTitleCard } from "./hooks";
 
 type CardProps = {
   params: {
@@ -49,7 +46,7 @@ export default function Card({ params }: CardProps) {
 
       <header className="w-full p-2 flex gap-3 items-center relative z-30">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push(`/workspaces/${card.workspaceId}`)}
           className="hover:bg-zinc-100 dark:hover:bg-zinc-800 opacity-70 hover:opacity-100 grid place-items-center w-10 h-10 rounded"
         >
           <IoIosArrowBack size={20} />
@@ -84,6 +81,8 @@ export default function Card({ params }: CardProps) {
         </div>
       </header>
 
+      <FileBackgroundUpdate />
+
       <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-20 ">
         <div className="w-full px-1 hover:opacity-100 opacity-0 delay-[1.4s] hover:delay-0">
           <Link
@@ -97,10 +96,6 @@ export default function Card({ params }: CardProps) {
             </span>
           </Link>
         </div>
-
-        <FileBackgroundUpdate />
-
-        <div className="w-full" />
 
         <header className="flex gap-4 mt-3">
           <TextareaAutosize

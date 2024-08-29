@@ -100,18 +100,10 @@ export function Sidebar() {
             </button>
           </div>
           <div className="flex-1 flex p-2 flex-col h-full max-w-auto overflow-auto scroll-default">
-            {!!workspaces &&
-              workspaces?.[0]?.name &&
-              workspaces?.map(
-                ({ id, name, code, workspaces, cards }, index: number) => {
-                  return (
-                    <WorkspaceLink
-                      key={index}
-                      {...{ id, name, code, workspaces, cards }}
-                    />
-                  );
-                }
-              )}
+            {workspaces?.[0]?.name &&
+              workspaces?.map((workspace, index: number) => {
+                return <WorkspaceLink key={index} {...workspace} />;
+              })}
           </div>
         </section>
       </div>

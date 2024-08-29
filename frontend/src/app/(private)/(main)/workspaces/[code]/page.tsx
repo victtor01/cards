@@ -19,12 +19,14 @@ type WorkspaceProps = {
 
 export default function Workspace({ params }: WorkspaceProps) {
   const { workspace, modal, isLoading } = useWorkspace(params.code);
-  const { code } = params;
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) {
+    return <>Loading...</>;
+  }
 
-  if (!workspace?.id || !workspace?.name)
+  if (!workspace?.id || !workspace?.name) {
     throw new Error("workspace not found!");
+  }
 
   const { id, name } = workspace;
 

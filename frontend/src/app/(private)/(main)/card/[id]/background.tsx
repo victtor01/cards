@@ -14,22 +14,22 @@ const update = async ({ file, id }: any) => {
 
   await api.put(`/cards/background/${id}`, form);
 
-  await queryClient.refetchQueries({
-    queryKey: ["workspaces"],
-  });
-};
-
-const Index = () => {
-  const { id } = useParams();
-
-  return (
-    <ModalToUploadBackground update={({ file }) => update({ file, id })} />
-  );
+  await Promise.all([
+    queryClient.refetchQueries({ queryKey: ["workspaces"] }),
+    queryClient.refetchQueries({ queryKey: ["card", id] }),
+  ]);
 };
 
 export function FileBackgroundUpdate() {
+  const { id } = useParams();
   const searchParams = useSearchParams();
   const cardId = searchParams.get(nameOfParam) || null;
 
-  return <AnimatePresence>{!!cardId && <Index />}</AnimatePresence>;
+  return (
+    <AnimatePresence>
+      {!!cardId && (
+        <ModalToUploadBackground update={({ file }) => update({ file, id })} />
+      )}
+    </AnimatePresence>
+  );
 }
