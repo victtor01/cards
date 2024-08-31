@@ -13,12 +13,12 @@ import { DeleteWorkspace } from "@/components/modals-workspaces/delete-workspace
 
 type WorkspaceProps = {
   params: {
-    code: string;
+    id: string;
   };
 };
 
 export default function Workspace({ params }: WorkspaceProps) {
-  const { workspace, modal, isLoading } = useWorkspace(params.code);
+  const { workspace, modal, isLoading } = useWorkspace(params.id);
 
   if (isLoading) {
     return <>Loading...</>;

@@ -9,10 +9,10 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 type MDW = "delete" | null;
 
-export function useWorkspace(workspaceCode: string) {
+export function useWorkspace(workspaceId: string) {
   const { data: workspace, isLoading } = useQuery<IWorkspace>({
-    queryKey: ["workspaces", workspaceCode],
-    queryFn: async () => (await api.get(`/workspaces/${workspaceCode}`)).data,
+    queryKey: ["workspaces", workspaceId],
+    queryFn: async () => (await api.get(`/workspaces/${workspaceId}`)).data,
   });
 
   const searchParams = useSearchParams();
@@ -30,9 +30,9 @@ export function useBackground() {
   const params = useParams();
   
   const deleteBackground = async () => {
-    const { code } = params;
+    const { id } = params;
 
-    await api.delete(`/workspaces/background/id/${code}`);
+    await api.delete(`/workspaces/background/id/${id}`);
 
     await queryClient.refetchQueries({
       queryKey: ["workspaces"],
@@ -46,11 +46,11 @@ export function useBackground() {
 
 export function useDashboards() {
   const router = useRouter();
-  const { code } = useParams();
+  const { id } = useParams();
 
   const redirectToCreate = () => {
     GenerateSoundClick();
-    router.push(`/workspaces/${code}/create`);
+    router.push(`/workspaces/${id}/create`);
   };
 
   return {

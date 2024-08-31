@@ -2,10 +2,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaMoon } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import { animate, AnimatePresence, motion, Variants } from "framer-motion";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { BsSoundwave } from "react-icons/bs";
 import { getUpload } from "@/utils/get-upload";
+import { exit } from "process";
+import src from "react-textarea-autosize";
 
 type UserComponentProps = {
   photoUrl: string | null;
@@ -54,7 +56,13 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
   const imageUser = getUpload(photoUrl);
 
   return (
-    <>
+    <div className="flex gap-3 relative items-center">
+      <div className="py-0">
+        <div className="p-1 px-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs grid place-items-center rounded opacity-50">
+          PRO
+        </div>
+      </div>
+
       <button
         data-focus={show}
         onClick={handleShow}
@@ -79,7 +87,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
             exit={"initial"}
             className="absolute z-[20] flex flex-col left-[150%] border dark:border-zinc-700 top-[0.5rem] items-center before:content-[''] before:w-[96%] before:rounded-t-xl before:h-1 before:absolute before:bottom-[100%]  before:bg-indigo-600 w-auto h-auto bg-zinc-100 text-gray-600 rounded shadow-xl dark:shadow-black dark:bg-zinc-800 dark:text-zinc-400"
           >
-            <div className="flex flex-col text-sm divide-y-2 divide-zinc-100 dark:divide-zinc-700">
+            <div className="flex flex-col text-sm divide-y-2 divide-zinc-100 dark:divide-zinc-700 overflow-hidden rounded">
               <button
                 onClick={handleTheme}
                 className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700"
@@ -101,6 +109,6 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

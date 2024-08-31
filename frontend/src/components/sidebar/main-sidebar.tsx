@@ -6,7 +6,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { WorkspaceLink } from "./workspace";
 import { HiFolderPlus } from "react-icons/hi2";
 import { usePathname, useRouter } from "next/navigation";
-import { UserComponent } from "./user";
+import { UserComponent } from "./user-component";
 import { BiSearch } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import { PiCardsFill } from "react-icons/pi";
 import { type } from "os";
 import style from "styled-jsx/style";
 import { map } from "zod";
+import { useActionsWorkspaces } from "@/hooks/use-workspace";
 
 const InputSearch = () => (
   <label
@@ -33,30 +34,28 @@ const InputSearch = () => (
 );
 
 export function Sidebar() {
-  const { workspaces, createFolder, i } = useSidebar();
+  const { workspaces, i } = useSidebar();
+  const { createFolder } = useActionsWorkspaces();
   const { size, resizing, handler } = useResize();
   const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <div className="flex group/sidebar relative">
-      <div
+      <section
         className={`flex flex-col h-screen bg-gray-100 bg-opacity-50 dark:bg-neutral-950 overflow-visible relative`}
         style={{ width: size.x }}
       >
-        <header className="flex items-center justify-between p-2">
+        <header className="flex p-2 items-center justify-between w-full">
           <div className={`${fontFiraCode} flex gap-2`}>
-            <button
-              onClick={() => router.push("/home")}
-              className="p-2 px-3 text-white dark:shadow-black rounded text-sm shadow-md shadow-zinc-400 flex bg-gradient-to-r from-violet-600 to-indigo-600 justify-center items-center gap-2 opacity-90 hover:opacity-100"
-            >
-              <PiCardsFill className="text-zinc-200" />
-              <span className={`${fontFiraCode} text-zinc-200`}>Flards</span>
-            </button>
+            <div className="text-transparent rounded text-sm flex bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text justify-center items-center gap-2 opacity-90 hover:opacity-100">
+              <PiCardsFill className="text-purple-600" size={20} />
+              <span className={`${fontFiraCode} text-lg font-bold`}>
+                Flards
+              </span>
+            </div>
           </div>
-          <div className="flex gap-2 relative">
-            <UserComponent photoUrl={i?.photo} />
-          </div>
+
+          <UserComponent photoUrl={i?.photo} />
         </header>
 
         <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900" />
@@ -89,7 +88,7 @@ export function Sidebar() {
           </div>
         </div>
 
-        <section className="gap-4 pb-5 overflow-hidden flex flex-col relative ">
+        <section className="gap-4 pb-5 overflow-hidden flex flex-col relative h-full">
           <div className="mt-4 w-full px-2">
             <button
               onClick={() => createFolder()}
@@ -106,7 +105,7 @@ export function Sidebar() {
               })}
           </div>
         </section>
-      </div>
+      </section>
 
       <button
         data-resizing={resizing}

@@ -2,7 +2,6 @@ import { api } from "@/api";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { queryClient } from "../providers/query-client";
 import { useState } from "react";
 
 type Card = {
@@ -17,6 +16,7 @@ export type Workspace = {
   workspaces: Workspace[];
   cards: Card[];
 };
+
 
 export function useSidebar() {
   const router = useRouter();
@@ -41,28 +41,9 @@ export function useSidebar() {
     },
   });
 
-  const createFolder = async (parentId: string | null = null) => {
-    await api.post("/workspaces", { name: "new folder", parentId });
-
-    await queryClient.invalidateQueries({
-      queryKey: ["workspaces"],
-    });
-  };
-
-  const createFile = async (workspaceId: string) => {
-    if (!workspaceId) return;
-
-    await api.post("/cards", { title: "new file", workspaceId });
-    await queryClient.invalidateQueries({
-      queryKey: ["workspaces"],
-    });
-  };
-
   return {
     redirectTo,
-    createFolder,
     pathName,
-    createFile,
     workspaces,
     i,
   };

@@ -17,13 +17,13 @@ type BackgroundProps = {
 
 type Modal = "upload" | "delete" | null;
 
-const update = async ({ file, code }: any) => {
+const update = async ({ file, id }: any) => {
   if (!file) return;
 
   const formData = new FormData();
   formData.append("background", file);
 
-  await api.put(`/workspaces/background/id/${code}`, formData);
+  await api.put(`/workspaces/background/id/${id}`, formData);
 
   await queryClient.refetchQueries({
     queryKey: ["workspaces"],
@@ -32,7 +32,7 @@ const update = async ({ file, code }: any) => {
 
 const Upload = () => {
   const router = useRouter();
-  const { code } = useParams();
+  const { id } = useParams();
   const params = useSearchParams();
   const modal: Modal = (params.get("md") as Modal) || null;
 
@@ -49,7 +49,7 @@ const Upload = () => {
 
       {modal === "upload" && (
         <ModalToUploadBackground
-          update={({ file }) => update({ file, code })}
+          update={({ file }) => update({ file, id })}
         />
       )}
     </div>
@@ -60,7 +60,7 @@ const Show = ({ photoUrl }: { photoUrl: string }) => {
   const router = useRouter();
   const params = useSearchParams();
   const image = getUpload(photoUrl);
-  const { code } = useParams();
+  const { id } = useParams();
   
   const background = useBackground();
 
@@ -95,7 +95,7 @@ const Show = ({ photoUrl }: { photoUrl: string }) => {
 
       {modal === "upload" && (
         <ModalToUploadBackground
-          update={({ file }) => update({ file, code })}
+          update={({ file }) => update({ file, id })}
         />
       )}
     </div>

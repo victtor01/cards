@@ -1,13 +1,13 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
+import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
+import { unlinkUploadFile } from '@src/utils/unlink';
 import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
+import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
+import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
 import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
-import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
-import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
-import { unlinkUploadFile } from '@src/utils/unlink';
-import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
@@ -74,7 +74,21 @@ export class WorkspacesService implements WorkspacesServiceInterface {
 
   public async delete(id: string, userId: string): Promise<boolean> {
     const workspace = await this.workspaceRepository.findOneById(id);
+
     if (workspace?.userId !== userId) throw new UnauthorizedException('user don`t permission!');
+
+    if (workspace?.cards) {
+      const { cards } = workspace;
+
+      cards.forEach((element) => {
+        unlinkUploadFile(element.background);
+      });
+    }
+
+    if (workspace?.background) {
+      unlinkUploadFile(workspace.background);
+    }
+
     await this.workspaceRepository.delete(id);
 
     return true;

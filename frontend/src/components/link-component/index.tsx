@@ -28,6 +28,8 @@ const LinkComponent = (props: Props) => {
 
   return (
     <motion.button
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
       whileTap={{ scale: 0.9 }}
       onTap={() => router.push(href || "#")}
       className="w-full max-w-[12rem] mx-1 text-left group/link mb-2 rotate shadow-2xl transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-white dark:bg-zinc-900 dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-60 hover:shadow-lg"
