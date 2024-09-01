@@ -32,7 +32,7 @@ const LinkComponent = (props: Props) => {
       animate={{ scale: 1 }}
       whileTap={{ scale: 0.9 }}
       onTap={() => router.push(href || "#")}
-      className="w-full max-w-[12rem] mx-1 text-left group/link mb-2 rotate shadow-2xl transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-white dark:bg-zinc-900 dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-60 hover:shadow-lg"
+      className="w-full max-w-[12rem] mx-1 text-left shadow group/link mb-2 rotate transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900 dark:shadow-black dark:border dark:border-zinc-800 dark:border-opacity-60"
     >
       <div className="bg-zinc-100 min-h-[6rem] dark:bg-zinc-800 h-[50%] relative overflow-hidden border dark:border-none dark:shadow dark:border-zinc-800 dark:shadow-black rounded-lg m-2">
         {backgroundImage && (
@@ -42,7 +42,7 @@ const LinkComponent = (props: Props) => {
             alt="background"
             objectFit="cover"
             fill
-            className="dark:brightness-75"
+            className="dark:brightness-75 group-hover/link:scale-[1.05] transition-all"
           />
         )}
         <div className="absolute w-full h-full top-0 left-0 z-20 text-zinc-800 dark:text-zinc-500 grid place-items-center">

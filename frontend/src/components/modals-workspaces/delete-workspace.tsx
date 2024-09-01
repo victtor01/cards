@@ -1,5 +1,5 @@
 import { api } from "@/api";
-import { Modal } from "../modal";
+import { Modal } from "../modal-template";
 import { queryClient } from "@/providers/query-client";
 import { useRouter } from "next/navigation";
 
@@ -34,7 +34,7 @@ export function DeleteWorkspace({ id, name }: DeleteWorkspaceProps) {
       <section className="flex flex-col p-6 gap-10">
         <p className="text-lg">
           Are you sure you want to <span className="text-rose-600">delete</span>{" "}
-          the workspace '{name}' ?
+          the workspace {name} ?
         </p>
         <footer className="w-full">
           <button

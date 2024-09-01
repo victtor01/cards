@@ -1,6 +1,6 @@
 "use client";
 
-import { fontFiraCode } from "@/fonts";
+import { fontFiraCode, fontRoboto } from "@/fonts";
 import { useResize, useSidebar } from "@/hooks/use-sidebar";
 import { MdSpaceDashboard } from "react-icons/md";
 import { WorkspaceLink } from "./workspace";
@@ -46,12 +46,9 @@ export function Sidebar() {
         style={{ width: size.x }}
       >
         <header className="flex p-2 items-center justify-between w-full">
-          <div className={`${fontFiraCode} flex gap-2`}>
-            <div className="text-transparent rounded text-sm flex bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text justify-center items-center gap-2 opacity-90 hover:opacity-100">
-              <PiCardsFill className="text-purple-600" size={20} />
-              <span className={`${fontFiraCode} text-lg font-bold`}>
-                Flards
-              </span>
+          <div className={`flex gap-2 cursor-default dark:opacity-80`}>
+            <div className="text-zinc-200 bg-indigo-600 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
+              <span className={`text-md font-semibold`}>Flards</span>
             </div>
           </div>
 
@@ -72,10 +69,16 @@ export function Sidebar() {
 
           <Link
             href={"#"}
-            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
+            className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
           >
-            <BiSearch size={16} />
-            <span className={fontFiraCode}>Search</span>
+            <div className="flex gap-2 items-center">
+              <BiSearch size={16} />
+              <span className={fontFiraCode}>Search</span>
+            </div>
+
+            <div className="grid place-items-center px-2 text-xs bg-white text-zinc-600 rounded p-1 font-semibold dark:bg-zinc-900 dark:text-zinc-100 border dark:border-zinc-800">
+              <span className={fontRoboto}>Ctr + K</span>
+            </div>
           </Link>
         </div>
 

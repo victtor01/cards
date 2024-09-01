@@ -1,6 +1,6 @@
 
-export function GenerateSoundClick (): void {
+export async function GenerateSoundClick (): Promise<void> {
   const sound = new Audio('/sounds/click.wav')
   sound.playbackRate = 1.3
-  sound.play()
+  await sound.play()
 }

@@ -107,8 +107,7 @@ export function Files({ workspace }: FilesProps) {
             );
           })}
 
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={createCardHandle}
             type="button"
             className="w-[8rem] h-[8rem] mx-1 group/link mb-2 grid place-items-center opacity-90 hover:opacity-100 overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-800 border-2 dark:border-dashed border-dashed "
@@ -116,7 +115,7 @@ export function Files({ workspace }: FilesProps) {
             <span>
               <IoAddCircle size={40} className="text-zinc-600" />
             </span>
-          </motion.button>
+          </button>
         </section>
       </div>
     </div>

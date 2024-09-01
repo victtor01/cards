@@ -1,4 +1,4 @@
-import { Modal } from "@/components/modal";
+import { Modal } from "@/components/modal-template";
 import { useParams, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModalToUploadBackground } from "@/components/uploads-background-workspace";

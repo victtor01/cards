@@ -5,9 +5,7 @@ import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useLogin } from "./hooks";
 import Link from "next/link";
-import { type } from "os";
 import { ImSpinner2 } from "react-icons/im";
-import style from "styled-jsx/style";
 
 export default function Page() {
   const { form, auth } = useLogin();
@@ -19,8 +17,10 @@ export default function Page() {
       onSubmit={handleSubmit(auth)}
       className="w-[99%] max-w-[25rem] border p-6 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
     >
-      <header className="dark:text-zinc-400 text-zinc-700 cursor-default">
-        <h1 className={`${fontRoboto} text-lg`}>Flards</h1>
+      <header className="cursor-default flex">
+        <div className="text-white bg-gradient-45 from-indigo-600 to-violet-600 shadow-lg shadow-zinc-300 dark:shadow-black p-1 px-3">
+          <h1 className={`${fontRoboto} text-lg`}>Flards</h1>
+        </div>
       </header>
       <section className="w-full flex flex-col gap-3">
         <label htmlFor="email" className="w-full flex flex-col gap-1">
@@ -57,6 +57,7 @@ export default function Page() {
       <footer className="w-full">
         <button
           type="submit"
+          disabled={isSubmitting}
           style={{ opacity: isSubmitting ? 0.6 : 0.9 }}
           className="w-full bg-indigo-600 p-2 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
         >

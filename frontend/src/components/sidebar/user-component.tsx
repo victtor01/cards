@@ -1,13 +1,13 @@
+import { fontOpenSans } from "@/fonts";
+import { GenerateSoundClick } from "@/utils/generate-sound-click";
+import { getUpload } from "@/utils/get-upload";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
+import { BsSoundwave } from "react-icons/bs";
 import { FaMoon } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import { animate, AnimatePresence, motion, Variants } from "framer-motion";
-import { GenerateSoundClick } from "@/utils/generate-sound-click";
-import { BsSoundwave } from "react-icons/bs";
-import { getUpload } from "@/utils/get-upload";
-import { exit } from "process";
-import src from "react-textarea-autosize";
+import nookies from "nookies";
 
 type UserComponentProps = {
   photoUrl: string | null;
@@ -25,10 +25,15 @@ const variantsAnimation = {
 } satisfies Variants;
 
 function useTheme() {
-  const handleTheme = () => {
-    GenerateSoundClick();
+  const handleTheme = async () => {
+    await GenerateSoundClick();
+
     const htmlElement = document.getElementsByTagName("html")[0];
-    htmlElement.className = htmlElement.className === "dark" ? "light" : "dark";
+    const newTheme = htmlElement.className === "dark" ? "light" : "dark";
+
+    htmlElement.className = newTheme;
+
+    nookies.set(null, "_theme", newTheme);
   };
 
   return {
@@ -38,8 +43,10 @@ function useTheme() {
 
 function useUserComponent() {
   const [show, setShow] = useState<boolean>(false);
-  const handleShow = () => {
-    GenerateSoundClick();
+
+  const handleShow = async () => {
+    await GenerateSoundClick();
+
     setShow((prev) => !prev);
   };
 
@@ -57,12 +64,6 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
 
   return (
     <div className="flex gap-3 relative items-center">
-      <div className="py-0">
-        <div className="p-1 px-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs grid place-items-center rounded opacity-50">
-          PRO
-        </div>
-      </div>
-
       <button
         data-focus={show}
         onClick={handleShow}
@@ -88,6 +89,14 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
             className="absolute z-[20] flex flex-col left-[150%] border dark:border-zinc-700 top-[0.5rem] items-center before:content-[''] before:w-[96%] before:rounded-t-xl before:h-1 before:absolute before:bottom-[100%]  before:bg-indigo-600 w-auto h-auto bg-zinc-100 text-gray-600 rounded shadow-xl dark:shadow-black dark:bg-zinc-800 dark:text-zinc-400"
           >
             <div className="flex flex-col text-sm divide-y-2 divide-zinc-100 dark:divide-zinc-700 overflow-hidden rounded">
+              <div className="cursor-default w-full">
+                <div className="p-1 px-3 bg-gradient-to-r from-purple-600 to-violet-700 text-zinc-300 hover:text-white transition-colors text-xs grid place-items-center">
+                  <span className={`${fontOpenSans} font-semibold`}>
+                    PREMIUM
+                  </span>
+                </div>
+              </div>
+
               <button
                 onClick={handleTheme}
                 className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700"

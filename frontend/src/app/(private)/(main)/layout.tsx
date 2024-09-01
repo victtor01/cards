@@ -13,8 +13,8 @@ export default function LayoutMain({ children }: LayoutMainProps) {
 
       <ToastContainer
         position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
+        autoClose={1000}
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}
@@ -23,8 +23,6 @@ export default function LayoutMain({ children }: LayoutMainProps) {
         pauseOnHover
         theme="dark"
       />
-      <ToastContainer />
-
       <div className="flex flex-col h-screen overflow-auto flex-1 scroll-default">
         {children}
       </div>

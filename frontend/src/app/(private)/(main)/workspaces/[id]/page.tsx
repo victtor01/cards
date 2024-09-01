@@ -50,6 +50,7 @@ export default function Workspace({ params }: WorkspaceProps) {
         </header>
 
         {!!workspace && <Dashboards workspace={workspace} />}
+
         {!!workspace && <Files workspace={workspace} />}
 
         <AnimatePresence>

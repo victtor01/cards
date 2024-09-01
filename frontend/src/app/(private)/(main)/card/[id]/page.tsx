@@ -14,12 +14,15 @@ import { IoIosArrowBack } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
 import { FileBackgroundUpdate } from "./background";
 import { useCard, useUpdateContentCard, useUpdateTitleCard } from "./hooks";
+import src from "react-textarea-autosize";
 
 type CardProps = {
   params: {
     id: string;
   };
 };
+
+const lenghtTitle = 60;
 
 export default function Card({ params }: CardProps) {
   const router = useRouter();
@@ -37,53 +40,66 @@ export default function Card({ params }: CardProps) {
   const image = !!card?.background ? getUpload(card?.background) : null;
 
   return (
-    <div className="w-full h-auto relative p-5">
+    <div className="w-full h-auto relative">
+      <header className="w-full px-4 pt-3 gap-3 items-center relative z-30 flex justify-between">
+        <div className="flex flex-1 items-center gap-2">
+          <button
+            onClick={() => router.push(`/workspaces/${card.workspaceId}`)}
+            className="hover:bg-zinc-100 dark:hover:bg-zinc-900 opacity-70 hover:opacity-100 grid place-items-center w-10 h-10 rounded"
+          >
+            <IoIosArrowBack size={20} />
+          </button>
+
+          <label
+            className="flex flex-1 group/title items-center gap-2"
+            htmlFor="title-input"
+          >
+            <input
+              value={title || ""}
+              id="title-input"
+              maxLength={lenghtTitle}
+              onChange={onChangeTitle}
+              placeholder="This is my new project..."
+              className="bg-transparent outline-none placeholder:text-zinc-600 text-lg w-auto flex-1 transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
+            />
+
+            <span className="text-zinc-400 text-sm opacity-0 group-focus-within/title:opacity-100">
+              {lenghtTitle - (title?.length || 0)}
+            </span>
+          </label>
+        </div>
+
+        <div className="flex gap-2 items-center flex-1 justify-end">
+          <div className="relative flex gap-2 items-center p-1 px-2 cursor-default pointer-events-none">
+            {loading && (
+              <div className="flex gap-2 items-center">
+                <Loader className="w-5 h-5 " />
+                <span className="text-sm text-zinc-400">Salvando...</span>
+              </div>
+            )}
+
+            {!loading && (
+              <div className="flex gap-2 items-center">
+                <FaCheck className="opacity-50" size={12} />
+                <span className="text-sm text-zinc-400">Salvo</span>
+              </div>
+            )}
+          </div>
+          <button className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-700 dark:text-zinc-100">
+            Publicar
+          </button>
+        </div>
+      </header>
+
       {image && (
-        <div className="top-0 w-full left-0 h-[30vh] bg-indigo-50 rounded-xl shadow-lg dark:shadow-black overflow-hidden relative dark:brightness-75">
+        <div className="w-full mt-3 h-[30vh] bg-indigo-50 shadow-lg dark:shadow-black overflow-hidden relative dark:brightness-75">
           <Image src={image} alt="photo" fill objectFit="cover" />
         </div>
       )}
 
-      <header className="w-full p-2 flex gap-3 items-center relative z-30">
-        <button
-          onClick={() => router.push(`/workspaces/${card.workspaceId}`)}
-          className="hover:bg-zinc-100 dark:hover:bg-zinc-800 opacity-70 hover:opacity-100 grid place-items-center w-10 h-10 rounded"
-        >
-          <IoIosArrowBack size={20} />
-        </button>
-
-        <div className="flex">
-          <input
-            value={title || ""}
-            onChange={onChangeTitle}
-            placeholder="This is my new project..."
-            className="bg-transparent outline-none placeholder:text-zinc-600 text-lg"
-          />
-        </div>
-
-        <div
-          data-loading={loading}
-          className="absolute dark:bg-zinc-800 right-3 bg-zinc-100 flex gap-2 items-center p-1 px-2 rounded shadow"
-        >
-          {loading && (
-            <div className="flex gap-2 items-center">
-              <Loader className="w-5 h-5 " />
-              <span className="text-sm text-zinc-400">Salvando...</span>
-            </div>
-          )}
-
-          {!loading && (
-            <div className="flex gap-2 items-center">
-              <FaCheck className="opacity-50" />
-              <span className="text-sm text-zinc-400">Salvo</span>
-            </div>
-          )}
-        </div>
-      </header>
-
       <FileBackgroundUpdate />
 
-      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-20 ">
+      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-10 ">
         <div className="w-full px-1 hover:opacity-100 opacity-0 delay-[1.4s] hover:delay-0">
           <Link
             href={`?ub-card=${card.id}`}

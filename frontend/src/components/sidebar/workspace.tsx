@@ -10,6 +10,7 @@ import { FaCaretRight, FaFile } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
 import { map } from "zod";
 import workspaces from "../workspaces";
+import { useActionsWorkspaces } from "@/hooks/use-workspace";
 
 type Card = {
   id: string;
@@ -29,7 +30,8 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
   const link = `/workspaces/${id}`;
 
   const pathname = usePathname();
-  const { redirectTo, createFolder, createFile } = useSidebar();
+  const { redirectTo } = useSidebar();
+  const { createFile, createFolder } = useActionsWorkspaces();
   const selected = pathname.startsWith(link);
 
   const selectedClassStyle = selected
