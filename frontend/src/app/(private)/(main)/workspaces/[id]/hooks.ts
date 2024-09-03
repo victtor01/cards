@@ -7,7 +7,7 @@ import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-type MDW = "delete" | null;
+type MDW = "delete" | "rename" | null;
 
 export function useWorkspace(workspaceId: string) {
   const { data: workspace, isLoading } = useQuery<IWorkspace>({
@@ -28,7 +28,7 @@ export function useWorkspace(workspaceId: string) {
 
 export function useBackground() {
   const params = useParams();
-  
+
   const deleteBackground = async () => {
     const { id } = params;
 

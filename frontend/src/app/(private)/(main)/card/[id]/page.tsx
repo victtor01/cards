@@ -14,7 +14,6 @@ import { IoIosArrowBack } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
 import { FileBackgroundUpdate } from "./background";
 import { useCard, useUpdateContentCard, useUpdateTitleCard } from "./hooks";
-import src from "react-textarea-autosize";
 
 type CardProps = {
   params: {
@@ -41,7 +40,7 @@ export default function Card({ params }: CardProps) {
 
   return (
     <div className="w-full h-auto relative">
-      <header className="w-full px-4 pt-3 gap-3 items-center relative z-30 flex justify-between">
+      <header className="w-full px-3 py-2 gap-3 items-center sticky top-0 flex justify-between z-10 bg-white dark:bg-zinc-950 shadow-md">
         <div className="flex flex-1 items-center gap-2">
           <button
             onClick={() => router.push(`/workspaces/${card.workspaceId}`)}
@@ -60,7 +59,7 @@ export default function Card({ params }: CardProps) {
               maxLength={lenghtTitle}
               onChange={onChangeTitle}
               placeholder="This is my new project..."
-              className="bg-transparent outline-none placeholder:text-zinc-600 text-lg w-auto flex-1 transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
+              className="bg-transparent outline-none text-zinc-600 dark:text-zinc-100 font-semibold placeholder:text-zinc-600 text-lg w-auto flex-1 transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
             />
 
             <span className="text-zinc-400 text-sm opacity-0 group-focus-within/title:opacity-100">
@@ -85,14 +84,14 @@ export default function Card({ params }: CardProps) {
               </div>
             )}
           </div>
-          <button className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-700 dark:text-zinc-100">
+          <button className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100">
             Publicar
           </button>
         </div>
       </header>
 
       {image && (
-        <div className="w-full mt-3 h-[30vh] bg-indigo-50 shadow-lg dark:shadow-black overflow-hidden relative dark:brightness-75">
+        <div className="w-full h-[30vh] bg-indigo-50 shadow-lg dark:shadow-black overflow-hidden relative dark:brightness-75">
           <Image src={image} alt="photo" fill objectFit="cover" />
         </div>
       )}

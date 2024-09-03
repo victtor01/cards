@@ -90,7 +90,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
           >
             <div className="flex flex-col text-sm divide-y-2 divide-zinc-100 dark:divide-zinc-700 overflow-hidden rounded">
               <div className="cursor-default w-full">
-                <div className="p-1 px-3 bg-gradient-to-r from-purple-600 to-violet-700 text-zinc-300 hover:text-white transition-colors text-xs grid place-items-center">
+                <div className="p-1 px-3 bg-indigo-700 text-zinc-300 hover:text-white transition-colors text-xs grid place-items-center">
                   <span className={`${fontOpenSans} font-semibold`}>
                     PREMIUM
                   </span>

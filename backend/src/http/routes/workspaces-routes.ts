@@ -34,12 +34,14 @@ workspacesRoutes.use(sessionMiddleware);
 {
   workspacesRoutes.get('/:workspaceId', (req, res) => workspacesController.findById(req, res));
   workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
+  workspacesRoutes.put('/:workspaceId', (req, res) => workspacesController.rename(req, res));
 }
 
 {
   workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>
     workspacesController.updateBackgroundByCode(req, res)
   );
+
   workspacesRoutes.delete('/background/code/:code', (req, res) =>
     workspacesController.deleteBackgroundByCode(req, res)
   );
@@ -55,3 +57,4 @@ workspacesRoutes.use(sessionMiddleware);
 }
 
 export { workspacesRoutes, workspacesService };
+

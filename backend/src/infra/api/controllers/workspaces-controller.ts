@@ -47,6 +47,21 @@ export class WorkspacesController {
     });
   }
 
+  public async rename(request: Request, response: Response) {
+    const id = request?.params?.workspaceId || null;
+    const name = request?.body?.name || null;
+
+    const { id: userId } = request.session;
+
+    if (!id) throw new BadRequestException('params not found!');
+
+    await this.workspacesService.rename({ id, name }, userId);
+
+    response.json({
+      error: false,
+    });
+  }
+
   public async delete(request: Request, response: Response) {
     const { id: userId } = request.session;
 

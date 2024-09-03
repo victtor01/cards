@@ -1,3 +1,4 @@
+import { RenameWorkspaceDto } from '@core/application/dtos/workspaces-dtos/rename-workspace-dto';
 import { UpdateBackgroundWorkspaceByIdDto } from '@core/application/dtos/workspaces-dtos/update-background-by-id';
 import { UpdateBackgroundWorkspaceByCodeDto } from '@core/application/dtos/workspaces-dtos/update-background-dto';
 import { Workspace } from '@core/domain/entities/workspace.entity';
@@ -15,4 +16,5 @@ export abstract class WorkspacesServiceInterface {
   abstract deleteBackgroundByCode(code: string, userId: string): Promise<boolean>;
   abstract deleteBackgroundById(id: string, userId: string): Promise<boolean>;
   abstract delete(id: string, userId: string): Promise<boolean>;
+  abstract rename(data: RenameWorkspaceDto, userId: string): Promise<any>;
 }

@@ -1,3 +1,4 @@
 export interface UpdateWorkspaceDto {
-  background: string
+  background?: string;
+  name?: string
 }

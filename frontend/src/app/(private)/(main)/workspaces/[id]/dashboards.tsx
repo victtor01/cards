@@ -10,24 +10,19 @@ type DashBoardProps = {
 };
 
 export const Dashboards = ({ workspace }: DashBoardProps) => {
-  const { redirectToCreate } = useDashboards();
-  const quantityOf = workspace?.workspaces?.length + workspace?.cards?.length;
+  const workspaceLength = workspace?.workspaces?.length || 0;
+  const cardsLength = workspace?.cards?.length || 0;
 
   return (
     <section className="flex">
       <div className="w-full flex justify-between items-center gap-6 max-w-main mx-auto">
         <DashboardCard.Container title="Amount of documents">
           <div className="text-lg mt-2 font-semibold">
-            <span className="text-violet-500">{quantityOf || 0}</span> Documents
+            <span className="text-violet-500">{workspaceLength || 0}</span>{" "}
+            Workspaces
           </div>
-          <div className="w-full mt-4">
-            <button
-              onClick={() => redirectToCreate()}
-              className="p-2 text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded px-4 text-sm opacity-70 hover:opacity-100 flex items-center gap-2"
-            >
-              <GoPlus size={20} />
-              Create workspace
-            </button>
+          <div className="text-lg mt-1 font-semibold">
+            <span className="text-violet-500">{cardsLength || 0}</span> Cards
           </div>
         </DashboardCard.Container>
 

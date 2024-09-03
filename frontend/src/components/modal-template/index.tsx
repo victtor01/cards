@@ -21,15 +21,15 @@ const animations = {
 
 export function Modal({ children, title }: ModalProps) {
   return (
-    <motion.div className="flex w-full h-screen fixed top-0 left-0 z-30 bg-white dark:bg-black bg-opacity-10 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
+    <motion.div className="flex w-full h-screen fixed top-0 p-5 left-0 z-30 bg-zinc-100 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
       <motion.div
         variants={animations}
         initial="initial"
         animate="animate"
         exit="initial"
-        className="flex m-auto w-full max-w-[25rem] bg-zinc-100 dark:bg-zinc-900 rounded-md flex-col overflow-hidden"
+        className="flex m-auto w-full max-w-[25rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black"
       >
-        <header className="w-full border-b dark:border-zinc-700 p-2 flex justify-between items-center">
+        <header className="w-full border-b dark:border-zinc-800 p-3 flex justify-between items-center">
           <div
             className={`${fontOpenSans} text-zinc-600 dark:text-zinc-100 font-semibold capitalize`}
           >

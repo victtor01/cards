@@ -1,9 +1,10 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
-import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { unlinkUploadFile } from '@src/utils/unlink';
 import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
+import { RenameWorkspaceDto } from '../dtos/workspaces-dtos/rename-workspace-dto';
 import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
 import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
@@ -30,6 +31,22 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     const workspace = await this.workspaceRepository.save(workspaceToCreate);
 
     return workspace;
+  }
+
+  public async rename({ id, name }: RenameWorkspaceDto, userId: string): Promise<boolean> {
+    const workspace = await this.findOneByIdAndUser(id, userId);
+
+    if (!workspace?.id) {
+      throw new NotFoundException('workspace not found!');
+    }
+
+    if (workspace?.userId !== userId) {
+      throw new UnauthorizedException('user not does permission!');
+    }
+
+    await this.workspaceRepository.update(id, { name });
+
+    return true;
   }
 
   public async updateBackgroundByCode(data: UpdateBackgroundWorkspaceByCodeDto): Promise<boolean> {
