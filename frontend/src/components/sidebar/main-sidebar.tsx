@@ -2,42 +2,24 @@
 
 import { fontFiraCode, fontRoboto } from "@/fonts";
 import { useResize, useSidebar } from "@/hooks/use-sidebar";
-import { MdSpaceDashboard } from "react-icons/md";
-import { WorkspaceLink } from "./workspace";
-import { HiFolderPlus } from "react-icons/hi2";
-import { usePathname, useRouter } from "next/navigation";
-import { UserComponent } from "./user-component";
-import { BiSearch } from "react-icons/bi";
-import { FaHome } from "react-icons/fa";
-import Link from "next/link";
-import { PiCardsFill } from "react-icons/pi";
-import { type } from "os";
-import style from "styled-jsx/style";
-import { map } from "zod";
 import { useActionsWorkspaces } from "@/hooks/use-workspace";
-
-const InputSearch = () => (
-  <label
-    htmlFor="search"
-    className="border dark:border-zinc-800 rounded-md dark:bg-zinc-800 w-full flex items-center focus-within:ring-2 ring-indigo-400 dark:ring-indigo-600 ring-offset-1 transition-all ring-offset-white dark:ring-offset-zinc-900 bg-white dark:bg-transparent"
-  >
-    <input
-      type="text"
-      id="search"
-      placeholder="study..."
-      className="flex bg-transparent px-2 font-semibold outline-none text-zinc-500 dark:text-zinc-300 w-full p-1 dark:placeholder:text-zinc-300 placeholder:text-zinc-400 placeholder:text-sm"
-    />
-    <button className="flex px-4 text-white bg-indigo-600 rounded mr-1 text-xs p-1 opacity-90 hover:opacity-100">
-      <span className={fontFiraCode}>Go</span>
-    </button>
-  </label>
-);
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BiSearch } from "react-icons/bi";
+import { FaHome, FaTrash } from "react-icons/fa";
+import { HiFolderPlus } from "react-icons/hi2";
+import { MdSpaceDashboard } from "react-icons/md";
+import { UserComponent } from "./user-component";
+import { WorkspaceLink } from "./workspace";
+import { Trash } from "../trash";
 
 export function Sidebar() {
   const { workspaces, i } = useSidebar();
   const { createFolder } = useActionsWorkspaces();
   const { size, resizing, handler } = useResize();
+  const trashOpen = "trash" === useSearchParams().get("md");
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <div className="flex group/sidebar relative">
@@ -61,11 +43,27 @@ export function Sidebar() {
           <Link
             href={"/home"}
             data-selected={!!pathname.startsWith("/home")}
-            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:opacity-100"
+            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
           >
             <FaHome size={16} />
             <span className={fontFiraCode}>Home</span>
           </Link>
+
+          <div className="relative">
+            <button
+              type="button"
+              data-open={trashOpen}
+              onClick={() => router.push("?md=trash")}
+              className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 dark:data-[open=true]:text-indigo-500 dark:data-[open=true]:opacity-100 data-[open=true]:text-indigo-600 data-[open=true]:opacity-100"
+            >
+              <div className="flex gap-2 items-center">
+                <FaTrash size={12} />
+                <span className={fontFiraCode}>Trash</span>
+              </div>
+            </button>
+
+            {trashOpen && <Trash />}
+          </div>
 
           <Link
             href={"#"}

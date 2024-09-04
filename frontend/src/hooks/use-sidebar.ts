@@ -17,10 +17,12 @@ export type Workspace = {
   cards: Card[];
 };
 
-
 export function useSidebar() {
   const router = useRouter();
   const pathName = usePathname();
+
+  const [trashOpen, setTrashOpen] = useState<boolean>(false);
+  const handleTrashOpen = () => setTrashOpen((prev) => !prev);
 
   const redirectTo = (link: string) => {
     GenerateSoundClick();
@@ -44,6 +46,8 @@ export function useSidebar() {
   return {
     redirectTo,
     pathName,
+    trashOpen,
+    handleTrashOpen,
     workspaces,
     i,
   };

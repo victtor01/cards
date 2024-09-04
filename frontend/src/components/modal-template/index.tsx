@@ -27,11 +27,11 @@ export function Modal({ children, title }: ModalProps) {
         initial="initial"
         animate="animate"
         exit="initial"
-        className="flex m-auto w-full max-w-[25rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black"
+        className="flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black"
       >
-        <header className="w-full border-b dark:border-zinc-800 p-3 flex justify-between items-center">
+        <header className="w-full p-5 flex justify-between items-center">
           <div
-            className={`${fontOpenSans} text-zinc-600 dark:text-zinc-100 font-semibold capitalize`}
+            className={`${fontOpenSans} text-zinc-600 dark:text-zinc-300 font-semibold capitalize`}
           >
             <h1 className="text-lg">{title}</h1>
           </div>

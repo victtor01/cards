@@ -5,6 +5,7 @@ import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { IWorkspace } from "@/interfaces/IWorkspace";
 import { toast } from "react-toastify";
+import { Loader } from "../loader";
 
 interface RenameWorkspaceProps {
   id: string;
@@ -50,6 +51,8 @@ export function RenameWorkspace({ id, name }: RenameWorkspaceProps) {
   const { register, handleSubmit } = form;
   const router = useRouter();
 
+  const { isSubmitting } = form.formState;
+
   const value = form.watch("name");
 
   return (
@@ -84,7 +87,7 @@ export function RenameWorkspace({ id, name }: RenameWorkspaceProps) {
             data-accept={!!value}
             className="p-2 px-4 text-white bg-indigo-600 rounded opacity-70 dark:opacity-40 data-[accept=true]:opacity-100 dark:data-[accept=true]:opacity-100"
           >
-            Concluido.
+            {isSubmitting ? <Loader className="w-6 h-6" /> : "Go"}
           </button>
         </footer>
       </form>
