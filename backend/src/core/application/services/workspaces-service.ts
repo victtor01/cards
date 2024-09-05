@@ -121,6 +121,20 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
+  public async enable(workspaceId: string, userId: string): Promise<boolean> {
+    const workspace = await this.workspaceRepository.findOneById(workspaceId);
+
+    if (workspace?.userId !== userId || !workspace?.id) {
+      throw new UnauthorizedException('not found workspace!');
+    }
+
+    await this.workspaceRepository.update(workspaceId, {
+      status: WorkspaceStatus.ACTIVATED,
+    });
+
+    return true;
+  }
+
   public async getDisabledByUser(userId: string): Promise<Workspace[]> {
     const workspaces = await this.workspaceRepository.findDisabledByUser(userId);
 
@@ -206,6 +220,11 @@ export class WorkspacesService implements WorkspacesServiceInterface {
 
   public async findByUserFormatTree(userId: string): Promise<any> {
     const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
+
+    console.log(workspaces);
+
+    if (!workspaces?.length) return [];
+
     const build = this.buildTree(workspaces);
 
     return build;
@@ -235,13 +254,13 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     const tree: Workspace[] = [];
     const map: { [key: number]: Workspace } = {};
 
-    workspaces.forEach((node) => {
+    workspaces?.forEach((node) => {
       map[node.id] = node;
       node.workspaces = [];
     });
 
-    workspaces.forEach((node) => {
-      if (node.parentId) {
+    workspaces?.forEach((node) => {
+      if (node?.parentId && map[node.parentId]) {
         map[node.parentId].workspaces.push(node);
       } else {
         tree.push(node);

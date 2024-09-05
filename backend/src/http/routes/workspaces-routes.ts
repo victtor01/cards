@@ -29,6 +29,10 @@ workspacesRoutes.use(sessionMiddleware);
     workspacesController.disableTree(req, res)
   );
 
+  workspacesRoutes.put('/enable/:workspaceId', (req, res) =>
+    workspacesController.enable(req, res)
+  );
+
   workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
     workspacesController.findOneByIdWithTree(req, res)
   );

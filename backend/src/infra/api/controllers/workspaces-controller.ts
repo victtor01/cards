@@ -139,6 +139,18 @@ export class WorkspacesController {
     response.status(200).json(workspaces);
   }
 
+  public async enable(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    const workspaceId = request.params.workspaceId;
+
+    await this.workspacesService.enable(workspaceId, userId);
+
+    response.status(200).json({
+      error: false,
+      message: 'update success!',
+    });
+  }
+
   public async getDisabled(request: Request, response: Response) {
     const { id: userId } = request.session;
     const workspaces = await this.workspacesService.getDisabledByUser(userId);

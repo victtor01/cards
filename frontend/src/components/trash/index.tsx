@@ -4,9 +4,12 @@ import { api } from "@/api";
 import { fontFiraCode } from "@/fonts";
 import { IWorkspace } from "@/interfaces/IWorkspace";
 import { useQuery } from "@tanstack/react-query";
+import { IoClose } from "react-icons/io5";
 import { RxReset } from "react-icons/rx";
 import { Modal } from "../modal-template";
-import { IoClose, IoTrash } from "react-icons/io5";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { queryClient } from "@/providers/query-client";
 
 const minutes = 1000 * 10;
 
@@ -17,13 +20,28 @@ const useTrash = () => {
     refetchInterval: minutes,
   });
 
+  const enable = async (id: string) => {
+    const response = await api.put(`/workspaces/enable/${id}`);
+
+    if (response.data.error) {
+      toast.error("erro ao restaurar workspaces");
+    }
+
+    console.log(response.data)
+
+    await queryClient.refetchQueries({
+      queryKey: ["workspaces"],
+    });
+  };
+
   return {
+    enable,
     workspaces,
   };
 };
 
 export function Trash() {
-  const { workspaces } = useTrash();
+  const { enable, workspaces } = useTrash();
 
   return (
     <Modal title="Lixeira">
@@ -47,7 +65,11 @@ export function Trash() {
                   <button className="w-8 h-8 bg-zinc-100 dark:bg-zinc-950 border dark:border-zinc-800 text-zinc-500 grid place-items-center rounded opacity-90 hover:opacity-100">
                     <IoClose />
                   </button>
-                  <button className="w-12 h-8 bg-indigo-600 rounded text-white grid place-items-center opacity-90 hover:opacity-100">
+                  <button
+                    type="button"
+                    onClick={() => enable(workspace.id)}
+                    className="w-12 h-8 bg-indigo-600 rounded text-white grid place-items-center opacity-90 hover:opacity-100"
+                  >
                     <RxReset size={16} />
                   </button>
                 </div>
