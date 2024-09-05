@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
-import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
-import { WorkspacesService } from './workspaces-service';
-import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
-import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
 import { Workspace } from '@core/domain/entities/workspace.entity';
+import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
+import { WorkspacesService } from './workspaces-service';
 
 vi.mock('../validations/create-workspace-schema', () => ({
   createWorkspaceSchema: {
@@ -14,7 +14,7 @@ vi.mock('../validations/create-workspace-schema', () => ({
 
 const WorkspacesRepositoryMock = {
   save: vi.fn(),
-  findByUserIdWithCards: vi.fn(),
+  findActivesByUserIdWithCards: vi.fn(),
   findOneByCodeWithWorkspacesAndCards: vi.fn(),
   findOneById: vi.fn(),
 } satisfies WorkspacesRepository;

@@ -1,7 +1,8 @@
 import { api } from "@/api";
-import { Modal } from "../modal-template";
 import { queryClient } from "@/providers/query-client";
 import { useRouter } from "next/navigation";
+import { Modal } from "../modal-template";
+import { toast } from "react-toastify";
 
 type DeleteWorkspaceProps = {
   id: string;
@@ -12,13 +13,17 @@ const useDeleteWorkspace = () => {
   const router = useRouter();
 
   const handleDelete = async (id: string) => {
-    await api.delete(`/workspaces/${id}`);
-
-    router.push("/home");
-
-    await queryClient.resetQueries({
+    const deleted = api.put(`/workspaces/disable/${id}`);
+    await toast.promise(deleted, {
+      success: "Deletado com sucesso!",
+      error: "Houve um erro ao excluir!",
+      pending: "Deletando...",
+    });
+    await queryClient.invalidateQueries({
       queryKey: ["workspaces"],
     });
+
+    router.push("/home");
   };
 
   return {

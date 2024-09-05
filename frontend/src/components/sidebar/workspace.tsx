@@ -1,16 +1,12 @@
 import { fontInter, fontOpenSans } from "@/fonts";
 import { useSidebar, Workspace } from "@/hooks/use-sidebar";
+import { useActionsWorkspaces } from "@/hooks/use-workspace";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type } from "os";
-import { title } from "process";
 import { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { FaCaretRight, FaFile } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
-import { map } from "zod";
-import workspaces from "../workspaces";
-import { useActionsWorkspaces } from "@/hooks/use-workspace";
 
 type Card = {
   id: string;

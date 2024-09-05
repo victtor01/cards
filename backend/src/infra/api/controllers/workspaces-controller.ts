@@ -130,6 +130,22 @@ export class WorkspacesController {
     return response.status(200).json(res);
   }
 
+  public async disableTree(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    const { workspaceId } = request?.params;
+
+    const workspaces = await this.workspacesService.disableTree(workspaceId, userId);
+
+    response.status(200).json(workspaces);
+  }
+
+  public async getDisabled(request: Request, response: Response) {
+    const { id: userId } = request.session;
+    const workspaces = await this.workspacesService.getDisabledByUser(userId);
+
+    response.status(200).json(workspaces);
+  }
+
   public async findWithTree(request: Request, response: Response) {
     const { id: userId } = request.session;
 
@@ -140,7 +156,7 @@ export class WorkspacesController {
 
   public async findAll(request: Request, response: Response) {
     const { id: userId } = request.session;
-    const workspaces = await this.workspacesService.findByUser(userId);
+    const workspaces = await this.workspacesService.findByUserWithCards(userId);
 
     response.status(200).json(workspaces);
   }

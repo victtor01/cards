@@ -21,11 +21,14 @@ workspacesRoutes.use(sessionMiddleware);
 {
   workspacesRoutes.post('/', (req, res) => workspacesController.create(req, res));
   workspacesRoutes.get('/', (req, res) => workspacesController.findAll(req, res));
-}
-
-{
   workspacesRoutes.get('/tree', (req, res) => workspacesController.findWithTree(req, res));
+  workspacesRoutes.get('/disabled', (req, res) => workspacesController.getDisabled(req, res));
   workspacesRoutes.get('/code/:code', (req, res) => workspacesController.findByCode(req, res));
+
+  workspacesRoutes.put('/disable/:workspaceId', (req, res) =>
+    workspacesController.disableTree(req, res)
+  );
+
   workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
     workspacesController.findOneByIdWithTree(req, res)
   );
@@ -45,12 +48,11 @@ workspacesRoutes.use(sessionMiddleware);
   workspacesRoutes.delete('/background/code/:code', (req, res) =>
     workspacesController.deleteBackgroundByCode(req, res)
   );
-}
 
-{
   workspacesRoutes.delete('/background/id/:id', (req, res) =>
     workspacesController.deleteBackgroundById(req, res)
   );
+
   workspacesRoutes.put('/background/id/:id', upload.single('background'), (req, res) =>
     workspacesController.updateBackgroundById(req, res)
   );

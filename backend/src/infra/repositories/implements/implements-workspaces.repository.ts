@@ -1,7 +1,7 @@
-import { Workspace } from '@core/domain/entities/workspace.entity';
-import { IsNull, Repository } from 'typeorm';
-import { WorkspacesRepository } from '../workspaces.repository';
 import { UpdateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/update-workspace-dto';
+import { Workspace, WorkspaceStatus } from '@core/domain/entities/workspace.entity';
+import { IsNull, Repository, UpdateResult } from 'typeorm';
+import { WorkspacesRepository } from '../workspaces.repository';
 
 export class ImplementsWorkspacesRepository implements WorkspacesRepository {
   constructor(private readonly workspace: Repository<Workspace>) {}
@@ -10,13 +10,23 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
     return await this.workspace.save({ id, name, userId, code, parentId });
   }
 
-  public async findByUserIdWithCards(userId: string): Promise<Workspace[]> {
+  public async findActivesByUserIdWithCards(userId: string): Promise<Workspace[]> {
     return await this.workspace.find({
-      where: { userId },
+      where: { status: WorkspaceStatus.ACTIVATED, userId },
       relations: {
         cards: true,
       },
     });
+  }
+
+  public async findDisabledByUser(userId: string): Promise<Workspace[]> {
+    return await this.workspace.find({
+      where: { status: WorkspaceStatus.DISABLED, userId },
+    });
+  }
+
+  public async updateMany(ids: string[], data: UpdateWorkspaceDto): Promise<UpdateResult> {
+    return await this.workspace.update(ids, data);
   }
 
   public async delete(id: string): Promise<any> {

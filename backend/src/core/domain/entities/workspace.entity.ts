@@ -1,17 +1,13 @@
-import { randomUUID, UUID } from 'crypto';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { User } from './user.entity';
-import { nanoid } from 'nanoid';
-import { Card } from './card.entity';
 import { CreateWorkspaceDto } from '@core/application/dtos/workspaces-dtos/create-workspace-dto';
+import { nanoid } from 'nanoid';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Card } from './card.entity';
+import { User } from './user.entity';
+
+export enum WorkspaceStatus {
+  DISABLED = 'disabled',
+  ACTIVATED = 'activated',
+}
 
 @Entity('workspaces')
 export class Workspace {
@@ -20,6 +16,9 @@ export class Workspace {
 
   @Column({ type: 'varchar' })
   public name: string;
+
+  @Column({ type: 'enum', enum: WorkspaceStatus, default: WorkspaceStatus.ACTIVATED })
+  public status: WorkspaceStatus;
 
   @Column({ type: 'uuid' })
   public userId: string;
