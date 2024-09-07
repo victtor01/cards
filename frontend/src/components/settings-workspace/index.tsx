@@ -19,12 +19,13 @@ export const Settings = () => {
   return (
     <div className="relative">
       <button
+        data-open={!!open}
         onClick={handleOpen}
-        className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white text-lg"
+        className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white text-lg data-[open=true]:rotate-[45deg] transition-transform"
       >
         <IoSettings size={20} />
       </button>
-
+    
       {open && (
         <div className="absolute top-[100%] bg-white dark:bg-zinc-800 shadow dark:shadow-black rounded right-0 overflow-hidden">
           <Link
@@ -32,7 +33,7 @@ export const Settings = () => {
             className="flex text-red-600 items-center gap-2 p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700"
           >
             <IoClose />
-            <span className={fontFiraCode}>delete</span>
+            <span className={fontFiraCode}>Lixeira</span>
           </Link>
         </div>
       )}

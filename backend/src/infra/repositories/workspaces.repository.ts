@@ -8,7 +8,7 @@ export abstract class WorkspacesRepository {
   abstract findOneByCodeWithWorkspacesAndCards(code: string): Promise<Workspace>;
   abstract findByParentId(parentId: string): Promise<Workspace[]>;
   abstract findOneById(workspaceId: string): Promise<Workspace>;
-  abstract findOneByIdWithRelations(workspaceId: string): Promise<Workspace>;
+  abstract findOneActiveByIdWithRelations(workspaceId: string): Promise<Workspace>;
   abstract findByRootsWithUser(userId: string): Promise<Workspace[]>;
   abstract findDisabledByUser(userId: string): Promise<Workspace[]>;
   abstract update(id: string, data: UpdateWorkspaceDto): Promise<boolean>;

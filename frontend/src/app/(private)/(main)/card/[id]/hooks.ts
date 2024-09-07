@@ -5,7 +5,7 @@ import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
 import { Editor } from "@tiptap/react";
 import { useParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -119,8 +119,26 @@ export function useCard(cardId: string) {
     queryFn: async () => (await api.get(`/cards/${cardId}`)).data,
   });
 
+  const [fixed, setFixed] = useState<boolean>(true);
+
+  const refToHeader = useRef<HTMLDivElement | null>(null);
+
+  const onScroll = () => {
+    setFixed(() => !!(refToHeader.current?.scrollTop === 0));
+  };
+
+  // useEffect(() => {
+  //   if (refToHeader?.current) {
+  //     const yPosition = refToHeader?.current?.g;
+  //     console.log(yPosition);
+  //   }
+  // }, [refToHeader]);
+
   return {
+    refToHeader,
     isLoading,
+    onScroll,
+    fixed,
     card,
   };
 }

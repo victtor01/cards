@@ -49,7 +49,7 @@ export function Files({ workspace }: FilesProps) {
   const { createFolderHandle, createCardHandle } = useFiles();
 
   return (
-    <div className="w-full my-5 mt-10">
+    <div className="w-full ">
       <div className="w-full max-w-main mx-auto flex flex-col gap-1">
         <header className="justify-between flex w-full items-center gap-4 rounded-lg">
           <div className="flex gap-3 items-center cursor-default px-2">
@@ -59,19 +59,17 @@ export function Files({ workspace }: FilesProps) {
         </header>
 
         <section className="flex flex-wrap w-full mt-3">
-          <AnimatePresence mode="popLayout">
-            {workspace?.workspaces?.map((workspace) => {
-              const { name, background, id } = workspace;
-              return (
-                <LinkComponent
-                  name={name}
-                  background={background}
-                  href={`/workspaces/${id}`}
-                  key={id}
-                />
-              );
-            })}
-          </AnimatePresence>
+          {workspace?.workspaces?.map((workspace) => {
+            const { name, background, id } = workspace;
+            return (
+              <LinkComponent
+                name={name}
+                background={background}
+                href={`/workspaces/${id}`}
+                key={id}
+              />
+            );
+          })}
           <button
             type="button"
             onClick={createFolderHandle}

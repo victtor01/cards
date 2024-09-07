@@ -179,7 +179,7 @@ export class WorkspacesController {
 
     if (!workspaceId) throw new BadRequestException('not found workspace id');
 
-    const workspace = await this.workspacesService.findOneByIdAndUser(workspaceId, userId);
+    const workspace = await this.workspacesService.findOneActiveByIdAndUser(workspaceId, userId);
 
     response.status(200).json(workspace);
   }

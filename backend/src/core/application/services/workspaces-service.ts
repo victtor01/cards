@@ -34,7 +34,7 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   }
 
   public async rename({ id, name }: RenameWorkspaceDto, userId: string): Promise<boolean> {
-    const workspace = await this.findOneByIdAndUser(id, userId);
+    const workspace = await this.findOneActiveByIdAndUser(id, userId);
 
     if (!workspace?.id) {
       throw new NotFoundException('workspace not found!');
@@ -186,8 +186,8 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
-  public async findOneByIdAndUser(id: string, userId: string): Promise<Workspace> {
-    const workspace = await this.workspaceRepository.findOneByIdWithRelations(id);
+  public async findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace> {
+    const workspace = await this.workspaceRepository.findOneActiveByIdWithRelations(id);
 
     if (workspace?.userId !== userId) {
       throw new UnauthorizedException('workspace not exists!');
@@ -197,6 +197,18 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   }
 
   public async delete(id: string, userId: string): Promise<boolean> {
+    const workspace = await this.workspaceRepository.findOneById(id);
+
+    if (workspace?.userId !== userId) throw new UnauthorizedException('user don`t permission!');
+
+    if (workspace?.background) unlinkUploadFile(workspace.background);
+
+    await this.workspaceRepository.delete(id);
+
+    return true;
+  }
+
+  public async deleteWithTree(id: string, userId: string): Promise<boolean> {
     const workspace = await this.workspaceRepository.findOneById(id);
 
     if (workspace?.userId !== userId) throw new UnauthorizedException('user don`t permission!');

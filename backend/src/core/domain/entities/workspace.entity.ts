@@ -38,19 +38,20 @@ export class Workspace {
 
   @ManyToOne(() => Workspace, (workspace) => workspace.workspaces, {
     nullable: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'parentId' })
   public parent: Workspace;
 
   @OneToMany(() => Workspace, (workspace) => workspace.parent, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   public workspaces: Workspace[];
 
   @OneToMany(() => Card, (card) => card.workspace)
   cards: Card[];
 
+  
   constructor(props: CreateWorkspaceDto, id?: string) {
     Object.assign(this, props);
     this.code = nanoid(12);

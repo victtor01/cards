@@ -8,7 +8,7 @@ export abstract class WorkspacesServiceInterface {
   abstract findByUserWithCards(userId: string): Promise<Workspace[]>;
   abstract findByUserFormatTree(userId: string): Promise<Workspace[]>;
   abstract enable(workspaceId: string, userId: string): Promise<boolean>;
-  abstract findOneByIdAndUser(id: string, userId: string): Promise<Workspace>;
+  abstract findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace>;
   abstract findOneByCodeAndUser(code: string, userId: string): Promise<Workspace>;
   abstract findOneWorkspaceWithTree(workspaceId: string, userId: string): Promise<Workspace>;
   abstract updateBackgroundByCode(data: UpdateBackgroundWorkspaceByCodeDto): Promise<boolean>;

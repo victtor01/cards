@@ -8,7 +8,7 @@ type LayoutMainProps = {
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   return (
-    <section className="flex w-full h-screen bg-white dark:bg-neutral-900 dark:bg-opacity-60">
+    <section className="flex w-full h-screen bg-white dark:bg-neutral-950">
       <Sidebar />
 
       <ToastContainer

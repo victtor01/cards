@@ -22,6 +22,11 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
   public async findDisabledByUser(userId: string): Promise<Workspace[]> {
     return await this.workspace.find({
       where: { status: WorkspaceStatus.DISABLED, userId },
+      relations: { cards: true, workspaces: true },
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }
 
@@ -53,14 +58,18 @@ export class ImplementsWorkspacesRepository implements WorkspacesRepository {
     });
   }
 
-  public async findOneByIdWithRelations(workspaceId: string): Promise<Workspace> {
-    return await this.workspace.findOne({
-      where: { id: workspaceId },
-      relations: {
-        workspaces: true,
-        cards: true,
-      },
-    });
+  public async findOneActiveByIdWithRelations(workspaceId: string): Promise<Workspace> {
+    return await this.workspace
+      .createQueryBuilder('workspace')
+      .leftJoinAndSelect(
+        'workspace.workspaces',
+        'childWorkspaces',
+        'childWorkspaces.status = :status',
+        { status: WorkspaceStatus.ACTIVATED }
+      )
+      .leftJoinAndSelect('workspace.cards', 'cards')
+      .where('workspace.id = :workspaceId', { workspaceId })
+      .getOne();
   }
 
   public async findByRootsWithUser(userId: string): Promise<Workspace[]> {

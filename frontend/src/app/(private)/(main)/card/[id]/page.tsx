@@ -14,6 +14,10 @@ import { IoIosArrowBack } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
 import { FileBackgroundUpdate } from "./background";
 import { useCard, useUpdateContentCard, useUpdateTitleCard } from "./hooks";
+import { useScroll } from "framer-motion";
+import { ToastContainer } from "react-toastify";
+import { log } from "console";
+import src from "react-textarea-autosize";
 
 type CardProps = {
   params: {
@@ -25,9 +29,8 @@ const lenghtTitle = 60;
 
 export default function Card({ params }: CardProps) {
   const router = useRouter();
-  const { card, isLoading } = useCard(params.id);
+  const { card, isLoading, refToHeader, fixed, onScroll } = useCard(params.id);
   const { title, onChangeTitle } = useUpdateTitleCard(card, isLoading);
-
   const content = card?.content || null;
   const { editor, editorContentRef } = useEditorConfig({ content });
   const { loading } = useUpdateContentCard(editor, card?.content);
@@ -39,8 +42,16 @@ export default function Card({ params }: CardProps) {
   const image = !!card?.background ? getUpload(card?.background) : null;
 
   return (
-    <div className="w-full h-auto relative">
-      <header className="w-full px-3 py-2 gap-3 items-center sticky top-0 flex justify-between z-10 bg-white dark:bg-zinc-950 shadow-md">
+    <div
+      onScroll={onScroll}
+      ref={refToHeader}
+      className="w-full h-screen overflow-y-auto overflow-x-hidden scroll-default relative"
+    >
+      <header
+        data-fixed={!fixed}
+        className="w-full px-3 py-2 gap-3 items-center sticky top-0 flex justify-between z-10 bg-white dark:bg-neutral-950
+        dark:data-[fixed=true]:shadow-black data-[fixed=true]:shadow-md transition-shadow"
+      >
         <div className="flex flex-1 items-center gap-2">
           <button
             onClick={() => router.push(`/workspaces/${card.workspaceId}`)}
@@ -84,7 +95,16 @@ export default function Card({ params }: CardProps) {
               </div>
             )}
           </div>
-          <button className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100">
+          <button
+            type="button"
+            className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100"
+          >
+            Tela cheia
+          </button>
+          <button
+            type="button"
+            className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100"
+          >
             Publicar
           </button>
         </div>
@@ -98,7 +118,7 @@ export default function Card({ params }: CardProps) {
 
       <FileBackgroundUpdate />
 
-      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-10 ">
+      <div className="flex mx-auto w-full flex-col max-w-[65rem] mt-10 px-10">
         <div className="w-full px-1 hover:opacity-100 opacity-0 delay-[1.4s] hover:delay-0">
           <Link
             href={`?ub-card=${card.id}`}
