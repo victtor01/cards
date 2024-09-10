@@ -129,7 +129,7 @@ export class WorkspacesController {
 
     return response.status(200).json(res);
   }
-
+  
   public async disableTree(request: Request, response: Response) {
     const { id: userId } = request.session;
     const { workspaceId } = request?.params;

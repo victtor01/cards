@@ -7,6 +7,16 @@ import { Editor } from "@tiptap/react";
 import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
+type useUpdateTitleCardProps = {
+  card: ICard | undefined | null;
+  isLoading: boolean;
+};
+
+type useUpdateContentCardProps = {
+  editor?: Editor | null;
+  card?: ICard | undefined | null;
+};
+
 function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -36,10 +46,10 @@ const updateCardInWorkspace = (
   });
 };
 
-export const useUpdateTitleCard = (
-  card: ICard | undefined | null,
-  isLoading: boolean
-) => {
+export const useUpdateTitleCard = ({
+  card,
+  isLoading,
+}: useUpdateTitleCardProps) => {
   const [title, setTitle] = useState<string | null>(null);
 
   const cardId = card?.id || null;
@@ -62,11 +72,11 @@ export const useUpdateTitleCard = (
 
     setTitle(value);
 
-    api.put(`/cards/${cardId}`, {
-      title: value,
-    });
-
     await Promise.all([
+      api.put(`/cards/${cardId}`, {
+        title: value,
+      }),
+
       queryClient.setQueryData(["workspaces"], (workspaces: IWorkspace[]) => {
         const updated = updateCardInWorkspace(workspaces, cardId, {
           title: value,
@@ -74,6 +84,7 @@ export const useUpdateTitleCard = (
 
         return updated;
       }),
+
       queryClient.setQueryData(
         ["workspaces", card?.workspaceId],
         (workspace: IWorkspace) => {
@@ -97,6 +108,7 @@ export const useUpdateTitleCard = (
           };
         }
       ),
+
       queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
         console.log(title);
         return {
@@ -127,13 +139,6 @@ export function useCard(cardId: string) {
     setFixed(() => !!(refToHeader.current?.scrollTop === 0));
   };
 
-  // useEffect(() => {
-  //   if (refToHeader?.current) {
-  //     const yPosition = refToHeader?.current?.g;
-  //     console.log(yPosition);
-  //   }
-  // }, [refToHeader]);
-
   return {
     refToHeader,
     isLoading,
@@ -143,46 +148,52 @@ export function useCard(cardId: string) {
   };
 }
 
-export function useUpdateContentCard(
-  editor?: Editor | null,
-  content?: string | undefined | null
-) {
+export function useUpdateContentCard({
+  card,
+  editor,
+}: useUpdateContentCardProps) {
+  const content = card?.content || null;
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const [last, setLast] = useState<string | null>(content || null);
+  const [latest, setLatest] = useState<string | null>(content || null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const params = useParams();
   const cardId = params.id || null;
 
   const save = async (content: string) => {
-    await api.put(`/cards/${params.id}`, {
-      content,
-    });
+    if (!card || !content) return;
+
+    setLoading(false);
+    setLatest(content);
+
+    await Promise.all([
+      api.put(`/cards/${params.id}`, {
+        content,
+      }),
+
+      queryClient.setQueryData(
+        ["card", "latest", card?.workspaceId],
+        () => card
+      ),
+    ]);
   };
 
   useEffect(() => {
     const html = editor?.getHTML() || null;
-
     setLoading(false);
 
-    if (content) setLast(content);
-
-    if (last === html || !content || !last) return;
-
+    if (content) setLatest(content);
     if (timeoutId) clearTimeout(timeoutId);
+    if (latest === html || !content || !latest) return;
 
-    const min = 1,
-      max = 3;
+    const min = 1;
+    const max = 3;
     const timeInSecounds = getRandomNumber(min, max) * 1000;
 
     setLoading(true);
     const idTimeout = setTimeout(() => {
-      if (!html || !cardId) return;
-      setLoading(false);
-      setLast(html);
-      save(html);
+      if (!!html && !!cardId) save(html);
     }, timeInSecounds);
-
     setTimeoutId(idTimeout);
 
     return () => {

@@ -28,6 +28,16 @@ export class CardsController {
     });
   }
 
+  public async findOneLatestUpdate(request: Request, response: Response) {
+    const { session, params } = request;
+    const { workspaceId } = params;
+    const { id } = session;
+
+    const workspace = await this.cardsService.findOneLatestUpdate(id, workspaceId);
+
+    response.status(200).json(workspace);
+  }
+
   public async updateBackground(request: Request, response: Response) {
     const { file, session, params } = request;
     const { id: userId } = session;

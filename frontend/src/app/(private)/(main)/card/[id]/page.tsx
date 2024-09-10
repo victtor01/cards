@@ -28,12 +28,13 @@ type CardProps = {
 const lenghtTitle = 60;
 
 export default function Card({ params }: CardProps) {
-  const router = useRouter();
   const { card, isLoading, refToHeader, fixed, onScroll } = useCard(params.id);
-  const { title, onChangeTitle } = useUpdateTitleCard(card, isLoading);
+
   const content = card?.content || null;
   const { editor, editorContentRef } = useEditorConfig({ content });
-  const { loading } = useUpdateContentCard(editor, card?.content);
+  const { title, onChangeTitle } = useUpdateTitleCard({ card, isLoading });
+  const { loading } = useUpdateContentCard({ card, editor });
+  const router = useRouter();
 
   if (isLoading) return;
 

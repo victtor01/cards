@@ -1,14 +1,14 @@
 import { Card } from '@core/domain/entities/card.entity';
 import { CardsRepository } from '@infra/repositories/cards.repository';
-import { CreateCardDto } from '../dtos/create-card-dto';
-import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
-import { CreateCardValidation } from '../validations/cards-schemas/create-card-schema';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
-import { CardsServiceInterface } from '../interfaces/cards-interfaces/cards-service-inteface';
-import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
-import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
+import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { unlinkUploadFile } from '@src/utils/unlink';
+import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
+import { CreateCardDto } from '../dtos/create-card-dto';
+import { CardsServiceInterface } from '../interfaces/cards-interfaces/cards-service-inteface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { CreateCardValidation } from '../validations/cards-schemas/create-card-schema';
+import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
 
 export class CardsService implements CardsServiceInterface {
   constructor(
@@ -35,6 +35,18 @@ export class CardsService implements CardsServiceInterface {
     });
 
     const card = await this.cardsRepo.save(cardToCreate);
+
+    return card;
+  }
+
+  public async findOneLatestUpdate(userId: string, workspaceId: string): Promise<Card> {
+    if (!userId) throw new BadRequestException('params not found!');
+
+    const card = await this.cardsRepo.findOneLatestUpdateByWorkspace(userId, workspaceId);
+
+    if (card?.userId !== userId) {
+      throw new UnauthorizedException('card not found!');
+    }
 
     return card;
   }

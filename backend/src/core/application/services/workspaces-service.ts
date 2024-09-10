@@ -233,8 +233,6 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   public async findByUserFormatTree(userId: string): Promise<any> {
     const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
 
-    console.log(workspaces);
-
     if (!workspaces?.length) return [];
 
     const build = this.buildTree(workspaces);

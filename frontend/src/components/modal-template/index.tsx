@@ -6,6 +6,7 @@ import Link from "next/link";
 type ModalProps = {
   children: React.ReactNode;
   title: string;
+  zIndex?: number;
 };
 
 const animations = {
@@ -21,7 +22,7 @@ const animations = {
 
 export function Modal({ children, title }: ModalProps) {
   return (
-    <motion.div className="flex w-full h-screen fixed top-0 p-5 left-0 z-30 bg-zinc-100 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
+    <motion.div className="flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-zinc-100 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
       <motion.div
         variants={animations}
         initial="initial"

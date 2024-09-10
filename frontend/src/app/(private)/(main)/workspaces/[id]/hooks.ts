@@ -1,11 +1,11 @@
 "use client";
 
 import { api } from "@/api";
+import { ICard } from "@/interfaces/ICard";
 import { IWorkspace } from "@/interfaces/IWorkspace";
 import { queryClient } from "@/providers/query-client";
-import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 type MDW = "delete" | "rename" | null;
 
@@ -45,15 +45,16 @@ export function useBackground() {
 }
 
 export function useDashboards() {
-  const router = useRouter();
   const { id } = useParams();
 
-  const redirectToCreate = () => {
-    GenerateSoundClick();
-    router.push(`/workspaces/${id}/create`);
-  };
+  const { data: latestCard } = useQuery<ICard>({
+    queryKey: ["card", "latest", id],
+    queryFn: async () => {
+      return (await api.get(`/cards/latest/${id}`)).data;
+    },
+  });
 
   return {
-    redirectToCreate,
+    latestCard,
   };
 }
