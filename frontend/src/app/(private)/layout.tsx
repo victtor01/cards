@@ -17,16 +17,14 @@ export default async function Layout({ children }: LayoutProps) {
   const accessToken = cookiesStore.get("__access_token")?.value;
   const refreshToken = cookiesStore.get("__refresh_token")?.value;
 
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  const res = await fetch("http://localhost:9000/users/mine", {
-    credentials: "include",
-    headers: {
-      Cookie: `__access_token=${accessToken}; __refresh_token=${refreshToken}`,
-    },
-  });
-
   try {
+    const res = await fetch("http://localhost:9000/users/mine", {
+      credentials: "include",
+      headers: {
+        Cookie: `__access_token=${accessToken}; __refresh_token=${refreshToken}`,
+      },
+    });
+
     const responseJSON = await res.json();
 
     if (responseJSON.firstName) {

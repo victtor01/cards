@@ -24,7 +24,7 @@ export function Sidebar() {
   return (
     <div className="flex group/sidebar relative">
       <section
-        className={`flex flex-col h-screen bg-gray-100 bg-opacity-50 dark:bg-zinc-950 border-r dark:border-zinc-900 dark:bg-opacity-50 overflow-visible relative`}
+        className={`flex flex-col h-screen bg-gray-100 bg-opacity-50 dark:bg-zinc-950  border-r dark:border-zinc-900 dark:bg-opacity-80 overflow-visible relative`}
         style={{ width: size.x }}
       >
         <header className="flex p-2 items-center justify-between w-full">

@@ -26,7 +26,7 @@ const variantsAnimation = {
 
 function useTheme() {
   const handleTheme = async () => {
-    await GenerateSoundClick();
+    GenerateSoundClick();
 
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
