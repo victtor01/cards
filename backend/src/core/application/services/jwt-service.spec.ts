@@ -1,12 +1,11 @@
+import { Request, Response } from 'express';
+import { jwtVerify } from 'jose';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
 import { JwtService } from './jwt-service';
-import { Request, Response } from 'express';
-
-import { jwtVerify } from 'jose';
 
 vi.mock('jose', () => ({
-  jwtVerify: vi.fn(), // Mocka a função jwtVerify
+  jwtVerify: vi.fn(),
 }));
 
 describe('jwtService', () => {
@@ -50,7 +49,9 @@ describe('jwtService', () => {
 
     (jwtVerify as Mock).mockRejectedValue(new Error('generic error'));
 
-    await expect(jwtService.getSession(requestMock, responseMock)).rejects.toThrow('session expired!');
+    await expect(jwtService.getSession(requestMock, responseMock)).rejects.toThrow(
+      'session expired!'
+    );
     expect(jwtService.renewTokenWithPassportOrThrowError).toBeCalledTimes(1);
     expect(jwtService.signJWT).toBeCalledTimes(0);
     expect(jwtVerify).toBeCalledTimes(2);
