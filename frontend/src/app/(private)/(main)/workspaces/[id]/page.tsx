@@ -11,7 +11,6 @@ import { Background } from "./background";
 import { Dashboards } from "./dashboards";
 import { Files } from "./files";
 import { useWorkspace } from "./hooks";
-import { warn } from "console";
 
 type WorkspaceProps = {
   params: {

@@ -1,10 +1,15 @@
 import { Loader } from "@/components/loader";
 import { fontFiraCode } from "@/fonts";
 import { useEditorConfig } from "@/hooks/use-editor";
+import { useThemeStore } from "@/hooks/use-theme";
 import { ICard } from "@/interfaces/ICard";
 import { getUpload } from "@/utils/get-upload";
 import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/mantine";
+import {
+  BlockNoteView,
+  darkDefaultTheme,
+  lightDefaultTheme,
+} from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,10 +27,13 @@ export function EditorComponent({ card }: { card: ICard }) {
   const { editor, ...styles } = useEditorConfig({ content });
   const { loading, updateContent } = useUpdateContentCard({ card, editor });
   const { onScroll, refToHeader, fixed } = styles;
+  const { theme } = useThemeStore((store) => store);
 
   const router = useRouter();
   const image = !!card?.background ? getUpload(card?.background) : null;
   const lenghtTitle = 60;
+
+  const defaultTheme = theme === "dark" ? darkDefaultTheme : lightDefaultTheme;
 
   return (
     <div
@@ -135,8 +143,9 @@ export function EditorComponent({ card }: { card: ICard }) {
           theme={{
             borderRadius: 0,
             colors: {
+              ...defaultTheme.colors,
               editor: {
-                text: "text-zinc-500",
+                ...defaultTheme.colors.editor,
                 background: "transparent",
               },
             },

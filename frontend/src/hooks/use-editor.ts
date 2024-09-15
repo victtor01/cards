@@ -15,6 +15,7 @@ const getJsonValid = (content: string | "") => {
   }
 };
 
+
 export const useEditorConfig = ({ content }: useEditorConfigProps) => {
   const editorContentRef = useRef<HTMLDivElement>(null);
   const [fixed, setFixed] = useState<boolean>(true);
@@ -23,9 +24,7 @@ export const useEditorConfig = ({ content }: useEditorConfigProps) => {
     initialContent: getJsonValid(content || ""),
     dictionary: locales.pt,
     domAttributes: {
-      blockGroup: {
-        class: "text-xl",
-      },
+      blockGroup: { class: "text-xl" },
     },
   });
 

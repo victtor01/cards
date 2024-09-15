@@ -6,6 +6,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 type useUpdateTitleCardProps = {
   card: ICard | undefined | null;
@@ -48,14 +49,26 @@ const updateCardInWorkspace = (
 export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
   const [title, setTitle] = useState<string | null>(card?.title || null);
 
-  const cardId = card?.id || null;
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries({
+        queryKey: ["card", "latest", card?.workspaceId],
+      });
+    };
+  }, []);
 
   const onChangeTitle = async (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const value = e.currentTarget.value || "";
 
-    if (!cardId) return;
+    const cardId = card?.id || null;
+    const workspaceId = card?.workspaceId || null;
+
+    if (!cardId || !workspaceId) {
+      toast.error("Houve um erro, tente novamente mais tarde!");
+      return;
+    }
 
     const element = window.document.getElementById(cardId);
     if (element) element.innerHTML = value;
@@ -100,7 +113,6 @@ export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
       ),
 
       queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
-        console.log(title);
         return {
           ...prevCard,
           title: value,
@@ -126,95 +138,6 @@ export function useCard(cardId: string) {
     card,
   };
 }
-
-// export function useUpdateContentCard({
-//   card,
-//   editor,
-// }: useUpdateContentCardProps) {
-//   const content = card?.content || null;
-//   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-//   const [latest, setLatest] = useState<string | null>(content || null);
-//   const [loading, setLoading] = useState<boolean>(false);
-
-//   const params = useParams();
-//   const cardId = params.id || null;
-
-//   const save = async (content: string) => {
-//     if (!card || !content) return;
-
-//     setLoading(false);
-//     setLatest(content);
-
-//     await Promise.all([
-//       api.put(`/cards/${params.id}`, {
-//         content,
-//       }),
-
-//       queryClient.setQueryData(
-//         ["card", "latest", card?.workspaceId],
-//         () => card
-//       ),
-//     ]);
-//   };
-
-//   useEffect(() => {
-//     const html = editor?.getHTML() || null;
-//     setLoading(false);
-
-//     if (content) setLatest(content);
-//     if (timeoutId) clearTimeout(timeoutId);
-//     if (latest === html || !content || !latest) return;
-
-//     const min = 1;
-//     const max = 3;
-//     const timeInSecounds = getRandomNumber(min, max) * 1000;
-
-//     setLoading(true);
-//     const idTimeout = setTimeout(() => {
-//       if (!!html && !!cardId) save(html);
-//     }, timeInSecounds);
-//     setTimeoutId(idTimeout);
-
-//     return () => {
-//       clearTimeout(idTimeout);
-//     };
-//   }, [editor?.getHTML(), content]);
-
-//   useEffect(() => {
-//     const handle = (e: BeforeUnloadEvent) => {
-//       if (loading) {
-//         e.preventDefault();
-//         return "";
-//       }
-//     };
-
-//     window.addEventListener("beforeunload", handle, { capture: true });
-
-//     return () => {
-//       window.removeEventListener("beforeunload", handle, { capture: true });
-//     };
-//   }, [loading]);
-
-//   useEffect(() => {
-//     return () => {
-//       const html = editor?.getHTML() || null;
-
-//       if (!!html) {
-//         setLoading(false);
-//         save(html);
-
-//         queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
-//           return {
-//             ...prevCard,
-//             content: html,
-//           };
-//         });
-//       }
-//     };
-//   }, [editor]);
-
-//   return { loading };
-// }
 
 export function useUpdateContentCard({
   card,
@@ -288,18 +211,21 @@ export function useUpdateContentCard({
   useEffect(() => {
     return () => {
       const html = editor?.document ? JSON.stringify(editor?.document) : null;
+      if (!html) return;
 
-      if (!!html) {
-        setLoading(false);
-        save(html);
+      setLoading(false);
+      save(html);
 
-        queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
-          return {
-            ...prevCard,
-            content: html,
-          };
-        });
-      }
+      queryClient.invalidateQueries({
+        queryKey: ["card", "latest", card?.workspaceId],
+      });
+
+      queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
+        return {
+          ...prevCard,
+          content: html,
+        };
+      });
     };
   }, [editor]);
 

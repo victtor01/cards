@@ -1,13 +1,14 @@
 import { fontOpenSans } from "@/fonts";
+import { useThemeStore } from "@/hooks/use-theme";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { getUpload } from "@/utils/get-upload";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import nookies, { parseCookies } from "nookies";
+import { useEffect, useState } from "react";
 import { BsSoundwave } from "react-icons/bs";
 import { FaMoon } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import nookies from "nookies";
 
 type UserComponentProps = {
   photoUrl: string | null;
@@ -25,7 +26,14 @@ const variantsAnimation = {
 } satisfies Variants;
 
 function useTheme() {
-  const handleTheme = async () => {
+  const storeTheme = useThemeStore();
+  const cookies = parseCookies();
+
+  useEffect(() => {
+    storeTheme.setTheme(cookies["_theme"]);
+  }, []);
+
+  const handleTheme = () => {
     GenerateSoundClick();
 
     const htmlElement = document.getElementsByTagName("html")[0];
@@ -34,6 +42,7 @@ function useTheme() {
     htmlElement.className = newTheme;
 
     nookies.set(null, "_theme", newTheme);
+    storeTheme.setTheme(newTheme);
   };
 
   return {

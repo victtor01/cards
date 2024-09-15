@@ -29,6 +29,7 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
       <DashboardCard.Container title="Continue de onde você parou">
         <div className="text-lg mt-2">
           {!latestCard?.id && <span className="text-zinc-500"></span>}
+          
           {latestCard?.id && (
             <div className="flex dark:bg-zinc-900 rounded justify-between items-center">
               <div className="flex gap-2 items-center">

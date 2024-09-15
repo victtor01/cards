@@ -3,9 +3,10 @@ import { useSidebar, Workspace } from "@/hooks/use-sidebar";
 import { useActionsWorkspaces } from "@/hooks/use-workspace";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { BiPlus } from "react-icons/bi";
-import { FaCaretRight, FaFile } from "react-icons/fa";
+import { useState } from "react";
+import { BsFiles } from "react-icons/bs";
+import { CgFileAdd } from "react-icons/cg";
+import { FaFolder, FaFolderOpen } from "react-icons/fa";
 import { TbFolderPlus } from "react-icons/tb";
 
 type Card = {
@@ -21,6 +22,11 @@ type WorkspaceLinkProps = {
   cards: Card[];
 };
 
+const classNameIfSelected = (selected: boolean) =>
+  selected
+    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-zinc-800 dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
+    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-black opacity-70 hover:opacity-100";
+
 export function WorkspaceLink(props: WorkspaceLinkProps) {
   const { id, name, workspaces, cards } = props;
   const link = `/workspaces/${id}`;
@@ -28,38 +34,40 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
   const pathname = usePathname();
   const { redirectTo } = useSidebar();
   const { createFile, createFolder } = useActionsWorkspaces();
-  const selected = pathname.startsWith(link);
 
-  const selectedClassStyle = selected
-    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-zinc-800 dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
-    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-black opacity-70 hover:opacity-100";
+  const selected = pathname.startsWith(link);
+  const style = classNameIfSelected(selected);
 
   const [open, setOpen] = useState<boolean>(selected);
 
-  useEffect(() => {
-    if (selected) setOpen(true);
-  }, [selected]);
+  const handleOpen = () => {
+    if (selected) {
+      setOpen((prev) => !prev);
+    } else {
+      setOpen(true);
+    }
+  };
 
   return (
-    <div className="flex flex-col min-w-[9rem] w-auto">
+    <div className="flex flex-col min-w-[9rem] w-auto text-base">
       <div
-        className={`${selectedClassStyle} ${fontOpenSans} w-full group flex gap-3 items-center justify-between p-1 rounded relative`}
+        className={`${style} ${fontOpenSans} w-full group flex gap-3 items-center justify-between p-1 rounded relative`}
       >
-        <div className="flex flex-1 text-left gap-3 text-sm">
+        <div className="flex flex-1 text-left gap-3">
           <button
+
             onClick={() => setOpen((prev) => !prev)}
             data-selected={pathname.startsWith(link)}
-            className={`${fontInter}`}
+            className={`${fontInter} pl-2`}
           >
-            <FaCaretRight
-              size={18}
-              data-selected={open}
-              className="data-[selected=true]:rotate-90 transition-all"
-            />
+            {!open ? <FaFolder size={16} /> : <FaFolderOpen size={16} />}
           </button>
           <button
             type="button"
-            onClick={() => redirectTo(link)}
+            onClick={() => {
+              redirectTo(link);
+              handleOpen();
+            }}
             id={`${id}`}
             className="flex flex-nowrap flex-1 whitespace-nowrap text-ellipsis"
           >
@@ -74,9 +82,9 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-white dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-zinc-800 text-white w-7 h-5 place-items-center rounded grid"
             >
-              <BiPlus size={16} />
+             <CgFileAdd />
             </button>
             <button
               onClick={() => {
@@ -84,30 +92,32 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-white dark:bg-zinc-800 w-5 h-5 place-items-center rounded grid"
+              className="bg-zinc-800 text-white w-7 h-5 place-items-center rounded grid"
             >
-              <TbFolderPlus size={16} />
+              <TbFolderPlus size={15} />
             </button>
           </div>
         </div>
       </div>
 
-      {open && (
-        <div
-          data-focus={false}
-          className="flex pt-1 ml-[0.1rem] pl-1 border-l-2 transition-colors border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col dark:data-[focus=true]:border-indigo-600"
-        >
-          {workspaces?.map((workspace) => (
-            <WorkspaceLink key={workspace.id} {...workspace} />
-          ))}
+      <div
+        data-open={open}
+        className="data-[open=false]:max-h-[0px] max-h-[30rem] data-[open=false]:opacity-0 data-[open=false]:pointer-events-none transition-all flex pt-1 gap-1 ml-[0.1rem] pl-1 border-l-2 border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col"
+      >
+        {workspaces?.map((workspace) => (
+          <WorkspaceLink key={workspace.id} {...workspace} />
+        ))}
 
-          {cards?.map((card) => (
+        {cards?.map((card) => {
+          const selected = pathname.startsWith(`/card/${card.id}`);
+          const style = classNameIfSelected(selected);
+          return (
             <Link
               key={card.id}
               href={`/card/${card.id}`}
-              className="text-sm text-black flex gap-3 items-center p-1 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-800 rounded opacity-70 hover:opacity-100"
+              className={`${style} flex gap-2 items-center px-2 p-1 rounded`}
             >
-              <FaFile size={12} />
+              <BsFiles size={14} />
               <span
                 id={card.id}
                 className="whitespace-nowrap text-ellipsis flex-1 overflow-hidden"
@@ -115,9 +125,9 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 {card.title}
               </span>
             </Link>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
