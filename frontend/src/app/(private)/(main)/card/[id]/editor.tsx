@@ -1,5 +1,5 @@
 import { Loader } from "@/components/loader";
-import { fontFiraCode } from "@/fonts";
+import { fontFiraCode, fontOpenSans, fontRoboto } from "@/fonts";
 import { useEditorConfig } from "@/hooks/use-editor";
 import { useThemeStore } from "@/hooks/use-theme";
 import { ICard } from "@/interfaces/ICard";
@@ -19,6 +19,9 @@ import { IoIosArrowBack } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
 import { FileBackgroundUpdate } from "./background";
 import { useUpdateContentCard, useUpdateTitleCard } from "./hooks";
+import { type } from "os";
+import { MdPublish } from "react-icons/md";
+import src from "react-textarea-autosize";
 
 export function EditorComponent({ card }: { card: ICard }) {
   const content = card?.content || null;
@@ -91,15 +94,16 @@ export function EditorComponent({ card }: { card: ICard }) {
           </div>
           <button
             type="button"
-            className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100"
+            className="p-1 px-2 bg-zinc-200 dark:bg-zinc-800 rounded text-zinc-700 opacity-90 hover:opacity-100 dark:text-zinc-100"
           >
-            Tela cheia
+            Lixeira
           </button>
           <button
             type="button"
-            className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-500 opacity-90 hover:opacity-100 dark:text-zinc-100"
+            className="p-1 px-2 text-base bg-gradient-45 from-violet-500 to-indigo-600 rounded text-white opacity-95 hover:shadow-lg hover:shadow-indigo-600/50 hover:opacity-100 dark:text-zinc-100 flex items-center gap-2"
           >
-            Publicar
+            <MdPublish />
+            <span className={fontFiraCode}>Publicar</span>
           </button>
         </div>
       </header>
@@ -127,30 +131,32 @@ export function EditorComponent({ card }: { card: ICard }) {
           </Link>
         </div>
 
-        <header className="flex gap-4 mt-3">
+        <header className={`${fontRoboto} flex gap-4 mt-3`}>
           <span className="w-[2.5rem]" />
           <TextareaAutosize
             value={title || ""}
             onChange={onChangeTitle}
             placeholder="This is my new project..."
-            className="bg-transparent border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
+            className="bg-transparent font-semibold border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
           />
         </header>
 
-        <BlockNoteView
-          onChange={updateContent}
-          editor={editor}
-          theme={{
-            borderRadius: 0,
-            colors: {
-              ...defaultTheme.colors,
-              editor: {
-                ...defaultTheme.colors.editor,
-                background: "transparent",
+        <section className="references">
+          <BlockNoteView
+            onChange={updateContent}
+            editor={editor}
+            theme={{
+              borderRadius: 0,
+              colors: {
+                ...defaultTheme.colors,
+                editor: {
+                  ...defaultTheme.colors.editor,
+                  background: "transparent",
+                },
               },
-            },
-          }}
-        />
+            }}
+          />
+        </section>
       </div>
     </div>
   );

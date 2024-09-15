@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 
 export default async function Layout({ children }: LayoutProps) {
   const cookiesStore = cookies();
-
   const accessToken = cookiesStore.get("__access_token")?.value;
   const refreshToken = cookiesStore.get("__refresh_token")?.value;
 

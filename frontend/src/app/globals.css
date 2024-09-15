@@ -20,6 +20,25 @@
   }
 }
 
+/* Regra para quando for tema dark o botão de adicionar imagem
+ficar de acordo! */
+.dark .bn-add-file-button {
+  @apply bg-zinc-900 opacity-80 hover:opacity-100 !important; 
+}
+.light .bn-add-file-button {
+  @apply bg-zinc-100 opacity-80 hover:opacity-100 !important; 
+}
+
+/* Regra para as referencias <a> no editor de texto! */
+.references a {
+  cursor: pointer; 
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+
+  @apply opacity-95 hover:opacity-100 text-indigo-700 transition-opacity
+
+}
+
 body {
   width: 100%;
   height: 100vh;

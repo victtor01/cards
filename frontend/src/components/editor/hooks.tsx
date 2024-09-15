@@ -1,14 +1,13 @@
+import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import Document from "@tiptap/extension-document";
+import Highlight from "@tiptap/extension-highlight";
 import Paragraph from "@tiptap/extension-paragraph";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import Text from "@tiptap/extension-text";
-import Highlight from "@tiptap/extension-highlight";
-import { CustomSpan } from "./variants";
 
 interface useEditorConfigProps {
   content?: string | null;
@@ -24,7 +23,6 @@ export const useEditorConfig = ({ content = null }: useEditorConfigProps) => {
           levels: [1, 2, 3],
         },
       }),
-      CustomSpan,
       Highlight.configure({ multicolor: true }),
       TaskItem.configure({
         nested: true,

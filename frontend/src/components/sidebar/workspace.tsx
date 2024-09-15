@@ -82,7 +82,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-zinc-800 text-white w-7 h-5 place-items-center rounded grid"
+              className="bg-zinc-800 text-white w-9 h-6 place-items-center rounded grid opacity-90 hover:opacity-100"
             >
              <CgFileAdd />
             </button>
@@ -92,7 +92,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
                 setOpen(true);
               }}
               type="button"
-              className="bg-zinc-800 text-white w-7 h-5 place-items-center rounded grid"
+              className="bg-zinc-800 text-white w-9 h-6 place-items-center rounded grid opacity-90 hover:opacity-100"
             >
               <TbFolderPlus size={15} />
             </button>
