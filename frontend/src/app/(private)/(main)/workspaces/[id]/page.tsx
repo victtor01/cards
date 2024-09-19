@@ -11,6 +11,7 @@ import { Background } from "./background";
 import { Dashboards } from "./dashboards";
 import { Files } from "./files";
 import { useWorkspace } from "./hooks";
+import { Week } from "./week";
 
 type WorkspaceProps = {
   params: {
@@ -58,17 +59,18 @@ export default function Workspace({ params }: WorkspaceProps) {
         </div>
       </header>
 
-      {!!workspace && (
-        <section className="flex flex-col gap-10 pb-20 px-5">
-          <Dashboards workspace={workspace} />
-          <Files workspace={workspace} />
+      <section className="flex flex-col gap-10 pb-20 px-5">
+        <Dashboards workspace={workspace} />
 
-          <AnimatePresence>
-            {modal === "delete" && <DeleteWorkspace {...{ id, name }} />}
-            {modal === "rename" && <RenameWorkspace {...{ id, name }} />}
-          </AnimatePresence>
-        </section>
-      )}
+        <Week />
+
+        <Files workspace={workspace} />
+
+        <AnimatePresence>
+          {modal === "delete" && <DeleteWorkspace id={id} name={name} />}
+          {modal === "rename" && <RenameWorkspace id={id} name={name} />}
+        </AnimatePresence>
+      </section>
     </div>
   );
 }

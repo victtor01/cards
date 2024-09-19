@@ -1,5 +1,5 @@
 import { Loader } from "@/components/loader";
-import { fontFiraCode, fontOpenSans, fontRoboto } from "@/fonts";
+import { fontFiraCode, fontRoboto } from "@/fonts";
 import { useEditorConfig } from "@/hooks/use-editor";
 import { useThemeStore } from "@/hooks/use-theme";
 import { ICard } from "@/interfaces/ICard";
@@ -16,12 +16,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
+import { MdPublish } from "react-icons/md";
 import TextareaAutosize from "react-textarea-autosize";
 import { FileBackgroundUpdate } from "./background";
 import { useUpdateContentCard, useUpdateTitleCard } from "./hooks";
-import { type } from "os";
-import { MdPublish } from "react-icons/md";
-import src from "react-textarea-autosize";
 
 export function EditorComponent({ card }: { card: ICard }) {
   const content = card?.content || null;

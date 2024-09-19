@@ -77,7 +77,7 @@ export function RenameWorkspace({ id, name }: RenameWorkspaceProps) {
           <button
             type="button"
             onClick={() => router.push("?")}
-            className="p-2 px-4 text-white bg-rose-600 rounded opacity-90 hover:opacity-100"
+            className="p-2 px-4 text-white bg-zinc-200 dark:bg-zinc-800/90 rounded opacity-90 hover:opacity-100"
           >
             Cancelar
           </button>
