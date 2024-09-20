@@ -34,15 +34,16 @@ function useTheme() {
   }, []);
 
   const handleTheme = () => {
-    GenerateSoundClick();
-
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
 
+    nookies.set(null, "_theme", newTheme, {
+      path: "/",
+    });
+    storeTheme.setTheme(newTheme);
     htmlElement.className = newTheme;
 
-    nookies.set(null, "_theme", newTheme);
-    storeTheme.setTheme(newTheme);
+    GenerateSoundClick();
   };
 
   return {

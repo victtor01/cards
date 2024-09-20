@@ -8,10 +8,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BiSearch } from "react-icons/bi";
 import { FaHome, FaTrash } from "react-icons/fa";
 import { HiFolderPlus } from "react-icons/hi2";
-import { MdSpaceDashboard } from "react-icons/md";
+import { MdEditCalendar, MdSpaceDashboard } from "react-icons/md";
+import { Trash } from "../trash";
 import { UserComponent } from "./user-component";
 import { WorkspaceLink } from "./workspace";
-import { Trash } from "../trash";
 
 export function Sidebar() {
   const { workspaces, i } = useSidebar();
@@ -47,6 +47,15 @@ export function Sidebar() {
           >
             <FaHome size={16} />
             <span className={fontFiraCode}>Home</span>
+          </Link>
+
+          <Link
+            href={"/calendar"}
+            data-selected={!!pathname.startsWith("/calendar")}
+            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
+          >
+            <MdEditCalendar size={16}/>
+            <span className={fontFiraCode}>Week</span>
           </Link>
 
           <div className="relative">

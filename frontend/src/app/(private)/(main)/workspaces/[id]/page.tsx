@@ -11,7 +11,6 @@ import { Background } from "./background";
 import { Dashboards } from "./dashboards";
 import { Files } from "./files";
 import { useWorkspace } from "./hooks";
-import { Week } from "./week";
 
 type WorkspaceProps = {
   params: {
@@ -46,14 +45,16 @@ export default function Workspace({ params }: WorkspaceProps) {
               Workspace{" "}
               <b className="text-zinc-700 dark:text-white">{workspace?.name}</b>
             </h1>
+          </div>
+          <div className="flex gap-2 items-center rounded-md">
             <button
               onClick={() => router.push("?mdw=rename")}
-              className="opacity-60 hover:opacity-100 grid place-items-center w-8 h-8 rounded hover:bg-zinc-100 dark:hover:bg-zinc-900"
+              className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-black shadow dark:shadow-black border-l dark:border-zinc-800/90"
             >
               <MdOutlineDriveFileRenameOutline />
+              <span className={`${fontFiraCode}`}>Edit</span>
             </button>
-          </div>
-          <div className="flex gap-2 items-center">
+
             <Settings />
           </div>
         </div>
@@ -61,8 +62,6 @@ export default function Workspace({ params }: WorkspaceProps) {
 
       <section className="flex flex-col gap-10 pb-20 px-5">
         <Dashboards workspace={workspace} />
-
-        <Week />
 
         <Files workspace={workspace} />
 

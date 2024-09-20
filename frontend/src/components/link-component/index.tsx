@@ -32,7 +32,7 @@ const LinkComponent = (props: Props) => {
       animate={{ scale: 1 }}
       whileTap={{ scale: 0.9 }}
       onTap={() => router.push(href || "#")}
-      className="w-full max-w-[12rem] mx-1 text-left shadow group/link mb-2 rotate transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-zinc-50 hover:shadow-xl dark:bg-zinc-900 dark:shadow-black"
+      className="w-full max-w-[12rem] text-left shadow group/link mb-2 rotate transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-zinc-50 hover:shadow-xl dark:bg-zinc-900 dark:shadow-black"
     >
       <div className="bg-zinc-200 min-h-[6rem] dark:bg-zinc-800 h-[50%] relative overflow-hidden border dark:border-none shadow shadow-zinc-400/70 dark:border-zinc-800 dark:shadow-black rounded-lg m-2">
         {backgroundImage && (

@@ -24,8 +24,8 @@ type WorkspaceLinkProps = {
 
 const classNameIfSelected = (selected: boolean) =>
   selected
-    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-zinc-800 dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
-    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 text-black opacity-70 hover:opacity-100";
+    ? "bg-neutral-200 bg-opacity-70 dark:bg-zinc-900 text-black dark:text-white opacity-100 cursor-default shadow dark:shadow-black"
+    : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 opacity-70 hover:opacity-100";
 
 export function WorkspaceLink(props: WorkspaceLinkProps) {
   const { id, name, workspaces, cards } = props;
@@ -53,27 +53,24 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
       <div
         className={`${style} ${fontOpenSans} w-full group flex gap-3 items-center justify-between p-1 rounded relative`}
       >
-        <div className="flex flex-1 text-left gap-3">
-          <button
-
-            onClick={() => setOpen((prev) => !prev)}
-            data-selected={pathname.startsWith(link)}
-            className={`${fontInter} pl-2`}
-          >
-            {!open ? <FaFolder size={16} /> : <FaFolderOpen size={16} />}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              redirectTo(link);
-              handleOpen();
-            }}
-            id={`${id}`}
-            className="flex flex-nowrap flex-1 whitespace-nowrap text-ellipsis"
-          >
-            {name}
-          </button>
-        </div>
+        <button
+          onClick={() => setOpen((prev) => !prev)}
+          data-selected={pathname.startsWith(link)}
+          className={`${fontInter} pl-2`}
+        >
+          {!open ? <FaFolder size={16} /> : <FaFolderOpen size={16} />}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            redirectTo(link);
+            handleOpen();
+          }}
+          id={`${id}`}
+          className="text-left flex-nowrap flex-1 whitespace-nowrap text-ellipsis overflow-hidden"
+        >
+          {name}
+        </button>
         <div className="flex items-center gap-2">
           <div className="hidden group-hover:flex gap-1 items-center group-hover:opacity-100">
             <button
@@ -84,7 +81,7 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
               type="button"
               className="bg-zinc-800 text-white w-9 h-6 place-items-center rounded grid opacity-90 hover:opacity-100"
             >
-             <CgFileAdd />
+              <CgFileAdd />
             </button>
             <button
               onClick={() => {
