@@ -1,13 +1,14 @@
 import { fontOpenSans } from "@/fonts";
-import { IoClose } from "react-icons/io5";
 import { motion, MotionProps } from "framer-motion";
 import Link from "next/link";
+import { HTMLAttributes } from "react";
+import { IoClose } from "react-icons/io5";
+import { twMerge } from "tailwind-merge";
 
-type ModalProps = {
-  children: React.ReactNode;
+interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   zIndex?: number;
-};
+}
 
 const animations = {
   initial: {
@@ -20,7 +21,12 @@ const animations = {
   },
 } satisfies MotionProps;
 
-export function Modal({ children, title }: ModalProps) {
+export function Modal({ children, title, className }: ModalProps) {
+  const style = twMerge(
+    "flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black",
+    className
+  );
+
   return (
     <motion.div className="flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-zinc-100 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
       <motion.div
@@ -28,7 +34,7 @@ export function Modal({ children, title }: ModalProps) {
         initial="initial"
         animate="animate"
         exit="initial"
-        className="flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black"
+        className={style}
       >
         <header className="w-full p-5 flex justify-between items-center">
           <div

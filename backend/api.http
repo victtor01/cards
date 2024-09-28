@@ -70,3 +70,19 @@ Content-Type: application/json
 ###
 GET {{HOST}}/cards/99G4tPfFYaXe HTTP/1.1
 Content-Type: application/json
+###
+
+# @name tasks
+
+GET {{HOST}}/tasks?startAt=2024-09-02&endAt=2024-10-08 HTTP/1.1
+
+###
+POST {{HOST}}/tasks HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "example2",
+  "endAt": null,
+  "days": [0],
+  "repeat": false
+}

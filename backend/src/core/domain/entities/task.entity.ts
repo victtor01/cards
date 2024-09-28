@@ -1,22 +1,47 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { CreateTaskDto, RepeatType } from '@core/application/dtos/tasks-dtos/create-task-dto';
+import { randomUUID } from 'crypto';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { User } from './user.entity';
 
-@Entity({ name: 'task' })
+export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+@Entity({ name: 'tasks' })
 export class Task {
   @PrimaryColumn({ type: 'varchar' })
-  id: string;
+  public id: string;
 
   @Column({ type: 'varchar' })
-  name: string;
+  public name: string;
+
+  @Column({ type: 'varchar' })
+  public repeat: RepeatType;
+
+  @Column({ type: 'date' })
+  public startAt: Date;
 
   @Column({ type: 'date', nullable: true })
-  startAt: Date;
+  public endAt: Date;
 
-  @Column({ type: 'date', nullable: true })
-  endAt: Date;
+  @Column({ type: 'simple-array', nullable: true })
+  public completed: string[];
+
+  @Column({ type: 'simple-array', nullable: true })
+  public deleted: string[];
 
   @Column({ type: 'simple-array' })
-  completed: string[];
+  public days: Day[];
 
-  @Column({ type: 'simple-array' })
-  deleted: string[];
+  @Column({ type: 'varchar' })
+  userId: string;
+
+  @ManyToOne(() => User, (user) => user.tasks)
+  @JoinColumn({ name: 'userId' })
+  user: User;
+
+  constructor(props?: CreateTaskDto, id?: string) {
+    Object.assign(this, props);
+    this.startAt = props?.startAt || new Date();
+    this.endAt = props?.endAt || new Date();
+    this.id = id || randomUUID();
+  }
 }

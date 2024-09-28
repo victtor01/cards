@@ -5,7 +5,7 @@ import { CreateUserDto } from "../dtos/users-dtos/create-user-dto";
 import { createUserSchema } from "../validations/users-schemas/create-user-schema";
 import { UsersService } from "./users-service";
 
-vi.mock("@core/application/validations/create-user-schema", () => ({
+vi.mock("../validations/users-schemas/create-user-schema", () => ({
   createUserSchema: {
     parseAsync: vi.fn(),
   },
@@ -40,7 +40,7 @@ describe("usersService", () => {
     (createUserSchema.parseAsync as Mock).mockResolvedValue(
       Promise.resolve(userMock)
     );
-
+    
     vi.spyOn(usersService, "findOneByEmail").mockReturnValueOnce(
       Promise.resolve(null)
     );

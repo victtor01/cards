@@ -7,8 +7,8 @@ import { hash } from 'bcryptjs';
 import { Multer } from 'multer';
 import { CreateUserDto } from '../dtos/users-dtos/create-user-dto';
 import { PropsToUpdataPhoto } from '../dtos/users-dtos/update-photo-user.dto';
-import { createUserSchema } from '../validations/users-schemas/create-user-schema';
 import { UsersServiceInterface } from '../interfaces/users-interfaces/users-service-interface';
+import { createUserSchema } from '../validations/users-schemas/create-user-schema';
 
 export class UsersService implements UsersServiceInterface {
   constructor(private readonly usersRepo: UsersRepository, private readonly multer: Multer) {}
