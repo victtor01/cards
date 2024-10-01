@@ -7,14 +7,6 @@ import { FaHourglassStart, FaRepeat } from "react-icons/fa6";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { useAddTask } from "./hooks";
 
-/* 
- [x] name of task
- [x] startAt task
- [x] days of task
- [x] repeat
-   [x] endAt task
-*/
-
 const days = ["D", "S", "T", "Q", "Q", "S", "S"];
 
 export default function AddTaskModal() {
@@ -23,8 +15,6 @@ export default function AddTaskModal() {
 
   const daysField = form.watch("days");
   const repeat = form.watch("repeat");
-
-  console.log(form.formState.errors);
 
   return (
     <Modal title="Adicionar nova task" className="max-w-[40rem]">
@@ -44,7 +34,7 @@ export default function AddTaskModal() {
               required
               autoComplete="off"
               {...form.register("name")}
-              className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+              className="p-3 bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-600 dark:text-zinc-200 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               placeholder="Terminar projeto..."
             />
           </label>

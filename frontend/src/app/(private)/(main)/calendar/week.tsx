@@ -119,8 +119,8 @@ export function Week() {
         </header>
       </div>
 
-      <div className="mx-auto flex flex-col gap-5 w-full max-w-[70rem] bg-transparent rounded-md">
-        <header className="p-3 px-4 bg-zinc-200/50 dark:bg-neutral-800/50 w-full flex items-center justify-between rounded-md">
+      <div className="mx-auto flex flex-col gap-5 w-full max-w-[100rem] bg-transparent rounded-md">
+        <header className="p-3 px-12 w-full flex items-center justify-between rounded-full">
           <div className="items-center flex dark:text-zinc-400">
             <h1 className={fontFiraCode}>O que tenho essa semana...</h1>
           </div>
@@ -132,9 +132,7 @@ export function Week() {
               <BiPlus />
               <span className={`${fontFiraCode}`}>Create</span>
             </button>
-
             <span className="flex-1 flex bg-zinc-200 dark:bg-zinc-800 w-[1px]" />
-
             <button
               type="button"
               onClick={back}
@@ -142,9 +140,15 @@ export function Week() {
             >
               <BsArrowLeft />
             </button>
-            <span className="flex items-center text-sm opacity-50">
-              {startOf.format("DD-MM-YYYY")}
-            </span>
+            <div className="flex items-center gap-2 bg-white dark:bg-zinc-800 px-2 rounded-md">
+              <span className="flex items-center text-sm opacity-50">
+                {startOf.format("DD-MM-YYYY")}
+              </span>
+              -
+              <span className="flex items-center text-sm opacity-50">
+                {endOf.format("DD-MM-YYYY")}
+              </span>
+            </div>
             <button
               type="button"
               onClick={next}
@@ -155,8 +159,8 @@ export function Week() {
           </div>
         </header>
 
-        <section className="flex gap-5 overflow-auto relative">
-          <div className="flex flex-col justify-center items-center">
+        <section className="flex gap-5 overflow-hidden relative rounded">
+          <div className="flex flex-col justify-center px-4 opacity-50 bg-gradient-to-r from-zinc-200 dark:from-zinc-950/80 transition-opacity to-transparent hover:opacity-100 z-20 items-center absolute left-0 h-full">
             <button
               type="button"
               className="flex justify-end items-center py-5 backdrop-blur-md bg-zinc-100 dark:bg-zinc-900/40 hover:shadow-xl dark:shadow-black shadow opacity-90 hover:opacity-100 rounded dark:via-to-zinc-950 to-zinc-200 dark:to-zinc-950 p- right-0 top-0 border-l dark:border-zinc-800/70"
@@ -165,35 +169,47 @@ export function Week() {
             </button>
           </div>
 
-          <div className="w-full relative overflow-auto flex scroll-hidden bg-zinc-100/20 dark:bg-neutral-900/40 gap-4 p-5 border rounded-md dark:border-zinc-700/40">
+          <div className="w-full relative overflow-auto flex scroll-hidden gap-4 p-5 border-x rounded-md dark:border-zinc-700/40">
             {daysArray?.map((day) => {
               const dayOfWeek = dayjs(day).day();
+              const isCurrentDay =
+                dayjs().format("DD-MM-YYYY") ===
+                dayjs(day).format("DD-MM-YYYY");
+
+              const style = isCurrentDay
+                ? "bg-zinc-100/60 dark:bg-zinc-900 shadow-lg border-indigo-500 dark:border-indigo-600 border-2 dark:shadow-indigo-600/20"
+                : "bg-zinc-100/30";
 
               const tasksForDay = tasks?.filter((task) => {
+                const taskStartAt = new Date(task?.startAt) || null;
                 const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
 
                 const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
 
-                if (!taskEndAt) {
-                  return task.days.includes(dayOfWeek.toString());
-                }
+                if (!taskEndAt) return task.days.includes(dayOfWeek.toString());
 
                 return (
                   task.days.includes(dayOfWeek.toString()) &&
-                  (!taskEndAt || taskEndAt >= currentDay)
+                  (!taskEndAt || taskEndAt >= currentDay) &&
+                  !(currentDay < taskStartAt)
                 );
               });
 
               return (
                 <div
                   key={day}
-                  className="flex gap-4 flex-col w-auto min-w-[15rem] p-3 bg-zinc-100/60 dark:bg-neutral-950/60 rounded-lg"
+                  className={`${style} border dark:border-zinc-800/40 flex gap-4 flex-col w-auto relative min-w-[20rem] min-h-[25rem] p-3 dark:bg-neutral-900/60 rounded-lg`}
                 >
+                  {isCurrentDay && (
+                    <span className="w-[99%] h-[0.4rem] bg-indigo-600 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />
+                  )}
                   <header className="w-full items-center p-1 rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex">
                     <span className="cursor-default whitespace-nowrap">
                       {dayjs(day).format("dddd")}
                     </span>
-                    <span className="text-xs opacity-40">{day}</span>
+                    <span className="text-xs opacity-40">
+                      {dayjs(day).format("DD/MM/YYYY")}
+                    </span>
                   </header>
                   <section className="flex flex-col">
                     {!tasksForDay?.length && (
@@ -231,7 +247,7 @@ export function Week() {
             })}
           </div>
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center px-4 opacity-50 bg-gradient-to-l from-zinc-200 dark:from-zinc-950/80 transition-opacity to-transparent hover:opacity-100 z-20 items-center absolute right-0 h-full">
             <button
               type="button"
               className="flex justify-end items-center py-5 backdrop-blur-md bg-zinc-100 dark:bg-zinc-900/40 hover:shadow-lg dark:shadow-black shadow opacity-90 hover:opacity-100 rounded dark:via-to-zinc-950 to-zinc-200 dark:to-zinc-950 p- right-0 top-0 border-l dark:border-zinc-800/70"

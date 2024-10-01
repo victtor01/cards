@@ -16,10 +16,10 @@ export class Task {
   @Column({ type: 'varchar' })
   public repeat: RepeatType;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   public startAt: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   public endAt: Date;
 
   @Column({ type: 'simple-array', nullable: true })
@@ -41,7 +41,7 @@ export class Task {
   constructor(props?: CreateTaskDto, id?: string) {
     Object.assign(this, props);
     this.startAt = props?.startAt || new Date();
-    this.endAt = props?.endAt || new Date();
+    this.endAt = props?.endAt ? new Date(props.endAt) : null;
     this.id = id || randomUUID();
   }
 }

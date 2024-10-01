@@ -13,8 +13,8 @@ export class TasksService implements TasksServiceInterface {
     const { name, startAt, endAt, repeat, days } = data;
 
     const parse = await CreateTaskSchema.parseAsync({
+      endAt: endAt ? new Date(endAt) : null,
       startAt: new Date(startAt),
-      endAt: new Date(endAt),
       repeat,
       name,
       days,
@@ -24,6 +24,7 @@ export class TasksService implements TasksServiceInterface {
     taskToCreate.userId = userId;
 
     const task = await this.tasksRepository.save(taskToCreate);
+    console.log(task);
     return task;
   }
 
