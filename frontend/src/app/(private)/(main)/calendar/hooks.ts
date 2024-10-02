@@ -1,6 +1,8 @@
 import { api } from "@/api";
+import { queryClient } from "@/providers/query-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -26,6 +28,8 @@ type CreateTask = {
 
 export const useAddTask = () => {
   const date = dayjs();
+  const router = useRouter();
+
   const status = () =>
     [0, 1, 2, 3, 4, 5, 6]?.map((value) => value === date.day());
 
@@ -61,10 +65,16 @@ export const useAddTask = () => {
       name: name,
     } satisfies CreateTask;
 
-    const res = await api.post("/tasks", createTaskData);
+    try {
+      await api.post("/tasks", createTaskData);
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
 
-    if (!res.data.error) {
-      toast.success("Criado com sucesso!P");
+      toast.success("Criado com sucesso!");
+      router.push("?");
+    } catch (error) {
+      toast.error("Houve um erro ao adicionar nova task!");
     }
   };
 
