@@ -1,6 +1,6 @@
 import { CreateTaskDto, RepeatType } from '@core/application/dtos/tasks-dtos/create-task-dto';
 import { randomUUID } from 'crypto';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 
 export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -30,6 +30,10 @@ export class Task {
 
   @Column({ type: 'simple-array' })
   public days: Day[];
+
+
+  @CreateDateColumn()
+  public createdAt: Date;
 
   @Column({ type: 'varchar' })
   userId: string;

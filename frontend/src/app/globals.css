@@ -140,6 +140,23 @@ body {
   @apply bg-[radial-gradient(#1f2937_1px,transparent_1px)] opacity-30;
 }
 
+.shadow-up::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  margin-top: 0;
+  transform-style: preserve-3d;
+  width: 80%;
+  height: 4rem;
+  left: 50%;
+  opacity: 0.3;
+  background-color: black;
+  transform: rotateX(60deg) translateX(-50%);
+  filter: blur(10px);
+  border-radius: 50%;
+
+}
+
 .shadow-light {
   box-shadow: 6px 5px 10px -6px rgba(0,0,0,0.5),
     inset 3px 3px 10px rgba(200, 200, 200, 0.2),

@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: PropsLayout) {
   return (
-    <main className="w-full h-auto flex-1 flex flex-col">
-      <header className="p-2 bg-zinc-50 border-b dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-70 z-30">
+    <main className="w-full h-auto flex-1 flex flex-col bg-neutral-950">
+      <header className="p-2 bg-zinc-50 border-b dark:border-zinc-800 dark:bg-zinc-900 z-30">
         <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
           <div className="flex text-zinc-100 bg-indigo-600 p-1 px-2 rounded items-center gap-2">
             <PiCardsFill className="text-white" />
@@ -22,7 +22,7 @@ export default function Layout({ children }: PropsLayout) {
           </div>
           <div className="flex text-zinc-500 dark:text-zinc-200">
             <button
-              className={`${fontFiraCode} border bg-white text-zinc-800 rounded-md hover:shadow-lg dark:hover:bg-indigo-600 transition-all p-1 px-3 dark:border-zinc-700 opacity-90 hover:opacity-100 capitalize`}
+              className={`${fontFiraCode} border bg-white text-zinc-800 rounded text-sm hover:shadow-lg dark:bg-zinc-700 dark:text-white transition-all p-1 px-3 dark:border-zinc-700 opacity-90 hover:opacity-100 capitalize`}
             >
               Create account
             </button>

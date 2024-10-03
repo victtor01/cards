@@ -1,11 +1,12 @@
 "use client";
 
-import { fontRoboto } from "@/fonts";
+import { fontFiraCode, fontRoboto } from "@/fonts";
 import { FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { useLogin } from "./hooks";
 import Link from "next/link";
 import { ImSpinner2 } from "react-icons/im";
+import { BiCheck } from "react-icons/bi";
 
 export default function Page() {
   const { form, auth } = useLogin();
@@ -15,20 +16,21 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[25rem] border p-6 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
+      className="w-[99%] max-w-[28rem] border p-10 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 flex flex-col gap-6 z-20"
     >
-      <header className="cursor-default flex">
-        <div className="text-white bg-gradient-45 from-indigo-600 to-violet-600 shadow-lg shadow-zinc-300 dark:shadow-black p-1 px-3">
-          <h1 className={`${fontRoboto} text-lg`}>Flards</h1>
+      <header className="cursor-default flex mb-10">
+        <div className="bg-indigo-500 shadow-light shadow-up text-white relative flex gap-2 items-center dark:bg-indigo-600 p-2 px-4 rounded text-sm shadow dark:shadow-black">
+          <span className={fontFiraCode}>Anotizese</span>
         </div>
       </header>
       <section className="w-full flex flex-col gap-3">
         <label htmlFor="email" className="w-full flex flex-col gap-1">
           <span className="">Email</span>
-          <div className="flex w-full items-center transition-all border bg-white dark:bg-transparent dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
-            <MdEmail className="text-zinc-700 w-10" size={20} />
+          <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
+            <MdEmail className="text-zinc-500 w-10" size={20} />
             <input
               type="text"
+              autoCapitalize="off"
               {...register("email")}
               placeholder="jonhDoe@example.com.br"
               className="p-2 rounded bg-transparent outline-none flex-1 "
@@ -37,8 +39,8 @@ export default function Page() {
         </label>
         <label htmlFor="password" className="w-full flex flex-col gap-1">
           <span className="">Password</span>
-          <div className="flex w-full items-center transition-all border bg-white dark:bg-transparent dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
-            <FaLock className="text-zinc-700 min-w-10" size={16} />
+          <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
+            <FaLock className="text-zinc-500 min-w-10" size={16} />
             <input
               type="password"
               {...register("password")}

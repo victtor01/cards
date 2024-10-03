@@ -48,7 +48,6 @@ describe("usersService", () => {
     const action = await usersService.save(dataToCreateNewUser);
 
     expect(usersService.findOneByEmail).toBeCalledTimes(1);
-    // expect(createUserSchema.parseAsync).toBeCalledTimes(1);
     expect(action).toBeInstanceOf(User);
     expect(action).instanceOf(User);
     expect(action.firstName).toBe("Jonh");
