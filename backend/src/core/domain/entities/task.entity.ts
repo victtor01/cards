@@ -31,6 +31,8 @@ export class Task {
   @Column({ type: 'simple-array' })
   public days: Day[];
 
+  @Column({ type: 'time', nullable: true })
+  public hour: string | null = null;
 
   @CreateDateColumn()
   public createdAt: Date;

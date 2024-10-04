@@ -10,12 +10,13 @@ export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
   public async create(data: CreateTaskDto, userId: string): Promise<Task> {
-    const { name, startAt, endAt, repeat, days } = data;
+    const { name, startAt, endAt, repeat, days, hour } = data;
 
     const parse = await CreateTaskSchema.parseAsync({
       endAt: endAt ? new Date(endAt) : null,
       startAt: new Date(startAt),
       repeat,
+      hour,
       name,
       days,
     }).catch((err: any) => ThrowErrorInValidationSchema(err));

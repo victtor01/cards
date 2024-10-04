@@ -11,6 +11,7 @@ import { z } from "zod";
 const createTaskSchema = z.object({
   name: z.string(),
   days: z.array(z.boolean()),
+  hour: z.string().nullable(),
   repeat: z.boolean(),
   startAt: z.string(),
   endAt: z.string().optional(),
@@ -38,7 +39,7 @@ export const useAddTask = () => {
     defaultValues: {
       days: [...status()],
       repeat: false,
-      startAt: date.format("YYYY-MM-DD"),
+      startAt: date.format("YYYY-MM-DDTHH:mm"),
       endAt: date.add(7 * 2, "day").format("YYYY-MM-DD"),
     },
   });

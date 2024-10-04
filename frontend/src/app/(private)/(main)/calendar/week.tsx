@@ -287,8 +287,8 @@ export function Week() {
                                   </span>
                                   <div className="flex items-center gap-3">
                                     <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                                      {dayjs(task.createdAt).format(
-                                        "DD, MM [de] YYYY"
+                                      {dayjs(task.startAt).format(
+                                        "DD, MM [de] YYYY - HH:mm"
                                       )}
                                     </div>
                                     <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
