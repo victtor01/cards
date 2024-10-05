@@ -8,15 +8,17 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 
 import { TbClockHour12Filled } from "react-icons/tb";
 import { useAddTask } from "./hooks";
+import dayjs from "dayjs";
 
 const days = ["D", "S", "T", "Q", "Q", "S", "S"];
 
 export default function AddTaskModal() {
-  const { form } = useAddTask();
-  const { addTask } = useAddTask();
+  const { form, addTask, handleDateOfFinish, dateOfFinish, states } =
+    useAddTask();
+  const { handleDefineHour, defineHour } = states;
 
   const daysField = form.watch("days");
-  const repeat = form.watch("repeat");
+  const repeat = form.watch('repeat');
 
   return (
     <Modal title="Adicionar nova task" className="max-w-[40rem]">
@@ -92,7 +94,7 @@ export default function AddTaskModal() {
                         field.onChange(!!field.value ? false : true)
                       }
                       className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
-                    data-[selected=true]:justify-end overflow-hidden"
+                      data-[selected=true]:justify-end overflow-hidden"
                     >
                       <motion.div
                         layout
@@ -107,100 +109,82 @@ export default function AddTaskModal() {
               />
             </label>
 
-            <label
-              htmlFor="repeat"
-              className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2"
-            >
-              <div className=" flex-1 flex gap-2 items-center px-2">
-                <CgCheck size={20}/>
-                <span className="text-md">
-                  O Evento não tem data de termino.
-                </span>
+            {repeat && (
+              <div className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
+                <div className=" flex-1 flex gap-2 items-center px-2">
+                  <CgCheck size={20} />
+                  <span className="text-md">Definir data de termino</span>
+                </div>
+
+                <span className="h-[2rem] bg-zinc-200 dark:bg-zinc-700/60 w-[1px]" />
+
+                <button
+                  type="button"
+                  data-selected={dateOfFinish}
+                  onClick={handleDateOfFinish}
+                  className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
+                data-[selected=true]:justify-end overflow-hidden"
+                >
+                  <motion.div
+                    layout
+                    data-selected={dateOfFinish}
+                    transition={{ type: "spring", duration: 0.1 }}
+                    className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
+                  data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
+                  />
+                </button>
               </div>
+            )}
 
-              <span className="h-[2rem] bg-zinc-200 dark:bg-zinc-700/60 w-[1px]" />
-
-              <Controller
-                control={form.control}
-                name="repeat"
-                render={({ field }) => {
-                  return (
-                    <button
-                      type="button"
-                      data-selected={!!field.value}
-                      onClick={() =>
-                        field.onChange(!!field.value ? false : true)
-                      }
-                      className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
-                    data-[selected=true]:justify-end overflow-hidden"
-                    >
-                      <motion.div
-                        layout
-                        data-selected={!!field.value}
-                        transition={{ type: "spring", duration: 0.1 }}
-                        className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
-                      data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-                      />
-                    </button>
-                  );
-                }}
-              />
-            </label>
-            <label
-              htmlFor="repeat"
-              className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2"
-            >
+            <div className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
               <div className="flex-1 flex gap-2 items-center px-2">
                 <TbClockHour12Filled />
-                <span className="text-md">Acontecerá o dia todo.</span>
+                <span className="text-md">Definir horário</span>
               </div>
 
               <span className="h-[2rem] bg-zinc-200 dark:bg-zinc-700/60 w-[1px]" />
 
-              <Controller
-                control={form.control}
-                name="repeat"
-                render={({ field }) => {
-                  return (
-                    <button
-                      type="button"
-                      data-selected={!!field.value}
-                      onClick={() =>
-                        field.onChange(!!field.value ? false : true)
-                      }
-                      className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
+              <button
+                type="button"
+                data-selected={defineHour}
+                onClick={handleDefineHour}
+                className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
                     data-[selected=true]:justify-end overflow-hidden"
-                    >
-                      <motion.div
-                        layout
-                        data-selected={!!field.value}
-                        transition={{ type: "spring", duration: 0.1 }}
-                        className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
+              >
+                <motion.div
+                  layout
+                  data-selected={defineHour}
+                  transition={{ type: "spring", duration: 0.1 }}
+                  className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
                       data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-                      />
-                    </button>
-                  );
-                }}
-              />
-            </label>
+                />
+              </button>
+            </div>
           </div>
-          <label htmlFor="hour" className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <TbClockHour12Filled />
-              <span className="">Hora do dia que acontecerá o evento.</span>
-            </div>
-            <div>
-              <input
-                type="time"
-                id="hour"
-                required
-                autoComplete="off"
-                {...form.register("startAt")}
-                className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
-                placeholder="Terminar projeto..."
-              />
-            </div>
-          </label>
+          {defineHour && (
+            <motion.label
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              htmlFor="hour"
+              className="flex flex-col gap-2"
+            >
+              <div className="flex items-center gap-2">
+                <TbClockHour12Filled />
+                <span className="">Horário da task</span>
+              </div>
+              <div>
+                <input
+                  type="time"
+                  id="hour"
+                  required
+                  autoComplete="off"
+                  {...form.register("hour")}
+                  className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                  placeholder="Terminar projeto..."
+                />
+              </div>
+            </motion.label>
+          )}
 
           <div className="flex gap-2">
             <label htmlFor="startAt" className="flex flex-col gap-2">
@@ -208,7 +192,7 @@ export default function AddTaskModal() {
                 <span className="">Começa em</span>
               </div>
               <input
-                type="datetime-local"
+                type="date"
                 id="startAt"
                 required
                 autoComplete="off"
@@ -219,7 +203,7 @@ export default function AddTaskModal() {
             </label>
 
             <AnimatePresence>
-              {repeat && (
+              {dateOfFinish && (
                 <motion.label
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -231,6 +215,7 @@ export default function AddTaskModal() {
                   <input
                     type="date"
                     id="endAt"
+                    defaultValue={dayjs().format("YYYY-MM-DD")}
                     required
                     {...form.register("endAt")}
                     autoComplete="off"

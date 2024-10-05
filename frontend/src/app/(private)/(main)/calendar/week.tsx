@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 
 import { api } from "@/api";
+import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -80,6 +81,35 @@ const useWeek = () => {
     },
   });
 
+  const completeTask = async (taskId: string, date: string) => {
+    const task = tasks?.filter((task) => task.id === taskId)[0];
+    if (!task) return;
+
+    const includesInCompleted = task?.completed?.includes(date) || null;
+
+    if (!includesInCompleted) {
+      const prevTasks = task?.completed || [];
+      const newArray: string[] = [...prevTasks, date];
+      await api.put(`/tasks/${taskId}`, {
+        arrayToConclude: newArray,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    } else {
+      const prevTasks = task?.completed || [];
+      const newArray: string[] = [
+        ...prevTasks?.filter((datePrev) => datePrev !== date),
+      ];
+      await api.put(`/tasks/${taskId}`, {
+        arrayToConclude: newArray,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    }
+  };
+
   const daysArray = Array.from(
     { length: endOf.diff(startOf, "day") + 1 },
     (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
@@ -91,7 +121,7 @@ const useWeek = () => {
   return {
     handles: { next, back, handleNow, openDetail },
     states: { startOf, endOf, daysArray, modal },
-    data: { isLoading, tasks },
+    data: { isLoading, tasks, completeTask },
     params: { taskIdDetail },
   };
 };
@@ -100,7 +130,7 @@ export function Week() {
   const {
     handles: { next, back, handleNow, openDetail },
     states: { startOf, endOf, daysArray, modal },
-    data: { isLoading, tasks },
+    data: { tasks, completeTask },
     params: { taskIdDetail },
   } = useWeek();
 
@@ -108,8 +138,6 @@ export function Week() {
   const day = dayjs();
 
   const now = day.isBefore(endOf) && day.isAfter(startOf);
-
-  if (isLoading) return "loading";
 
   return (
     <>
@@ -203,23 +231,31 @@ export function Week() {
                     ? "shadow-lg border-indigo-400 dark:border-indigo-600 border-2 dark:shadow-indigo-600/20"
                     : "dark:border-zinc-800/30";
 
-                  const tasksForDay = tasks?.filter((task: ITask) => {
-                    const taskStartAt = new Date(task?.startAt) || null;
-                    const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
+                  const tasksForDay = tasks
+                    ?.filter((task: ITask) => {
+                      const taskStartAt = new Date(task?.startAt) || null;
+                      const taskEndAt = task?.endAt
+                        ? new Date(task.endAt)
+                        : null;
 
-                    const currentDay = new Date(
-                      dayjs(day).format("YYYY-MM-DD")
+                      const currentDay = new Date(
+                        dayjs(day).format("YYYY-MM-DD")
+                      );
+
+                      if (!taskEndAt)
+                        return task.days.includes(dayOfWeek.toString());
+
+                      return (
+                        task.days.includes(dayOfWeek.toString()) &&
+                        (!taskEndAt || taskEndAt >= currentDay) &&
+                        !(currentDay < taskStartAt)
+                      );
+                    })
+                    .sort(
+                      (a, b) =>
+                        new Date(a.createdAt).getTime() -
+                        new Date(b.createdAt).getTime()
                     );
-
-                    if (!taskEndAt)
-                      return task.days.includes(dayOfWeek.toString());
-
-                    return (
-                      task.days.includes(dayOfWeek.toString()) &&
-                      (!taskEndAt || taskEndAt >= currentDay) &&
-                      !(currentDay < taskStartAt)
-                    );
-                  });
 
                   return (
                     <motion.div
@@ -254,8 +290,7 @@ export function Week() {
                           );
 
                           return (
-                            <motion.button
-                              onClick={() => openDetail(task.id)}
+                            <motion.div
                               key={`${task.id}-${day}`}
                               data-completed={completed}
                               data-isLinkAndSelected={
@@ -266,6 +301,12 @@ export function Week() {
                               <div className="flex flex-col w-full gap-1">
                                 <div className="flex gap-2 items-center w-full">
                                   <button
+                                    onClick={() =>
+                                      completeTask(
+                                        task.id,
+                                        dayjs(day).format("YYYY-MM-DD")
+                                      )
+                                    }
                                     type="button"
                                     data-completed={completed}
                                     className="w-6 h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
@@ -279,27 +320,32 @@ export function Week() {
                                       </motion.div>
                                     )}
                                   </button>
-                                  <span
-                                    data-completed={completed}
-                                    className={`${fontFiraCode} flex-1 text-start flex gap-1 data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+                                  <button
+                                    onClick={() => openDetail(task.id)}
+                                    className="flex gap-2 justify-between items-center flex-1"
                                   >
-                                    {task.name}
-                                  </span>
-                                  <div className="flex items-center gap-3">
-                                    <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                                      {dayjs(task.startAt).format(
-                                        "DD, MM [de] YYYY - HH:mm"
-                                      )}
+                                    <span
+                                      data-completed={completed}
+                                      className={`${fontFiraCode} flex-1 text-start flex gap-1 data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+                                    >
+                                      {task.name}
+                                    </span>
+                                    <div className="flex items-center gap-3">
+                                      <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+                                        {dayjs(task.startAt).format(
+                                          "DD, MM [de] YYYY - HH:mm"
+                                        )}
+                                      </div>
+                                      <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
+                                        <FaFile size={12} />
+                                        <span>2</span>
+                                      </div>
+                                      <span className="w-4 h-4 bg-orange-600 rounded" />
                                     </div>
-                                    <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-                                      <FaFile size={12} />
-                                      <span>2</span>
-                                    </div>
-                                    <span className="w-4 h-4 bg-orange-600 rounded" />
-                                  </div>
+                                  </button>
                                 </div>
                               </div>
-                            </motion.button>
+                            </motion.div>
                           );
                         })}
                         <div>

@@ -1,6 +1,6 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
 import { Task } from '@core/domain/entities/task.entity';
-import { IsNull, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { IsNull, LessThanOrEqual, MoreThanOrEqual, Repository, UpdateResult } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
 export class ImplementsTasksRepository implements TasksRepository {
@@ -38,8 +38,23 @@ export class ImplementsTasksRepository implements TasksRepository {
           endAt: IsNull(),
         },
       ],
+      order: {
+        name: 'DESC',
+      },
     });
 
     return tasks;
+  }
+
+  public async update(taskId: string, dataToUpdate: Partial<Task>): Promise<UpdateResult> {
+    const updated = await this.tasksRepo.update(taskId, dataToUpdate);
+
+    return updated;
+  }
+
+  public async findById(taskId: string): Promise<Task> {
+    const task = await this.tasksRepo.findOneBy({ id: taskId });
+
+    return task;
   }
 }

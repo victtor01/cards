@@ -3,7 +3,7 @@ import { queryClient } from "@/providers/query-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -11,10 +11,10 @@ import { z } from "zod";
 const createTaskSchema = z.object({
   name: z.string(),
   days: z.array(z.boolean()),
-  hour: z.string().nullable(),
+  hour: z.string().nullable().optional(),
   repeat: z.boolean(),
   startAt: z.string(),
-  endAt: z.string().optional(),
+  endAt: z.string().optional().nullable(),
 });
 
 export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
@@ -30,6 +30,10 @@ type CreateTask = {
 export const useAddTask = () => {
   const date = dayjs();
   const router = useRouter();
+  const [dateOfFinish, setDateOfFinish] = useState<boolean>(false);
+  const [defineHour, setDefineHour] = useState<boolean>(false);
+  const handleDateOfFinish = () => setDateOfFinish((prev) => !prev);
+  const handleDefineHour = () => setDefineHour(prev => !prev);
 
   const status = () =>
     [0, 1, 2, 3, 4, 5, 6]?.map((value) => value === date.day());
@@ -39,8 +43,9 @@ export const useAddTask = () => {
     defaultValues: {
       days: [...status()],
       repeat: false,
-      startAt: date.format("YYYY-MM-DDTHH:mm"),
-      endAt: date.add(7 * 2, "day").format("YYYY-MM-DD"),
+      hour: null,
+      startAt: date.format("YYYY-MM-DD"),
+      endAt: null,
     },
   });
 
@@ -65,6 +70,8 @@ export const useAddTask = () => {
       days: daysInIndex,
       name: name,
     } satisfies CreateTask;
+
+    console.log(createTaskData);
 
     try {
       await api.post("/tasks", createTaskData);
@@ -94,6 +101,9 @@ export const useAddTask = () => {
 
   return {
     form,
+    dateOfFinish,
+    states: { handleDefineHour, defineHour },
+    handleDateOfFinish,
     addTask,
   };
 };

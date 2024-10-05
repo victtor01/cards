@@ -14,6 +14,21 @@ export class TasksController {
     res.status(STATUS.CREATED).json(created);
   }
 
+  public async updateCompletedArray(req: Request, res: Response) {
+    const { params, body, session } = req;
+    const { id: userId } = session;
+    const { arrayToConclude } = body;
+    const { taskId } = params;
+
+    const updated = await this.tasksService.updateArrayCompleted({
+      completedArray: arrayToConclude,
+      taskId,
+      userId,
+    });
+
+    res.json(STATUS.OK).json(updated);
+  }
+
   public async findByDate(req: Request, res: Response) {
     const { id } = req.session;
     const { query } = req;
