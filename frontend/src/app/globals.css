@@ -150,11 +150,11 @@ body {
   height: 4rem;
   left: 50%;
   opacity: 0.3;
-  background-color: black;
   transform: rotateX(60deg) translateX(-50%);
-  filter: blur(10px);
+  filter: blur(20px);
   border-radius: 50%;
 
+  @apply bg-zinc-400 dark:bg-black
 }
 
 .shadow-light {

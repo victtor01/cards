@@ -22,6 +22,7 @@ export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
 type CreateTask = {
   name: string;
   days: number[];
+  hour: string | null | undefined;
   repeat: "weekly" | false;
   startAt: Date | string;
   endAt: Date | string | null;
@@ -44,14 +45,14 @@ export const useAddTask = () => {
       days: [...status()],
       repeat: false,
       hour: null,
-      startAt: date.format("YYYY-MM-DD"),
+      startAt: dayjs().startOf('week').format('YYYY-MM-DD'),
       endAt: null,
     },
   });
 
   const addTask = async (data: CreateTaskSchema) => {
     const { name, days, repeat, ...temp } = data;
-    const { startAt } = temp;
+    const { startAt, hour } = temp;
 
     const endAt = repeat
       ? temp.endAt
@@ -67,11 +68,10 @@ export const useAddTask = () => {
       repeat: !!repeat ? "weekly" : false,
       endAt: endAt,
       startAt: new Date(startAt),
+      hour: hour,
       days: daysInIndex,
       name: name,
     } satisfies CreateTask;
-
-    console.log(createTaskData);
 
     try {
       await api.post("/tasks", createTaskData);

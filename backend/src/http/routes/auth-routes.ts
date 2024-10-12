@@ -1,8 +1,8 @@
 import { AuthService } from '@core/application/services/auth-service';
-import { Router } from 'express';
-import { usersService } from './users-routers';
 import { JwtService } from '@core/application/services/jwt-service';
 import { AuthController } from '@infra/api/controllers/auth-controller';
+import { Router } from 'express';
+import { usersService } from './users-routers';
 
 const authRoutes = Router();
 
@@ -13,3 +13,4 @@ const authController = new AuthController(authService);
 authRoutes.post('/', (req, res) => authController.auth(req, res));
 
 export { authRoutes };
+

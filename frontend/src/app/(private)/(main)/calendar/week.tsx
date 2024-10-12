@@ -151,11 +151,8 @@ export function Week() {
           </div>
 
           <div className="w-full flex items-center justify-between rounded-full">
-            <div className={`${fontFiraCode} text-sm flex flex-col gap-1`}>
-              {day.format("dddd, DD MMMM")}
-              <div className="bg-indigo-600 rounded p-1 grid place-items-center text-white">
-                {day.format("YYYY")}
-              </div>
+            <div className={`${fontFiraCode} text-sm flex flex-col gap-1 p-2 bg-zinc-200/50 dark:bg-zinc-800/50 rounded-md`}>
+              {day.format("dddd, DD MMMM [de] YYYY")}
             </div>
 
             <div className="flex gap-2">
@@ -263,7 +260,7 @@ export function Week() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: (index + 1) / 100 }}
-                      className={`${style} rounded-xl flex gap-4 border-r border-l flex-col dark:shadow-black dark:shadow bg-zinc-50/80 flex-1 w-auto relative min-w-[30rem] min-h-[30rem] p-3 dark:bg-neutral-900/30`}
+                      className={`${style} rounded-xl flex gap-4 border-r border-l flex-col dark:shadow-black dark:shadow bg-zinc-50/80 flex-1 w-auto relative min-w-[25rem] min-h-[30rem] p-3 dark:bg-neutral-900/30`}
                     >
                       {isCurrentDay && (
                         <span className="w-[95%] h-[0.4rem] bg-indigo-600 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />

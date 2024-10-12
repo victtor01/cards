@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: PropsLayout) {
   return (
-    <main className="w-full h-auto flex-1 flex flex-col bg-neutral-950">
+    <main className="w-full h-auto flex-1 flex flex-col bg-white dark:bg-neutral-950 ">
       <header className="p-2 bg-zinc-50 border-b dark:border-zinc-800 dark:bg-zinc-900 z-30">
         <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
           <div className="flex text-zinc-100 bg-indigo-600 p-1 px-2 rounded items-center gap-2">

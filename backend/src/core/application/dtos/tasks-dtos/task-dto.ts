@@ -1,0 +1,11 @@
+import { Day } from '@core/domain/entities/task.entity';
+import { RepeatType } from './create-task-dto';
+
+export type taskDto = {
+  name: string;
+  startAt: Date;
+  endAt: Date;
+  hour: string;
+  days: Day[];
+  repeat: RepeatType;
+};

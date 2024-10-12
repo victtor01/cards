@@ -18,7 +18,7 @@ export default function AddTaskModal() {
   const { handleDefineHour, defineHour } = states;
 
   const daysField = form.watch("days");
-  const repeat = form.watch('repeat');
+  const repeat = form.watch("repeat");
 
   return (
     <Modal title="Adicionar nova task" className="max-w-[40rem]">
@@ -155,8 +155,7 @@ export default function AddTaskModal() {
                   layout
                   data-selected={defineHour}
                   transition={{ type: "spring", duration: 0.1 }}
-                  className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
-                      data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
+                  className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50 data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
                 />
               </button>
             </div>
@@ -187,20 +186,22 @@ export default function AddTaskModal() {
           )}
 
           <div className="flex gap-2">
-            <label htmlFor="startAt" className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <span className="">Começa em</span>
-              </div>
-              <input
-                type="date"
-                id="startAt"
-                required
-                autoComplete="off"
-                {...form.register("startAt")}
-                className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
-                placeholder="Terminar projeto..."
-              />
-            </label>
+            {repeat && (
+              <label htmlFor="startAt" className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="">Começa em</span>
+                </div>
+                <input
+                  type="date"
+                  id="startAt"
+                  required
+                  autoComplete="off"
+                  {...form.register("startAt")}
+                  className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                  placeholder="Terminar projeto..."
+                />
+              </label>
+            )}
 
             <AnimatePresence>
               {dateOfFinish && (
