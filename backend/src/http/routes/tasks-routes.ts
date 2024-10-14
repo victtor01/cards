@@ -16,6 +16,7 @@ const tasksContoller = new TasksController(tasksService);
 tasksRoutes.post('/', (req, res) => tasksContoller.create(req, res));
 tasksRoutes.get('/', (req, res) => tasksContoller.findByDate(req, res));
 tasksRoutes.put('/:taskId', (req, res) => tasksContoller.updateCompletedArray(req, res));
+tasksRoutes.delete('/:taskId', (req, res) => tasksContoller.delete(req, res));
 
 export { tasksRoutes };
 

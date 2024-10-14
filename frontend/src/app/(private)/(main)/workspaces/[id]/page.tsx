@@ -36,7 +36,11 @@ export default function Workspace({ params }: WorkspaceProps) {
     <div className="w-full flex flex-col flex-1 gap-6 relative">
       <Background photoUrl={workspace?.background} workspaceId={workspace.id} />
 
-      <header className="flex w-full px-5">
+      <div className="absolute top-0 left-0 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
+        <div className="grid-image w-full h-full"></div>
+      </div>
+
+      <header className="flex w-full px-5 z-10">
         <div className="flex gap-4 justify-between items-center w-full max-w-main mx-auto my-4">
           <div className="flex gap-2 items-center">
             <h1
@@ -60,7 +64,7 @@ export default function Workspace({ params }: WorkspaceProps) {
         </div>
       </header>
 
-      <section className="flex flex-col gap-10 pb-20 px-5">
+      <section className="flex flex-col gap-10 pb-20 px-5 z-10">
         <Dashboards workspace={workspace} />
 
         <Files workspace={workspace} />

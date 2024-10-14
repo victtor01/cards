@@ -1,7 +1,7 @@
 import "dayjs/locale/pt-br";
 
 import { fontFiraCode } from "@/fonts";
-import { AnimatePresence, motion } from "framer-motion";
+import { animate, AnimatePresence, delay, motion } from "framer-motion";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import {
   MdKeyboardArrowLeft,
@@ -12,13 +12,17 @@ import {
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
+import dayjs, { locale } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
 import { FaFile } from "react-icons/fa";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
+import { get } from "http";
+import { type } from "os";
+import { format } from "path";
+import { map } from "zod";
 
 dayjs.locale("pt-br");
 
@@ -142,7 +146,7 @@ export function Week() {
   return (
     <>
       <div className="flex w-full flex-col gap-3 relative">
-        <header className="mx-auto w-full max-w-[120rem]">
+        <header className="mx-auto w-full max-w-[100rem]">
           <div className="justify-between flex w-full items-center gap-4 rounded-lg">
             <div className="flex gap-3 items-center cursor-default">
               <MdViewWeek />
@@ -151,7 +155,9 @@ export function Week() {
           </div>
 
           <div className="w-full flex items-center justify-between rounded-full">
-            <div className={`${fontFiraCode} text-sm flex flex-col gap-1 p-2 bg-zinc-200/50 dark:bg-zinc-800/50 rounded-md`}>
+            <div
+              className={`${fontFiraCode} text-sm flex flex-col gap-1 p-2 bg-zinc-200/50 dark:bg-zinc-800/50 rounded-md`}
+            >
               {day.format("dddd, DD MMMM [de] YYYY")}
             </div>
 
@@ -201,180 +207,140 @@ export function Week() {
           </div>
         </header>
 
-        <motion.div className="mx-auto gap-2 flex w-full relative transition-all max-w-[120rem] py-3 rounded-md">
+        <div className="mx-auto gap-2 flex w-full relative transition-all max-w-[100rem] py-5 rounded-md">
           <div className="absolute top-0 left-0 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
             <div className="grid-image w-full h-full"></div>
           </div>
 
-          <section className="">
-            <section className="flex gap-5 overflow-hidden relative rounded">
-              <div className="flex-col justify-center hidden px-4 opacity-50 bg-gradient-to-r from-zinc-200 dark:from-zinc-950/80 transition-opacity to-transparent hover:opacity-100 z-20 items-center absolute left-0 h-full">
-                <button
-                  type="button"
-                  className="flex justify-end items-center py-5 backdrop-blur-md bg-zinc-100 dark:bg-zinc-900/40 hover:shadow-xl dark:shadow-black shadow opacity-90 hover:opacity-100 rounded dark:via-to-zinc-950 to-zinc-200 dark:to-zinc-950 p- right-0 top-0 border-l dark:border-zinc-800/70"
+          <div className="w-full relative overflow-visible flex scroll-hidden flex-wrap gap-4 rounded-md dark:border-zinc-700/40">
+            {daysArray?.map((day: string, index: number) => {
+              const dayOfWeek = dayjs(day).day();
+              const isCurrentDay =
+                dayjs().format("DD-MM-YYYY") ===
+                dayjs(day).format("DD-MM-YYYY");
+
+              const style = isCurrentDay
+                ? "shadow-lg border-indigo-400 dark:border-indigo-600 border-2 dark:shadow-indigo-600/20"
+                : "dark:border-zinc-800/30";
+
+              const tasksForDay = tasks
+                ?.filter((task: ITask) => {
+                  const taskStartAt = new Date(task?.startAt) || null;
+                  const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
+
+                  const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
+
+                  if (!taskEndAt)
+                    return task.days.includes(dayOfWeek.toString());
+
+                  return (
+                    task.days.includes(dayOfWeek.toString()) &&
+                    (!taskEndAt || taskEndAt >= currentDay) &&
+                    !(currentDay < taskStartAt)
+                  );
+                })
+                .sort(
+                  (a, b) =>
+                    new Date(a.createdAt).getTime() -
+                    new Date(b.createdAt).getTime()
+                );
+
+              return (
+                <motion.div
+                  key={day}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: (index + 1) / 100 }}
+                  className={`${style} rounded-xl flex gap-4 p-5 flex-col shadow dark:shadow-black bg-white flex-1 w-auto relative min-w-[25rem] max-w-[50%] min-h-[30rem] dark:bg-neutral-900/50`}
                 >
-                  <MdKeyboardArrowLeft size={30} />
-                </button>
-              </div>
-
-              <div className="w-full relative overflow-auto flex scroll-hidden flex-wrap gap-4 rounded-md dark:border-zinc-700/40">
-                {daysArray?.map((day: string, index: number) => {
-                  const dayOfWeek = dayjs(day).day();
-                  const isCurrentDay =
-                    dayjs().format("DD-MM-YYYY") ===
-                    dayjs(day).format("DD-MM-YYYY");
-
-                  const style = isCurrentDay
-                    ? "shadow-lg border-indigo-400 dark:border-indigo-600 border-2 dark:shadow-indigo-600/20"
-                    : "dark:border-zinc-800/30";
-
-                  const tasksForDay = tasks
-                    ?.filter((task: ITask) => {
-                      const taskStartAt = new Date(task?.startAt) || null;
-                      const taskEndAt = task?.endAt
-                        ? new Date(task.endAt)
-                        : null;
-
-                      const currentDay = new Date(
+                  {isCurrentDay && (
+                    <span className="w-[98%] min-h-[0.4rem] bg-indigo-500 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />
+                  )}
+                  <header className="w-full items-center p-1 rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex justify-between">
+                    <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">
+                      {isCurrentDay ? "Hoje" : dayjs(day).format("dddd")}
+                    </span>
+                    <span className="text-xs opacity-40">
+                      {dayjs(day).format("DD/MM/YYYY")}
+                    </span>
+                  </header>
+                  <section className="flex flex-col">
+                    {tasksForDay?.map((task) => {
+                      const selectedLink = taskIdDetail === task.id;
+                      const completed = task?.completed?.includes(
                         dayjs(day).format("YYYY-MM-DD")
                       );
 
-                      if (!taskEndAt)
-                        return task.days.includes(dayOfWeek.toString());
-
                       return (
-                        task.days.includes(dayOfWeek.toString()) &&
-                        (!taskEndAt || taskEndAt >= currentDay) &&
-                        !(currentDay < taskStartAt)
-                      );
-                    })
-                    .sort(
-                      (a, b) =>
-                        new Date(a.createdAt).getTime() -
-                        new Date(b.createdAt).getTime()
-                    );
-
-                  return (
-                    <motion.div
-                      key={day}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: (index + 1) / 100 }}
-                      className={`${style} rounded-xl flex gap-4 border-r border-l flex-col dark:shadow-black dark:shadow bg-zinc-50/80 flex-1 w-auto relative min-w-[25rem] min-h-[30rem] p-3 dark:bg-neutral-900/30`}
-                    >
-                      {isCurrentDay && (
-                        <span className="w-[95%] h-[0.4rem] bg-indigo-600 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />
-                      )}
-                      <header className="w-full items-center p-1 rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex justify-between">
-                        <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">
-                          {isCurrentDay ? "Hoje" : dayjs(day).format("dddd")}
-                        </span>
-                        <span className="text-xs opacity-40">
-                          {dayjs(day).format("DD/MM/YYYY")}
-                        </span>
-                      </header>
-                      <section className="flex flex-col">
-                        {!tasksForDay?.length && (
-                          <div className="flex p-1 px-2 bg-zinc-100 dark:bg-zinc-900 rounded opacity-60 text-sm">
-                            Nenhuma Task para esse dia!
-                          </div>
-                        )}
-
-                        {tasksForDay?.map((task) => {
-                          const selectedLink = taskIdDetail === task.id;
-                          const completed = task?.completed?.includes(
-                            dayjs(day).format("YYYY-MM-DD")
-                          );
-
-                          return (
-                            <motion.div
-                              key={`${task.id}-${day}`}
-                              data-completed={completed}
-                              data-isLinkAndSelected={
-                                !!taskIdDetail && !selectedLink
-                              }
-                              className="p-2 flex gap-2 rounded border mb-2 data-[isLinkAndSelected=true]:blur-[2px] items-center data-[isLinkAndSelected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
-                            >
-                              <div className="flex flex-col w-full gap-1">
-                                <div className="flex gap-2 items-center w-full">
-                                  <button
-                                    onClick={() =>
-                                      completeTask(
-                                        task.id,
-                                        dayjs(day).format("YYYY-MM-DD")
-                                      )
-                                    }
-                                    type="button"
-                                    data-completed={completed}
-                                    className="w-6 h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
-                                  >
-                                    {completed && (
-                                      <motion.div
-                                        initial={{ opacity: 0, scale: 0 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                      >
-                                        <CgCheck />
-                                      </motion.div>
-                                    )}
-                                  </button>
-                                  <button
-                                    onClick={() => openDetail(task.id)}
-                                    className="flex gap-2 justify-between items-center flex-1"
-                                  >
-                                    <span
-                                      data-completed={completed}
-                                      className={`${fontFiraCode} flex-1 text-start flex gap-1 data-[completed=true]:line-through data-[completed=true]:opacity-70`}
-                                    >
-                                      {task.name}
-                                    </span>
-                                    <div className="flex items-center gap-3">
-                                      <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                                        {dayjs(task.startAt).format(
-                                          "DD, MM [de] YYYY - HH:mm"
-                                        )}
-                                      </div>
-                                      <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-                                        <FaFile size={12} />
-                                        <span>2</span>
-                                      </div>
-                                      <span className="w-4 h-4 bg-orange-600 rounded" />
-                                    </div>
-                                  </button>
-                                </div>
-                              </div>
-                            </motion.div>
-                          );
-                        })}
-                        <div>
-                          <span
-                            className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
+                        <motion.div
+                          key={`${task.id}-${day}`}
+                          data-completed={completed}
+                          data-isLinkAndSelected={
+                            !!taskIdDetail && !selectedLink
+                          }
+                          className="flex gap-2 p-1 rounded border mb-2 data-[isLinkAndSelected=true]:blur-[2px] items-center data-[isLinkAndSelected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                        >
+                          <button
+                            onClick={() =>
+                              completeTask(
+                                task.id,
+                                dayjs(day).format("YYYY-MM-DD")
+                              )
+                            }
+                            type="button"
+                            data-completed={completed}
+                            className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
                           >
-                            {tasksForDay?.length} Tasks para esse dia!
-                          </span>
-                        </div>
-                      </section>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              <div className="hidden flex-col justify-center px-4 opacity-50 bg-gradient-to-l from-zinc-200 dark:from-zinc-950/80 transition-opacity to-transparent hover:opacity-100 z-20 items-center absolute right-0 h-full">
-                <button
-                  type="button"
-                  className="flex justify-end items-center py-5 backdrop-blur-md bg-zinc-100 dark:bg-zinc-900/40 hover:shadow-lg dark:shadow-black shadow opacity-90 hover:opacity-100 rounded dark:via-to-zinc-950 to-zinc-200 dark:to-zinc-950 p- right-0 top-0 border-l dark:border-zinc-800/70"
-                >
-                  <MdKeyboardArrowRight size={30} />
-                </button>
-              </div>
-            </section>
-          </section>
+                            {completed && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                              >
+                                <CgCheck />
+                              </motion.div>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => openDetail(task.id)}
+                            data-completed={completed}
+                            className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+                          >
+                            {task.name}
+                          </button>
+                          <div className="flex items-center gap-3">
+                            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+                              {dayjs(task.startAt).format(
+                                "DD, MM [de] YYYY - HH:mm"
+                              )}
+                            </div>
+                            <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
+                              <FaFile size={12} />
+                              <span>2</span>
+                            </div>
+                            <span className="w-4 h-4 bg-orange-600 rounded" />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                    <div>
+                      <span
+                        className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
+                      >
+                        {tasksForDay?.length} Tasks para esse dia!
+                      </span>
+                    </div>
+                  </section>
+                </motion.div>
+              );
+            })}
+          </div>
 
           {modal === "new" && <AddTaskModal />}
 
           <AnimatePresence>
             {!!taskIdDetail && <DetailsTasks taskId={taskIdDetail} />}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </>
   );

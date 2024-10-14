@@ -1,6 +1,6 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
 import { Task } from '@core/domain/entities/task.entity';
-import { IsNull, LessThanOrEqual, MoreThanOrEqual, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, IsNull, LessThanOrEqual, MoreThanOrEqual, Repository, UpdateResult } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
 export class ImplementsTasksRepository implements TasksRepository {
@@ -12,9 +12,14 @@ export class ImplementsTasksRepository implements TasksRepository {
     return created;
   }
 
+  public async delete(taskId: string): Promise<DeleteResult> {
+    const deleted = await this.tasksRepo.delete(taskId);
+
+    return deleted;
+  }
+
   public async findByStartAndUser(data: FindByDateDto, userId: string): Promise<Task[]> {
     const { startAt, endAt } = data;
-    console.log(startAt, endAt);
     const tasks = await this.tasksRepo.find({
       where: [
         {

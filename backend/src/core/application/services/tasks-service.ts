@@ -3,6 +3,7 @@ import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { CreateTaskDto } from '../dtos/tasks-dtos/create-task-dto';
+import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
 import { FindByDateDto } from '../dtos/tasks-dtos/find-by-date.dto';
 import { taskDto } from '../dtos/tasks-dtos/task-dto';
 import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
@@ -12,11 +13,11 @@ import { CreateTaskSchema } from '../validations/tasks-schemas/create-task-schem
 export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
-  public async parseToTask (data: taskDto): Promise<Task> {
+  protected async parseToTask(data: taskDto): Promise<Task> {
     const parse = await CreateTaskSchema.parseAsync({
       endAt: data.endAt ? new Date(data.endAt) : null,
       startAt: new Date(data.startAt),
-      repeat: data.repeat ,
+      repeat: data.repeat,
       name: data.name,
       days: data.days,
       hour: data?.hour || null,
@@ -57,7 +58,7 @@ export class TasksService implements TasksServiceInterface {
     const { completedArray, taskId, userId } = updateCompletedTaskDto;
 
     const task = await this.findById(taskId);
-    
+
     if (task.userId !== userId)
       throw new UnauthorizedException('Usuário não pode fazer essa ação!');
 
@@ -71,5 +72,20 @@ export class TasksService implements TasksServiceInterface {
     const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
 
     return allTasks;
+  }
+
+  public async deleteTask(data: DeleteTaskDto): Promise<boolean> {
+    const { taskId, userId } = data;
+
+    const task = await this.tasksRepository.findById(taskId);
+
+    if (!task?.id) throw new NotFoundException('Task não existe!');
+
+    if (task.userId !== userId)
+      throw new UnauthorizedException('Usuário não tem permissão para excluir essa task!');
+
+    await this.tasksRepository.delete(taskId);
+
+    return true;
   }
 }

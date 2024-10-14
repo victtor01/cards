@@ -44,7 +44,7 @@ export class Task {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  constructor(props?: CreateTaskDto, id?: string) {
+  constructor(props?: CreateTaskDto & { userId?: string }, id?: string) {
     Object.assign(this, props);
     this.startAt = props?.startAt || new Date();
     this.endAt = props?.endAt ? new Date(props.endAt) : null;
