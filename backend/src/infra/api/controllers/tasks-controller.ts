@@ -1,5 +1,5 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
-import { TasksServiceInterface } from '@core/application/interfaces/tasks-interfaces/task-service-interface';
+import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { STATUS } from '@infra/config/constants/status';
 import { Request, Response } from 'express';
 

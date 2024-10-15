@@ -24,7 +24,7 @@ export default function AddTaskModal() {
     <Modal title="Adicionar nova task" className="max-w-[40rem]">
       <form
         onSubmit={form.handleSubmit(addTask)}
-        className="flex flex-col bg-white dark:bg-transparent gap-3"
+        className="flex flex-col bg-gray-50 dark:bg-transparent gap-3"
       >
         <section className={`${fontOpenSans} flex flex-col gap-7 p-5`}>
           <label htmlFor="name" className="flex flex-col gap-2">
@@ -38,7 +38,7 @@ export default function AddTaskModal() {
               required
               autoComplete="off"
               {...form.register("name")}
-              className="p-3 bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-600 dark:text-zinc-200 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+              className="p-3 bg-white dark:bg-zinc-800 border-b-4 border-indigo-600 dark:shadow-black font-semibold text-zinc-600 dark:text-zinc-200 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               placeholder="Terminar projeto..."
             />
           </label>
@@ -55,7 +55,7 @@ export default function AddTaskModal() {
                     key={index}
                     data-selected={!!daysField[index]}
                     htmlFor={`check-day-${index}`}
-                    className="w-10 h-10 grid place-items-center bg-zinc-100 data-[selected=true]:bg-indigo-600 cursor-pointer transition-colors
+                    className="w-10 h-10 grid place-items-center bg-white data-[selected=true]:bg-indigo-600 cursor-pointer transition-colors
                     data-[selected=true]:text-white data-[selected=true]:opacity-100 dark:data-[selected=true]:bg-indigo-600 border-l dark:bg-zinc-800 dark:border-zinc-700 rounded-full opacity-90 hover:opacity-100"
                   >
                     <input
@@ -73,7 +73,7 @@ export default function AddTaskModal() {
           <div className="flex gap-2 flex-col text-zinc-500 dark:text-zinc-300">
             <label
               htmlFor="repeat"
-              className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2"
+              className="flex bg-white dark:bg-zinc-950/30 shadow dark:shadow-black p-2 rounded-lg items-center gap-2"
             >
               <div className="flex-1 flex gap-2 items-center px-2">
                 <FaRepeat />
@@ -93,7 +93,7 @@ export default function AddTaskModal() {
                       onClick={() =>
                         field.onChange(!!field.value ? false : true)
                       }
-                      className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
+                      className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-lg
                       data-[selected=true]:justify-end overflow-hidden"
                     >
                       <motion.div
@@ -110,7 +110,7 @@ export default function AddTaskModal() {
             </label>
 
             {repeat && (
-              <div className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
+              <div className="flex bg-white shadow dark:shadow-black dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
                 <div className=" flex-1 flex gap-2 items-center px-2">
                   <CgCheck size={20} />
                   <span className="text-md">Definir data de termino</span>
@@ -136,13 +136,13 @@ export default function AddTaskModal() {
               </div>
             )}
 
-            <div className="flex bg-zinc-100/60 dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
+            <div className="flex bg-white shadow dark:shadow-black dark:bg-zinc-950/30 p-2 rounded-lg items-center gap-2">
               <div className="flex-1 flex gap-2 items-center px-2">
                 <TbClockHour12Filled />
                 <span className="text-md">Definir horário</span>
               </div>
 
-              <span className="h-[2rem] bg-zinc-200 dark:bg-zinc-700/60 w-[1px]" />
+              <span className="h-[2rem] bg-white dark:bg-zinc-700/60 w-[1px]" />
 
               <button
                 type="button"
@@ -178,7 +178,7 @@ export default function AddTaskModal() {
                   required
                   autoComplete="off"
                   {...form.register("hour")}
-                  className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                  className="p-3 bg-white dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
                   placeholder="Terminar projeto..."
                 />
               </div>
@@ -197,7 +197,7 @@ export default function AddTaskModal() {
                   required
                   autoComplete="off"
                   {...form.register("startAt")}
-                  className="p-3 bg-zinc-100 dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                  className="p-3 bg-white dark:bg-zinc-800 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
                   placeholder="Terminar projeto..."
                 />
               </label>
@@ -229,14 +229,14 @@ export default function AddTaskModal() {
           </div>
         </section>
         <footer className="w-full flex justify-between items-center p-5 border-t-4 dark:border-zinc-800">
-          <button className="bg-zinc-100 dark:bg-zinc-800 p-2 rounded opacity-90 hover:opacity-100">
+          <button className="bg-white text-zinc-500 dark:bg-zinc-800 p-2 rounded opacity-90 hover:opacity-100">
             Cancelar
           </button>
           <button
             type="submit"
             className="bg-indigo-600 opacity-90 hover:opacity-100 p-2 px-3 text-white rounded"
           >
-            Concluído
+            Go
           </button>
         </footer>
       </form>

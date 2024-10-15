@@ -5,8 +5,8 @@ import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-
 import { unlinkUploadFile } from '@src/utils/unlink';
 import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
 import { CreateCardDto } from '../dtos/create-card-dto';
-import { CardsServiceInterface } from '../interfaces/cards-interfaces/cards-service-inteface';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { CardsServiceInterface } from '../interfaces/cards-service-inteface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { CreateCardValidation } from '../validations/cards-schemas/create-card-schema';
 import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
 

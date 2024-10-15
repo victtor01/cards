@@ -7,7 +7,7 @@ import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto
 import { RenameWorkspaceDto } from '../dtos/workspaces-dtos/rename-workspace-dto';
 import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 
 export class WorkspacesService implements WorkspacesServiceInterface {

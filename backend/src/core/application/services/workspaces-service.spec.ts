@@ -2,7 +2,7 @@ import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 import { WorkspacesService } from './workspaces-service';
 

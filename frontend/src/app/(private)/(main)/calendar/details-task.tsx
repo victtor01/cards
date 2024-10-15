@@ -38,12 +38,8 @@ export function DetailsTasks(props: DetailsTasksProps) {
   const { taskId } = props;
 
   return (
-    <div className="min-w-[30rem] fixed top-0 left-0 w-full h-screen bg-black/10 backdrop-blur-md flex flex-col px-0 p-1 z-20">
-      <motion.div
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="w-full max-w-[50rem] mx-auto relative mt-[10rem] rounded-xl flex flex-col overflow-auto bg-gray-50 dark:bg-zinc-900/80"
-      >
+    <div className="min-w-[30rem] fixed top-0 left-0 w-full h-screen bg-black/30 flex flex-col px-0 p-1 z-20">
+      <motion.div className="w-full max-w-[50rem] mx-auto relative mt-[10rem] rounded-xl flex flex-col overflow-auto bg-gray-50 dark:bg-zinc-900/80">
         <header className="w-full flex p-5 justify-between items-center gap-5">
           <div className={`flex items-center flex-1 gap-5 ${fontFiraCode}`}>
             <input

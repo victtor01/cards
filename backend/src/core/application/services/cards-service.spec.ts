@@ -3,7 +3,7 @@ import { CardsRepository } from '@infra/repositories/cards.repository';
 import { UnauthorizedException } from '@src/utils/errors';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { CreateCardDto } from '../dtos/create-card-dto';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { CardsService } from './cards-service';
 
 const cardsRepositoryMock = {

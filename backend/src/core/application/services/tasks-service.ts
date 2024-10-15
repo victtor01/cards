@@ -1,19 +1,19 @@
+import { CreateTaskDto } from '@core/application/dtos/tasks-dtos/create-task-dto';
+import { DeleteTaskDto } from '@core/application/dtos/tasks-dtos/delete-task-dto';
+import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
+import { taskDto } from '@core/application/dtos/tasks-dtos/task-dto';
+import { UpdateCompletedTaskDto } from '@core/application/dtos/tasks-dtos/update-completed-task';
+import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
+import { CreateTaskSchema } from '@core/application/validations/tasks-schemas/create-task-schema';
 import { Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
-import { CreateTaskDto } from '../dtos/tasks-dtos/create-task-dto';
-import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
-import { FindByDateDto } from '../dtos/tasks-dtos/find-by-date.dto';
-import { taskDto } from '../dtos/tasks-dtos/task-dto';
-import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
-import { TasksServiceInterface } from '../interfaces/tasks-interfaces/task-service-interface';
-import { CreateTaskSchema } from '../validations/tasks-schemas/create-task-schema';
 
 export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
-  protected async parseToTask(data: taskDto): Promise<Task> {
+  public async parseToTask(data: taskDto): Promise<Task> {
     const parse = await CreateTaskSchema.parseAsync({
       endAt: data.endAt ? new Date(data.endAt) : null,
       startAt: new Date(data.startAt),
@@ -28,10 +28,9 @@ export class TasksService implements TasksServiceInterface {
 
   public async create(data: CreateTaskDto, userId: string): Promise<Task> {
     const parse = await this.parseToTask(data);
-
     const taskToCreate = new Task({ ...parse });
     taskToCreate.userId = userId;
-
+    
     const task = await this.tasksRepository.save(taskToCreate);
 
     return task;
@@ -70,17 +69,15 @@ export class TasksService implements TasksServiceInterface {
 
   public async findByDate({ startAt, endAt }: FindByDateDto, userId: string): Promise<Task[]> {
     const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
-
     return allTasks;
   }
 
   public async deleteTask(data: DeleteTaskDto): Promise<boolean> {
     const { taskId, userId } = data;
-
     const task = await this.tasksRepository.findById(taskId);
 
     if (!task?.id) throw new NotFoundException('Task não existe!');
-
+    
     if (task.userId !== userId)
       throw new UnauthorizedException('Usuário não tem permissão para excluir essa task!');
 
