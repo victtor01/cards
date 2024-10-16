@@ -15,6 +15,16 @@ export class TasksController {
     res.status(STATUS.CREATED).json(created);
   }
 
+   public async findOneByIdAndUser(request: Request, response: Response) {
+    const { session, params } = request;
+    const [taskId, userId] = [params.taskId, session.id];
+    
+    const task = await this.tasksService.findOneByIdAndUserId(taskId, userId);
+
+    response.status(STATUS.OK).json(task);
+  }
+
+
   public async updateCompletedArray(req: Request, res: Response) {
     const { params, body, session } = req;
     const { id: userId } = session;

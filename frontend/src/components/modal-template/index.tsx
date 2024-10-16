@@ -23,12 +23,12 @@ const animations = {
 
 export function Modal({ children, title, className }: ModalProps) {
   const style = twMerge(
-    "flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col overflow-hidden shadow-lg dark:shadow-black",
+    "flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
     className
   );
 
   return (
-    <motion.div className="flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-zinc-100 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
+    <motion.div className="scroll-default flex-col flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-black/50 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
       <motion.div
         variants={animations}
         initial="initial"
@@ -36,7 +36,7 @@ export function Modal({ children, title, className }: ModalProps) {
         exit="initial"
         className={style}
       >
-        <header className="w-full p-5 flex justify-between items-center">
+        <header className="w-full p-3 px-5 flex justify-between items-center">
           <div
             className={`${fontOpenSans} text-zinc-600 dark:text-zinc-300 font-semibold capitalize`}
           >

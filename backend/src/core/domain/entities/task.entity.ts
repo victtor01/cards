@@ -13,6 +13,9 @@ export class Task {
   @Column({ type: 'varchar' })
   public name: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  public description: string;
+
   @Column({ type: 'varchar' })
   public repeat: RepeatType;
 

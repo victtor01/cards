@@ -1,27 +1,17 @@
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
+import { TaskSchema, taskSchema } from "@/schemas/task-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { z } from "zod";
-
-const createTaskSchema = z.object({
-  name: z.string(),
-  days: z.array(z.boolean()),
-  hour: z.string().nullable().optional(),
-  repeat: z.boolean(),
-  startAt: z.string(),
-  endAt: z.string().optional().nullable(),
-});
-
-export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
 
 type CreateTask = {
   name: string;
   days: number[];
+  description: string | null;
   hour: string | null | undefined;
   repeat: "weekly" | false;
   startAt: Date | string;
@@ -39,8 +29,8 @@ export const useAddTask = () => {
   const status = () =>
     [0, 1, 2, 3, 4, 5, 6]?.map((value) => value === date.day());
 
-  const form = useForm<CreateTaskSchema>({
-    resolver: zodResolver(createTaskSchema),
+  const form = useForm<TaskSchema>({
+    resolver: zodResolver(taskSchema),
     defaultValues: {
       days: [...status()],
       repeat: false,
@@ -50,8 +40,8 @@ export const useAddTask = () => {
     },
   });
 
-  const addTask = async (data: CreateTaskSchema) => {
-    const { name, days, repeat, ...temp } = data;
+  const addTask = async (data: TaskSchema) => {
+    const { name, days, repeat, description, ...temp } = data;
     const { startAt, hour } = temp;
 
     const endAt = repeat
@@ -66,6 +56,7 @@ export const useAddTask = () => {
 
     const createTaskData = {
       repeat: !!repeat ? "weekly" : false,
+      description: description,
       endAt: endAt,
       startAt: new Date(startAt),
       hour: hour,
@@ -87,17 +78,29 @@ export const useAddTask = () => {
   };
 
   const startAtField = form.watch("startAt");
-  useEffect(() => {
-    const endAt = form.getValues("endAt");
-    const startAt = form.getValues("startAt");
+  const repeat = form.watch("repeat");
 
-    if (endAt && new Date(endAt) < new Date(startAt)) {
+  useEffect(() => {
+    const startAt = form.getValues("startAt");
+    if (!!dateOfFinish) {
       form.setValue(
         "endAt",
         dayjs(startAt).add(2, "week").format("YYYY-MM-DD")
       );
     }
-  }, [startAtField]);
+  }, [startAtField, dateOfFinish]);
+
+  useEffect(() => {
+    if(!repeat) {
+      setDateOfFinish(false);
+    }
+  },[repeat])
+
+  useEffect(() => {
+    if(defineHour) {
+      form.setValue("hour", dayjs().format('HH:mm'))
+    }
+  },[defineHour])
 
   return {
     form,

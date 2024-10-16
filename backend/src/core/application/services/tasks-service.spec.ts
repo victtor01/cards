@@ -1,22 +1,16 @@
 import { Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CreateTaskDto } from '../dtos/tasks-dtos/create-task-dto';
+import { DeleteResult } from 'typeorm';
+import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
 import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
+import { TasksServiceInterface } from '../interfaces/task-service-interface';
 import { TasksService } from './tasks-service';
-
-const tasksRepositoryMock = {
-  save: vi.fn(),
-  findById: vi.fn(),
-  findByStartAndUser: vi.fn(),
-  delete: vi.fn(),
-  update: vi.fn(),
-} satisfies TasksRepository;
 
 const taskMock = new Task({
   name: 'example',
+  description: 'This is a description',
   startAt: new Date(),
   endAt: new Date(),
   hour: '',
@@ -27,33 +21,52 @@ const taskMock = new Task({
 const deleteTaskDto = { taskId: '123', userId: 'THIS_USER' } satisfies DeleteTaskDto;
 
 describe('tasks-service', () => {
-  let tasksService: TasksService;
+  let tasksService: TasksServiceInterface;
+  let tasksRepositoryMock: Mocked<TasksRepository>;
 
   beforeEach(() => {
+    tasksRepositoryMock = {
+      save: vi.fn(),
+      findById: vi.fn(),
+      findByStartAndUser: vi.fn(),
+      delete: vi.fn(),
+      update: vi.fn(),
+    } satisfies TasksRepository;
+
     tasksService = new TasksService(tasksRepositoryMock);
-
-    vi.resetAllMocks();
-  });
-
-  it('should create a new task', async () => {
-    const createTaskDto = {
-      name: 'example',
-      startAt: new Date(),
-      endAt: new Date(),
-      hour: '',
-      repeat: false,
-      days: [0],
-    } satisfies CreateTaskDto;
-
-    await tasksService.create(createTaskDto, 'EXAMPLEUSERID');
-
-    expect(tasksRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
   it('should error when not found task', async () => {
-    tasksRepositoryMock.findById.mockResolvedValueOnce(Promise.resolve(null));
+    tasksRepositoryMock.findById.mockResolvedValueOnce(null);
 
-    expect(tasksService.findById('not found')).rejects.toThrow();
+    expect(tasksService.findOneById('TASKID')).rejects.toThrow(NotFoundException);
+  });
+
+  describe('create', () => {
+    it('should create a new task', async () => {
+      const userIdMock = 'USERID';
+      const task = new Task({ ...taskMock, userId: userIdMock });
+      tasksRepositoryMock.save.mockResolvedValueOnce(task);
+
+      vi.spyOn(tasksService, 'parseToTask');
+      const created = await tasksService.create(taskMock, userIdMock);
+
+      expect(tasksRepositoryMock.save).toHaveBeenCalledTimes(1);
+      expect(tasksService.parseToTask).toHaveBeenCalledTimes(1);
+      expect(created).toBeInstanceOf(Task);
+    });
+
+    it('should error in create a new task because of data', async () => {
+      const USERID = "USER1";
+      const copyTask = { ...taskMock };
+      delete copyTask.name;
+
+      vi.spyOn(tasksService, 'parseToTask');
+
+      expect(tasksService.create(copyTask, USERID)).rejects.toThrow()
+      expect(tasksRepositoryMock.save).toBeCalledTimes(0);
+      expect(tasksService.parseToTask).toBeCalledTimes(1);
+    });
   });
 
   it('should be an error in updateCompletedTask because the task does not belong to the user', async () => {
@@ -64,7 +77,7 @@ describe('tasks-service', () => {
     } satisfies UpdateCompletedTaskDto;
 
     tasksRepositoryMock.findById.mockResolvedValueOnce(
-      Promise.resolve({ ...taskMock, userId: 'user2' })
+      await Promise.resolve({ ...taskMock, userId: 'user2' })
     );
 
     expect(tasksService.updateArrayCompleted(updatedTaskDataDto)).rejects.toThrow(
@@ -72,34 +85,63 @@ describe('tasks-service', () => {
     );
   });
 
-  it('should error trying delete task because user not have permission', async () => {
-    const task = new Task({ ...taskMock, userId: 'OUTER_USER' }, deleteTaskDto.taskId);
-    tasksRepositoryMock.findById.mockResolvedValue(task);
+  describe('deleteTask', () => {
+    it('should error trying delete task because user not have permission', async () => {
+      const task = new Task({ ...taskMock, userId: 'OUTER_USER' }, deleteTaskDto.taskId);
+      tasksRepositoryMock.findById.mockResolvedValueOnce(task);
 
-    const response = tasksService.deleteTask(deleteTaskDto);
+      const response = tasksService.deleteTask(deleteTaskDto);
 
-    expect(response).rejects.toThrow(UnauthorizedException);
-    expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
-    expect(tasksRepositoryMock.delete).toBeCalledTimes(0);
+      expect(response).rejects.toThrow(UnauthorizedException);
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+      expect(tasksRepositoryMock.delete).toBeCalledTimes(0);
+    });
+
+    it('should error when task not found', async () => {
+      tasksRepositoryMock.findById.mockResolvedValueOnce(null);
+
+      const response = tasksService.deleteTask(deleteTaskDto);
+
+      expect(response).rejects.toThrow(NotFoundException);
+      expect(tasksRepositoryMock.delete).toBeCalledTimes(0);
+    });
+
+    it('should delete task success', async () => {
+      const task = new Task({ ...taskMock, userId: deleteTaskDto.userId }, deleteTaskDto.taskId);
+      tasksRepositoryMock.findById.mockResolvedValueOnce(task);
+      tasksRepositoryMock.delete.mockResolvedValueOnce((await Promise.resolve({})) as DeleteResult);
+
+      const response = await tasksService.deleteTask(deleteTaskDto);
+
+      expect(response).toBe(true);
+      expect(tasksRepositoryMock.delete).toBeCalledTimes(1);
+    });
   });
+  describe('findByIdAndUser', () => {
+    it('should error when trying to get a task and the user does not have permission', async () => {
+      const taskIdMock = 'TASK_ID';
+      const task = new Task({ ...taskMock, userId: 'USER1' }, taskIdMock);
 
-  it('should error when task not found', async () => {
-    tasksRepositoryMock.findById.mockResolvedValue(null);
+      tasksRepositoryMock.findById.mockResolvedValueOnce(task);
 
-    const response = tasksService.deleteTask(deleteTaskDto);
+      const response = tasksService.findOneByIdAndUserId(taskIdMock, 'USER2');
 
-    expect(response).rejects.toThrow(NotFoundException);
-    expect(tasksRepositoryMock.delete).toBeCalledTimes(0);
-  });
+      expect(response).rejects.toThrow(UnauthorizedException);
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+    });
 
-  it('should delete task success', async () => {
-    const task = new Task({ ...taskMock, userId: deleteTaskDto.userId }, deleteTaskDto.taskId);
-    tasksRepositoryMock.findById.mockResolvedValue(task);
-    tasksRepositoryMock.delete.mockResolvedValue(true);
+    it('should success on get task by ID', async () => {
+      const taskIdMock = 'TASK_ID';
+      const userIdMock = 'USER1';
+      const task = new Task({ ...taskMock, userId: userIdMock }, taskIdMock);
 
-    const response = await tasksService.deleteTask(deleteTaskDto);
+      tasksRepositoryMock.findById.mockResolvedValueOnce(task);
 
-    expect(response).toBe(true);
-    expect(tasksRepositoryMock.delete).toBeCalledTimes(1);
+      const response = await tasksService.findOneByIdAndUserId(taskIdMock, userIdMock);
+
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+      expect(response).toBe(task);
+      expect(response).toBeInstanceOf(Task);
+    });
   });
 });

@@ -5,6 +5,7 @@ export class taskDto{
   name: string;
   startAt: Date;
   endAt: Date;
+  description: string;
   hour: string;
   days: Day[];
   repeat: RepeatType;

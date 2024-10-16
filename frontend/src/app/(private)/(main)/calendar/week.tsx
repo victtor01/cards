@@ -1,42 +1,23 @@
 import "dayjs/locale/pt-br";
 
 import { fontFiraCode } from "@/fonts";
-import { animate, AnimatePresence, delay, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdViewWeek,
-} from "react-icons/md";
+import { MdViewWeek } from "react-icons/md";
 
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
-import dayjs, { locale } from "dayjs";
+import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
 import { FaFile } from "react-icons/fa";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
-import { get } from "http";
-import { type } from "os";
-import { format } from "path";
-import { map } from "zod";
+import { ITask } from "@/interfaces/ITask";
 
 dayjs.locale("pt-br");
-
-type ITask = {
-  id: string;
-  name: string;
-  repeat: string | false;
-  completed: string[];
-  startAt: string | Date;
-  endAt: string | Date;
-  days: string[];
-  deleted: string[];
-  createdAt: Date | string;
-};
 
 type MdlOption = "new" | null | undefined;
 const LINK_NAME = "mdl-option";
@@ -138,6 +119,8 @@ export function Week() {
     params: { taskIdDetail },
   } = useWeek();
 
+  console.log(dayjs('22:43', 'HH:MM').format('HH:mm'))
+
   const router = useRouter();
   const day = dayjs();
 
@@ -207,12 +190,12 @@ export function Week() {
           </div>
         </header>
 
-        <div className="mx-auto gap-2 flex w-full relative transition-all max-w-[100rem] py-5 rounded-md">
+        <div className="mx-auto gap-2 flex w-full relative transition-all overflow-visible max-w-[100rem] py-5 rounded-md">
           <div className="absolute top-0 left-0 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
             <div className="grid-image w-full h-full"></div>
           </div>
 
-          <div className="w-full relative overflow-visible flex scroll-hidden flex-wrap gap-4 rounded-md dark:border-zinc-700/40">
+          <div className="w-full relative flex flex-wrap p-1 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
             {daysArray?.map((day: string, index: number) => {
               const dayOfWeek = dayjs(day).day();
               const isCurrentDay =
@@ -251,7 +234,7 @@ export function Week() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: (index + 1) / 100 }}
-                  className={`${style} rounded-xl flex gap-4 p-5 flex-col shadow dark:shadow-black bg-white flex-1 w-auto relative min-w-[25rem] max-w-[50%] min-h-[30rem] dark:bg-neutral-900/50`}
+                  className={`${style} rounded-xl flex gap-4 p-5 flex-col shadow dark:shadow-black bg-white flex-1 w-auto relative min-w-[25rem] max-w-[50%] h-auto dark:bg-neutral-900/50`}
                 >
                   {isCurrentDay && (
                     <span className="w-[98%] min-h-[0.4rem] bg-indigo-500 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />
@@ -275,10 +258,8 @@ export function Week() {
                         <motion.div
                           key={`${task.id}-${day}`}
                           data-completed={completed}
-                          data-isLinkAndSelected={
-                            !!taskIdDetail && !selectedLink
-                          }
-                          className="flex gap-2 p-1 rounded border mb-2 data-[isLinkAndSelected=true]:blur-[2px] items-center data-[isLinkAndSelected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                          data-linkselected={!!taskIdDetail && !selectedLink}
+                          className="flex gap-2 p-1 rounded border mb-2 data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
                         >
                           <button
                             onClick={() =>
@@ -309,9 +290,7 @@ export function Week() {
                           </button>
                           <div className="flex items-center gap-3">
                             <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                              {dayjs(task.startAt).format(
-                                "DD, MM [de] YYYY - HH:mm"
-                              )}
+                              {task?.hour?.toString() || "Sem horário"}
                             </div>
                             <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
                               <FaFile size={12} />

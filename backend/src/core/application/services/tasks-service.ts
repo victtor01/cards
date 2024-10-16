@@ -15,12 +15,13 @@ export class TasksService implements TasksServiceInterface {
 
   public async parseToTask(data: taskDto): Promise<Task> {
     const parse = await CreateTaskSchema.parseAsync({
-      endAt: data.endAt ? new Date(data.endAt) : null,
-      startAt: new Date(data.startAt),
-      repeat: data.repeat,
-      name: data.name,
-      days: data.days,
+      description: data?.description || null,
       hour: data?.hour || null,
+      repeat: data.repeat,
+      days: data.days,
+      name: data.name,
+      startAt: new Date(data?.startAt),
+      endAt: data.endAt ? new Date(data.endAt) : null,
     }).catch((err: any) => ThrowErrorInValidationSchema(err));
 
     return parse;
@@ -28,17 +29,17 @@ export class TasksService implements TasksServiceInterface {
 
   public async create(data: CreateTaskDto, userId: string): Promise<Task> {
     const parse = await this.parseToTask(data);
-    const taskToCreate = new Task({ ...parse });
-    taskToCreate.userId = userId;
-    
+    const taskToCreate = new Task({ ...parse, userId });
+
     const task = await this.tasksRepository.save(taskToCreate);
 
     return task;
   }
 
-  public async findById(taskId: string): Promise<Task> {
+  public async findOneById(taskId: string): Promise<Task> {
     const task = await this.tasksRepository.findById(taskId);
-    if (!task) throw new NotFoundException('task não existe!');
+
+    if (!task?.id) throw new NotFoundException('task não existe!');
 
     return task;
   }
@@ -56,7 +57,7 @@ export class TasksService implements TasksServiceInterface {
   public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<any> {
     const { completedArray, taskId, userId } = updateCompletedTaskDto;
 
-    const task = await this.findById(taskId);
+    const task = await this.findOneById(taskId);
 
     if (task.userId !== userId)
       throw new UnauthorizedException('Usuário não pode fazer essa ação!');
@@ -77,12 +78,22 @@ export class TasksService implements TasksServiceInterface {
     const task = await this.tasksRepository.findById(taskId);
 
     if (!task?.id) throw new NotFoundException('Task não existe!');
-    
+
     if (task.userId !== userId)
       throw new UnauthorizedException('Usuário não tem permissão para excluir essa task!');
 
     await this.tasksRepository.delete(taskId);
 
     return true;
+  }
+
+  public async findOneByIdAndUserId(taskId: string, userId: string): Promise<Task> {
+    const task = await this.findOneById(taskId);
+
+    if (task.userId !== userId) {
+      throw new UnauthorizedException('Usuário não tem permissão!');
+    }
+
+    return task;
   }
 }

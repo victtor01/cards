@@ -6,7 +6,10 @@ import { Task } from '@core/domain/entities/task.entity';
 
 export abstract class TasksServiceInterface {
   abstract create(data: CreateTaskDto, userId: string): Promise<Task>;
+  abstract parseToTask(data: CreateTaskDto): Promise<Task>
+  abstract findOneById(taskId: string): Promise<Task>;
   abstract findByDate(data: FindByDateDto, userId: string): Promise<Task[]>;
   abstract updateArrayCompleted(data: UpdateCompletedTaskDto): Promise<any>;
-  abstract deleteTask(data: DeleteTaskDto): Promise<boolean>
+  abstract deleteTask(data: DeleteTaskDto): Promise<boolean>;
+  abstract findOneByIdAndUserId(taskId: string, userId: string): Promise<Task>;
 }
