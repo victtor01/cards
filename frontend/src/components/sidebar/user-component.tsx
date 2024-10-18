@@ -4,7 +4,7 @@ import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { getUpload } from "@/utils/get-upload";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
-import nookies, { parseCookies } from "nookies";
+import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 import { BsSoundwave } from "react-icons/bs";
 import { FaMoon, FaUser } from "react-icons/fa";
@@ -27,7 +27,7 @@ const variantsAnimation = {
 
 function useTheme() {
   const storeTheme = useThemeStore();
-  const cookies = parseCookies();
+  const cookies = Cookies.get();
 
   useEffect(() => {
     storeTheme.setTheme(cookies["_theme"]);
@@ -37,7 +37,7 @@ function useTheme() {
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
 
-    nookies.set(null, "_theme", newTheme, {
+    Cookies.set("_theme", newTheme, {
       path: "/",
     });
     storeTheme.setTheme(newTheme);

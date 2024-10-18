@@ -119,8 +119,6 @@ export function Week() {
     params: { taskIdDetail },
   } = useWeek();
 
-  console.log(dayjs('22:43', 'HH:MM').format('HH:mm'))
-
   const router = useRouter();
   const day = dayjs();
 

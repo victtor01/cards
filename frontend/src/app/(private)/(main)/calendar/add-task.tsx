@@ -12,7 +12,7 @@ import { TiMediaPlay } from "react-icons/ti";
 import { useAddTask } from "./hooks";
 import TextareaAutosize from "react-textarea-autosize";
 
-const days = ["D", "S", "T", "Q", "Q", "S", "S"];
+export const days = ["D", "S", "T", "Q", "Q", "S", "S"];
 
 export default function AddTaskModal() {
   const { form, addTask, handleDateOfFinish, dateOfFinish, states } =

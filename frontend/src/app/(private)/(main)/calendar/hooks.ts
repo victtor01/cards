@@ -56,12 +56,12 @@ export const useAddTask = () => {
 
     const createTaskData = {
       repeat: !!repeat ? "weekly" : false,
-      description: description,
-      endAt: endAt,
       startAt: new Date(startAt),
+      endAt: endAt,
       hour: hour,
-      days: daysInIndex,
       name: name,
+      days: daysInIndex,
+      description: description,
     } satisfies CreateTask;
 
     try {
