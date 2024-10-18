@@ -124,6 +124,8 @@ export function Week() {
 
   const now = day.isBefore(endOf) && day.isAfter(startOf);
 
+  console.log(tasks)
+
   return (
     <>
       <div className="flex w-full flex-col gap-3 relative">

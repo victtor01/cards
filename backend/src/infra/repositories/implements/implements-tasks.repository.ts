@@ -1,6 +1,7 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
 import { Task } from '@core/domain/entities/task.entity';
 import {
+  And,
   DeleteResult,
   IsNull,
   LessThanOrEqual,
@@ -27,33 +28,6 @@ export class ImplementsTasksRepository implements TasksRepository {
 
   public async findByStartAndUser(data: FindByDateDto, userId: string): Promise<Task[]> {
     const { startAt, endAt } = data;
-    // const tasks = await this.tasksRepo.find({
-    //   where: [
-    //     {
-    //       userId,
-    //       startAt: Or(MoreThanOrEqual(startAt), LessThanOrEqual(endAt)),
-    //       endAt: LessThanOrEqual(endAt),
-    //     },
-    //     {
-    //       userId,
-    //       startAt: LessThanOrEqual(endAt),
-    //       endAt: MoreThanOrEqual(startAt),
-    //     },
-    //     {
-    //       userId,
-    //       startAt: LessThanOrEqual(startAt),
-    //       endAt: MoreThanOrEqual(startAt),
-    //     },
-    //     {
-    //       userId,
-    //       startAt: LessThanOrEqual(endAt),
-    //       endAt: IsNull(),
-    //     },
-    //   ],
-    //   order: {
-    //     name: 'DESC',
-    //   },
-    // });
 
     const tasks = await this.tasksRepo.find({
       where: [
@@ -76,6 +50,12 @@ export class ImplementsTasksRepository implements TasksRepository {
           userId,
           startAt: LessThanOrEqual(endAt),
           repeat: 'weekly',
+          endAt: IsNull(),
+        },
+        {
+          userId,
+          startAt: And(MoreThanOrEqual(startAt), LessThanOrEqual(endAt)),
+          repeat: false,
           endAt: IsNull(),
         },
       ],

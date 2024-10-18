@@ -19,10 +19,10 @@ export class Task {
   @Column({ type: 'varchar' })
   public repeat: RepeatType;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'date' })
   public startAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'date', nullable: true })
   public endAt: Date;
 
   @Column({ type: 'simple-array', nullable: true })
