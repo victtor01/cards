@@ -56,7 +56,8 @@ export function RenameWorkspace({ id, name }: RenameWorkspaceProps) {
   const value = form.watch("name");
 
   return (
-    <Modal title="Renomeie o seu espaço de trabalho">
+    <Modal.Container>
+      <Modal.Header title="Renomeie o seu espaço de trabalho" />
       <form
         className="w-full p-6 bg-white dark:bg-transparent"
         onSubmit={handleSubmit(rename)}
@@ -91,6 +92,6 @@ export function RenameWorkspace({ id, name }: RenameWorkspaceProps) {
           </button>
         </footer>
       </form>
-    </Modal>
+    </Modal.Container>
   );
 }

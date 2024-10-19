@@ -6,7 +6,6 @@ import { IoClose } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
 interface ModalProps extends HTMLAttributes<HTMLDivElement> {
-  title: string;
   zIndex?: number;
 }
 
@@ -21,7 +20,27 @@ const animations = {
   },
 } satisfies MotionProps;
 
-export function Modal({ children, title, className }: ModalProps) {
+function ModalHeader({ title }: { title: string }) {
+  return (
+    <header className="w-full p-3 px-5 flex justify-between items-center">
+      <div
+        className={`${fontOpenSans} text-zinc-600 dark:text-zinc-300 font-semibold capitalize`}
+      >
+        <h1 className="text-lg">{title}</h1>
+      </div>
+      <div>
+        <Link
+          href="?"
+          className="w-8 h-8 bg-white dark:bg-zinc-800 rounded opacity-70 hover:opacity-100 grid place-items-center shadow"
+        >
+          <IoClose />
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+function ModalContainer({ children, className }: ModalProps) {
   const style = twMerge(
     "flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
     className
@@ -36,24 +55,16 @@ export function Modal({ children, title, className }: ModalProps) {
         exit="initial"
         className={style}
       >
-        <header className="w-full p-3 px-5 flex justify-between items-center">
-          <div
-            className={`${fontOpenSans} text-zinc-600 dark:text-zinc-300 font-semibold capitalize`}
-          >
-            <h1 className="text-lg">{title}</h1>
-          </div>
-          <div>
-            <Link
-              href="?"
-              className="w-8 h-8 bg-white dark:bg-zinc-800 rounded opacity-70 hover:opacity-100 grid place-items-center shadow"
-            >
-              <IoClose />
-            </Link>
-          </div>
-        </header>
-
         {children}
       </motion.div>
     </motion.div>
   );
 }
+
+const Modal = {
+  Container: ModalContainer,
+  Header: ModalHeader,
+};
+
+export { Modal };
+

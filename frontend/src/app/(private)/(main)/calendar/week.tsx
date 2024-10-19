@@ -6,16 +6,16 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { MdViewWeek } from "react-icons/md";
 
 import { api } from "@/api";
+import { ITask } from "@/interfaces/ITask";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
-import { useRouter, useSearchParams } from "next/navigation";
+import dayjs, { Dayjs } from "dayjs";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
 import { FaFile } from "react-icons/fa";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
-import { ITask } from "@/interfaces/ITask";
 
 dayjs.locale("pt-br");
 
@@ -24,31 +24,35 @@ const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
-  const [startOf, setStartOf] = useState(dayjs().startOf("week"));
-  const [endOf, setEndOf] = useState(dayjs().endOf("week"));
+  const [startOf, setStartOf] = useState<Dayjs>(dayjs().startOf("week"));
+  const [endOf, setEndOf] = useState<Dayjs>(dayjs().endOf("week"));
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
-  function next() {
-    setStartOf((prev) => prev.add(1, "week"));
-    setEndOf((prev) => prev.add(1, "week"));
-  }
+  const next = () => {
+    setStartOf((prev) => {
+      router.push(`?startAt=${prev.add(1, "week").format("YYYY-MM-DD")}`);
+      return prev.add(1, "week");
+    });
 
-  function back() {
+    setEndOf((prev) => prev.add(1, "week"));
+  };
+
+  const back = () => {
     setStartOf((prev) => prev.subtract(1, "week"));
     setEndOf((prev) => prev.subtract(1, "week"));
-  }
+  };
 
-  function handleNow() {
+  const handleNow = () => {
     setStartOf(dayjs().startOf("week"));
     setEndOf(dayjs().endOf("week"));
-  }
+  };
 
-  function openDetail(taskId: string) {
+  const openDetail = (taskId: string) => {
     router.push(`?${DETAIL_NAME}=${taskId}`);
-  }
+  };
 
   const { data: tasks, isLoading } = useQuery<ITask[]>({
     queryKey: [
@@ -120,11 +124,18 @@ export function Week() {
   } = useWeek();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const day = dayjs();
 
-  const now = day.isBefore(endOf) && day.isAfter(startOf);
+  const addTaskModal = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(LINK_NAME, "new");
 
-  console.log(tasks)
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const now = day.isBefore(endOf) && day.isAfter(startOf);
 
   return (
     <>
@@ -155,7 +166,7 @@ export function Week() {
                 <span className={`${fontFiraCode}`}>Hoje</span>
               </button>
               <button
-                onClick={() => router.push(`?${LINK_NAME}=new`)}
+                onClick={addTaskModal}
                 className="opacity-95 hover:opacity-100 items-center px-3 flex gap-2 h-8 rounded-md bg-indigo-600 dark:bg-indigo-600 text-white shadow dark:shadow-black"
               >
                 <span className={`${fontFiraCode}`}>Nova task</span>

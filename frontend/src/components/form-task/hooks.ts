@@ -2,34 +2,48 @@ import { ITask } from "@/interfaces/ITask";
 import { taskSchema, TaskSchema } from "@/schemas/task-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm, useFormContext, UseFormReturn } from "react-hook-form";
 
-export const verifyInputTypeTime = (value: string) => {
+const isValidTimeInput = (input: string): boolean => {
+  const isNotValidHour = Number(input[0]) > 2;
+  const isValidLength = input?.length <= 4;
+
+  if (
+    isNotValidHour ||
+    !isValidLength ||
+    Number(input[2]) >= 6 ||
+    input[1] > "4"
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
+const verifyInputTypeTime = (value: string) => {
   let input = value.replace(/\D/g, "");
 
-  for (let i = 0; i < input.length - 1; i++) {
-    if (parseInt(input[i]) > 5) {
-      return "";
-    }
-  }
+  const isValid = isValidTimeInput(input);
+  if (!isValid) return;
 
-  if (Number(input[0]) > 2) {
-    return "";
-  }
-
-  if (value.length <= 5) {
+  if (input.length <= 4) {
     input = input.replace(/(\d)(\d{2})$/, "$1:$2");
     return input;
   }
+
+  return "";
 };
 
-export const useFormTask = (task?: ITask) => {
+const useFormTask = (task?: Partial<ITask>) => {
   const date = dayjs();
+  const searchParams = useSearchParams();
+  const initalStartAt = searchParams.get("startAt");
 
   const status = () =>
     [0, 1, 2, 3, 4, 5, 6]?.map((value) =>
-      task?.days.includes(value.toString())
+      task?.days?.includes(value.toString())
     );
 
   const form = useForm<TaskSchema>({
@@ -37,9 +51,11 @@ export const useFormTask = (task?: ITask) => {
     defaultValues: {
       name: task?.name,
       days: [...status()],
-      repeat: task?.repeat || false,
+      repeat: !!task?.repeat,
       hour: task?.hour?.toString() || null,
-      startAt: date.startOf("week").format("YYYY-MM-DD"),
+      startAt: task?.startAt
+        ? dayjs(task.startAt).format("YYYY-MM-DD")
+        : initalStartAt || date.startOf("week").format("YYYY-MM-DD"),
       endAt: task?.endAt ? dayjs(task?.endAt).format("YYYY-MM-DD") : null,
     },
   });
@@ -49,46 +65,64 @@ export const useFormTask = (task?: ITask) => {
   };
 };
 
-export const useFormTaskAction = () => {
-  const form = useFormContext<TaskSchema>();
-  const initialHourState = !!form.getValues("hour");
-  const initialFinishDayState =
-    !!form.getValues("repeat") && !!form.getValues("endAt");
+const getWatchsForm = (form: UseFormReturn<TaskSchema>) => ({
+  startAtWatch: form.watch("startAt"),
+  repeatWatch: form.watch("repeat"),
+  daysWatch: form.watch("days"),
+});
 
-  const handleDateOfFinish = () => setDateOfFinishState((prev) => !prev);
-  const handleDefineHour = () => setDefineHourState((prev) => !prev);
+const getInitalValuesForm = (form: UseFormReturn<TaskSchema>) => ({
+  endAtField: form.getValues("endAt"),
+  initialHourState: form.getValues("hour"),
+  repeatsField: form.getValues("repeat"),
+});
+
+const useFormTaskAction = () => {
+  const form = useFormContext<TaskSchema>();
+  const searchParams = useSearchParams();
+  const initalStartAtParam =
+    searchParams.get("startAt") || dayjs().startOf("week").format("YYYY-MM-DD");
+
+  const { startAtWatch, repeatWatch, daysWatch } = getWatchsForm(form);
+  const { endAtField, initialHourState, repeatsField } =
+    getInitalValuesForm(form);
+
+  const initialFinishDayState = !!repeatsField && !!endAtField;
   const [dateOfFinishState, setDateOfFinishState] = useState<boolean>(
     initialFinishDayState
   );
-  const [defineHourState, setDefineHourState] =
-    useState<boolean>(initialHourState);
+  const [defineHourState, setDefineHourState] = useState<boolean>(
+    !!initialHourState
+  );
 
-  const startAtField = form.watch("startAt");
-  const repeatField = form.watch("repeat");
-  const daysField = form.watch("days");
+  const handleDateOfFinish = () => setDateOfFinishState((prev) => !prev);
+  const handleDefineHour = () => setDefineHourState((prev) => !prev);
 
-  const TwoWeeksLater = dayjs(startAtField).add(2, "week").format("YYYY-MM-DD");
+  const TwoWeeksLater = dayjs(startAtWatch).add(2, "week").format("YYYY-MM-DD");
 
   useEffect(() => {
-    if (!dateOfFinishState) form.setValue("endAt", TwoWeeksLater);
+    const endAtValue = dateOfFinishState ? TwoWeeksLater : null;
+    form.setValue("endAt", endAtValue);
   }, [dateOfFinishState]);
 
   useEffect(() => {
-    const newValue = defineHourState ? dayjs().format("HH:mm") : null;
-    form.setValue("hour", newValue);
+    const newHour = defineHourState ? dayjs().format("HH:mm") : null;
+    form.setValue("hour", newHour);
   }, [defineHourState]);
 
   useEffect(() => {
-    const startWeek = dayjs().startOf("week").format("YYYY-MM-DD");
     form.setValue("endAt", TwoWeeksLater);
-    if (!repeatField) setDateOfFinishState(false);
-    if (!repeatField) form.setValue("startAt", startWeek);
-  }, [repeatField]);
+    if (!repeatWatch) setDateOfFinishState(false);
+    if (!repeatWatch) form.setValue("startAt", initalStartAtParam);
+  }, [repeatWatch]);
 
   return {
     form,
     handles: { handleDateOfFinish, handleDefineHour },
-    watchs: { daysField, startAtField, repeatField },
     states: { dateOfFinishState, defineHourState },
+    watchs: { daysWatch, startAtWatch, repeatWatch },
   };
 };
+
+export { useFormTask, useFormTaskAction, verifyInputTypeTime };
+

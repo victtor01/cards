@@ -69,11 +69,19 @@ function FormTaskHeader({ children }: FormTaskHeaderProps) {
 function FormTaskSection({ children }: FormTaskBaseProps) {
   const {
     form,
-    watchs: { daysField, repeatField },
+    watchs: { daysWatch, repeatWatch },
     handles: { handleDateOfFinish, handleDefineHour },
     states: { dateOfFinishState, defineHourState },
   } = useFormTaskAction();
+
   const { register, watch, control } = form;
+
+  const startAtField = watch("startAt");
+  const endAtField = watch("endAt");
+  const diff =
+    startAtField && endAtField
+      ? dayjs(endAtField).diff(startAtField, "week")
+      : "";
 
   return (
     <section className="flex flex-col gap-2 px-5 pb-5 ">
@@ -115,7 +123,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             return (
               <label
                 key={index}
-                data-selected={!!daysField[index]}
+                data-selected={!!daysWatch[index]}
                 htmlFor={`check-day-${index}`}
                 className="w-10 h-10 data-[selected=false]:shadow data-[selected=true]:scale-[0.9] transition-all grid mr-2 place-items-center bg-white data-[selected=true]:bg-indigo-600 cursor-pointer
                 data-[selected=true]:text-white data-[selected=true]:opacity-100 dark:data-[selected=true]:bg-indigo-600 border-l dark:bg-zinc-800 dark:border-zinc-700 rounded-md opacity-90 hover:opacity-100"
@@ -173,7 +181,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           />
         </label>
 
-        {repeatField && (
+        {repeatWatch && (
           <div className="flex items-center gap-2">
             <div className=" flex-1 flex gap-2 items-center px-2">
               <CgCheck size={20} />
@@ -224,8 +232,8 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         <div className="flex gap-2 items-center justify-between flex-1">
           <label
             htmlFor="startAt"
+            data-repeat={repeatWatch}
             className="flex flex-col gap-2 flex-1 data-[repeat=false]:hidden"
-            data-repeat={repeatField}
           >
             <div
               className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
@@ -243,7 +251,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             <div className="flex">
               <div className="w-6" />
               <input
-                disabled={!repeatField}
+                disabled={!repeatWatch}
                 type="date"
                 id="startAt"
                 required
@@ -293,6 +301,14 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           </motion.label>
         </div>
       </div>
+
+      {diff && (
+        <div className="flex flex-1 justify-end">
+          <span className="px-2 p-1 text-zinc-400 dark:text-zinc-500 rounded text-sm">
+            {diff} Semanas
+          </span>
+        </div>
+      )}
 
       <motion.label
         initial={{ opacity: 0 }}

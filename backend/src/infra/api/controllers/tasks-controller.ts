@@ -37,7 +37,7 @@ export class TasksController {
       userId,
     });
 
-    res.json(STATUS.OK).json(updated);
+    res.status(STATUS.OK).json(updated);
   }
 
   public async delete(req: Request, res: Response) {
