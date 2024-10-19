@@ -20,10 +20,10 @@ export class Task {
   public repeat: RepeatType;
 
   @Column({ type: 'date' })
-  public startAt: Date;
+  public startAt: Date | string;
 
   @Column({ type: 'date', nullable: true })
-  public endAt: Date;
+  public endAt: Date | string;
 
   @Column({ type: 'simple-array', nullable: true })
   public completed: string[];
@@ -50,7 +50,7 @@ export class Task {
   constructor(props?: CreateTaskDto & { userId?: string }, id?: string) {
     Object.assign(this, props);
     this.startAt = props?.startAt || new Date();
-    this.endAt = props?.endAt ? new Date(props.endAt) : null;
+    this.endAt = props?.endAt || null;
     this.id = id || randomUUID();
   }
 }

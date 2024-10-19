@@ -1,4 +1,5 @@
 import { WorkspacesServiceInterface } from '@core/application/interfaces/workspaces-service-interface';
+import { STATUS } from '@infra/config/constants/status';
 import { BadRequestException } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
@@ -57,7 +58,7 @@ export class WorkspacesController {
 
     await this.workspacesService.rename({ id, name }, userId);
 
-    response.json({
+    response.status(STATUS.OK).json({
       error: false,
     });
   }
@@ -129,7 +130,7 @@ export class WorkspacesController {
 
     return response.status(200).json(res);
   }
-  
+
   public async disableTree(request: Request, response: Response) {
     const { id: userId } = request.session;
     const { workspaceId } = request?.params;

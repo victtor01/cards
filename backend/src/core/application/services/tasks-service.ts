@@ -1,7 +1,6 @@
 import { CreateTaskDto } from '@core/application/dtos/tasks-dtos/create-task-dto';
 import { DeleteTaskDto } from '@core/application/dtos/tasks-dtos/delete-task-dto';
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
-import { taskDto } from '@core/application/dtos/tasks-dtos/task-dto';
 import { UpdateCompletedTaskDto } from '@core/application/dtos/tasks-dtos/update-completed-task';
 import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { CreateTaskSchema } from '@core/application/validations/tasks-schemas/create-task-schema';
@@ -13,15 +12,15 @@ import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-
 export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
-  public async parseToTask(data: taskDto): Promise<Task> {
+  public async parseToTask(data: CreateTaskDto): Promise<Task> {
     const parse = await CreateTaskSchema.parseAsync({
       description: data?.description || null,
       hour: data?.hour || null,
       repeat: data.repeat,
       days: data.days,
       name: data.name,
-      startAt: new Date(data?.startAt),
-      endAt: data.endAt ? new Date(data.endAt) : null,
+      startAt: data.startAt,
+      endAt: data.endAt,
     }).catch((err: any) => ThrowErrorInValidationSchema(err));
 
     return parse;
@@ -30,7 +29,6 @@ export class TasksService implements TasksServiceInterface {
   public async create(data: CreateTaskDto, userId: string): Promise<Task> {
     const parse = await this.parseToTask(data);
     const taskToCreate = new Task({ ...parse, userId });
-
     const task = await this.tasksRepository.save(taskToCreate);
 
     return task;

@@ -11,8 +11,8 @@ import { TasksService } from './tasks-service';
 const taskMock = new Task({
   name: 'example',
   description: 'This is a description',
-  startAt: new Date(),
-  endAt: new Date(),
+  startAt: '2024-10-23',
+  endAt: '2024-10-23',
   hour: '',
   repeat: false,
   days: [0],

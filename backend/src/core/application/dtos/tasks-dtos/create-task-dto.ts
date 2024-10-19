@@ -3,8 +3,8 @@ import { Day } from '@core/domain/entities/task.entity';
 export interface CreateTaskDto {
   name: string;
   description: string | null;
-  startAt: Date;
-  endAt: Date;
+  endAt: Date | string;
+  startAt: string | Date;
   hour: string;
   days: Day[];
   repeat: RepeatType;
