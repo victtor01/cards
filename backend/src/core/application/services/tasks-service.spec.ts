@@ -42,7 +42,7 @@ describe('tasks-service', () => {
     expect(tasksService.findOneById('TASKID')).rejects.toThrow(NotFoundException);
   });
 
-  describe('create', () => {
+  describe('#create', () => {
     it('should create a new task', async () => {
       const userIdMock = 'USERID';
       const task = new Task({ ...taskMock, userId: userIdMock });
@@ -85,7 +85,7 @@ describe('tasks-service', () => {
     );
   });
 
-  describe('deleteTask', () => {
+  describe('#deleteTask', () => {
     it('should error trying delete task because user not have permission', async () => {
       const task = new Task({ ...taskMock, userId: 'OUTER_USER' }, deleteTaskDto.taskId);
       tasksRepositoryMock.findById.mockResolvedValueOnce(task);
@@ -117,7 +117,8 @@ describe('tasks-service', () => {
       expect(tasksRepositoryMock.delete).toBeCalledTimes(1);
     });
   });
-  describe('findByIdAndUser', () => {
+  
+  describe('#findByIdAndUser', () => {
     it('should error when trying to get a task and the user does not have permission', async () => {
       const taskIdMock = 'TASK_ID';
       const task = new Task({ ...taskMock, userId: 'USER1' }, taskIdMock);

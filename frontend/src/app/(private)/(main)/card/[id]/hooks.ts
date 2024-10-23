@@ -139,10 +139,9 @@ export function useCard(cardId: string) {
   };
 }
 
-export function useUpdateContentCard({
-  card,
-  editor,
-}: useUpdateContentCardProps) {
+export function useUpdateContentCard(props: useUpdateContentCardProps) {
+  
+  const { card, editor } = props;
   const content = card?.content || null;
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [latest, setLatest] = useState<string | null>(content || null);

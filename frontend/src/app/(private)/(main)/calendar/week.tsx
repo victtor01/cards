@@ -13,7 +13,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
-import { FaFile } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaFile } from "react-icons/fa";
+import { PiPlus } from "react-icons/pi";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
 
@@ -24,12 +25,17 @@ const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
+  const [visibleConclued, setVisibleConclued] = useState<boolean>(true);
   const [startOf, setStartOf] = useState<Dayjs>(dayjs().startOf("week"));
   const [endOf, setEndOf] = useState<Dayjs>(dayjs().endOf("week"));
   const router = useRouter();
 
   const searchParams = useSearchParams();
   const taskIdDetail = searchParams.get(DETAIL_NAME);
+
+  const handleVisibleConcluedItems = () => {
+    setVisibleConclued((prev) => !prev);
+  };
 
   const next = () => {
     setStartOf((prev) => {
@@ -108,8 +114,8 @@ const useWeek = () => {
   const modal: MdlOption = (params.get(LINK_NAME) as MdlOption) || null;
 
   return {
-    handles: { next, back, handleNow, openDetail },
-    states: { startOf, endOf, daysArray, modal },
+    handles: { next, back, handleNow, openDetail, handleVisibleConcluedItems },
+    states: { startOf, endOf, daysArray, modal, visibleConclued },
     data: { isLoading, tasks, completeTask },
     params: { taskIdDetail },
   };
@@ -117,8 +123,8 @@ const useWeek = () => {
 
 export function Week() {
   const {
-    handles: { next, back, handleNow, openDetail },
-    states: { startOf, endOf, daysArray, modal },
+    handles: { next, back, handleNow, openDetail, handleVisibleConcluedItems },
+    states: { startOf, endOf, daysArray, modal, visibleConclued },
     data: { tasks, completeTask },
     params: { taskIdDetail },
   } = useWeek();
@@ -135,6 +141,7 @@ export function Week() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  const EyeComponent = visibleConclued ? FaEye : FaEyeSlash;
   const now = day.isBefore(endOf) && day.isAfter(startOf);
 
   return (
@@ -157,6 +164,17 @@ export function Week() {
 
             <div className="flex gap-2">
               <button
+                type="button"
+                onClick={handleVisibleConcluedItems}
+                className="opacity-95 hover:opacity-100 items-center px-3 flex gap-2 h-8 rounded-md bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-500 shadow dark:shadow-black"
+              >
+                <EyeComponent />
+                Concluidos
+              </button>
+
+              <span className="flex-1 flex bg-zinc-200 dark:bg-zinc-800 w-[1px]" />
+
+              <button
                 disabled={now}
                 data-disabled={now}
                 onClick={handleNow}
@@ -169,6 +187,7 @@ export function Week() {
                 onClick={addTaskModal}
                 className="opacity-95 hover:opacity-100 items-center px-3 flex gap-2 h-8 rounded-md bg-indigo-600 dark:bg-indigo-600 text-white shadow dark:shadow-black"
               >
+                <PiPlus />
                 <span className={`${fontFiraCode}`}>Nova task</span>
               </button>
 
@@ -224,6 +243,13 @@ export function Week() {
 
                   const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
 
+                  if (
+                    !visibleConclued &&
+                    task?.completed?.includes(dayjs(day).format("YYYY-MM-DD"))
+                  ) {
+                    return false;
+                  }
+
                   if (!taskEndAt)
                     return task.days.includes(dayOfWeek.toString());
 
@@ -245,12 +271,12 @@ export function Week() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: (index + 1) / 100 }}
-                  className={`${style} rounded-xl flex gap-4 p-5 flex-col shadow dark:shadow-black bg-white flex-1 w-auto relative min-w-[25rem] max-w-[50%] h-auto dark:bg-neutral-900/50`}
+                  className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white flex-1 w-auto relative min-w-[25rem] max-w-[50%] h-auto dark:bg-neutral-900/50`}
                 >
                   {isCurrentDay && (
                     <span className="w-[98%] min-h-[0.4rem] bg-indigo-500 absolute top-0 left-[50%] translate-x-[-50%] translate-y-[-100%] rounded-t-lg" />
                   )}
-                  <header className="w-full items-center p-1 rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex justify-between">
+                  <header className="w-full p-5 pb-0 items-center rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex justify-between">
                     <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">
                       {isCurrentDay ? "Hoje" : dayjs(day).format("dddd")}
                     </span>
@@ -258,67 +284,71 @@ export function Week() {
                       {dayjs(day).format("DD/MM/YYYY")}
                     </span>
                   </header>
-                  <section className="flex flex-col">
-                    {tasksForDay?.map((task) => {
-                      const selectedLink = taskIdDetail === task.id;
-                      const completed = task?.completed?.includes(
-                        dayjs(day).format("YYYY-MM-DD")
-                      );
-
-                      return (
-                        <motion.div
-                          key={`${task.id}-${day}`}
-                          data-completed={completed}
-                          data-linkselected={!!taskIdDetail && !selectedLink}
-                          className="flex gap-2 p-1 rounded border mb-2 data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
-                        >
-                          <button
-                            onClick={() =>
-                              completeTask(
-                                task.id,
-                                dayjs(day).format("YYYY-MM-DD")
-                              )
-                            }
-                            type="button"
-                            data-completed={completed}
-                            className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
-                          >
-                            {completed && (
-                              <motion.div
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                              >
-                                <CgCheck />
-                              </motion.div>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => openDetail(task.id)}
-                            data-completed={completed}
-                            className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 data-[completed=true]:line-through data-[completed=true]:opacity-70`}
-                          >
-                            {task.name}
-                          </button>
-                          <div className="flex items-center gap-3">
-                            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                              {task?.hour?.toString() || "Sem horário"}
-                            </div>
-                            <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-                              <FaFile size={12} />
-                              <span>2</span>
-                            </div>
-                            <span className="w-4 h-4 bg-orange-600 rounded" />
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                    <div>
+                  <section className="flex flex-col gap-2 pb-4 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
+                    <div className="">
                       <span
                         className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
                       >
                         {tasksForDay?.length} Tasks para esse dia!
                       </span>
                     </div>
+                      {tasksForDay?.map((task) => {
+                        const selectedLink = taskIdDetail === task.id;
+                        const completed = task?.completed?.includes(
+                          dayjs(day).format("YYYY-MM-DD")
+                        );
+
+                        return (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            key={`${task.id}-${day}`}
+                            data-completed={completed}
+                            data-linkselected={!!taskIdDetail && !selectedLink}
+                            className="flex gap-2 p-1 rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                          >
+                            <button
+                              onClick={() =>
+                                completeTask(
+                                  task.id,
+                                  dayjs(day).format("YYYY-MM-DD")
+                                )
+                              }
+                              type="button"
+                              data-completed={completed}
+                              className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
+                              dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
+                            >
+                              {completed && (
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                >
+                                  <CgCheck />
+                                </motion.div>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => openDetail(task.id)}
+                              data-completed={completed}
+                              className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
+                              data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+                            >
+                              {task.name}
+                            </button>
+                            <div className="flex items-center gap-3">
+                              <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+                                {task?.hour?.toString() || "Sem horário"}
+                              </div>
+                              <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
+                                <FaFile size={12} />
+                                <span>2</span>
+                              </div>
+                              <span className="w-4 h-4 bg-orange-600 rounded" />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                   </section>
                 </motion.div>
               );

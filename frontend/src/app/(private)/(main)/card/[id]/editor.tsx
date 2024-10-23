@@ -135,11 +135,11 @@ export function EditorComponent({ card }: { card: ICard }) {
             value={title || ""}
             onChange={onChangeTitle}
             placeholder="This is my new project..."
-            className="bg-transparent font-semibold border border-transparent outline-none w-full text-6xl placeholder:text-zinc-700 break-word text-zinc-700 dark:text-zinc-300 resize-none"
+            className="bg-transparent font-semibold border  leading-[4rem] border-transparent outline-none w-full text-[4.5rem] placeholder:text-zinc-700 break-word text-zinc-800 dark:text-zinc-300 resize-none"
           />
         </header>
 
-        <section className="references">
+        <section className="references font-semibold text-xl">
           <BlockNoteView
             onChange={updateContent}
             editor={editor}

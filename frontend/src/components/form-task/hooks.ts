@@ -9,12 +9,13 @@ import { useForm, useFormContext, UseFormReturn } from "react-hook-form";
 const isValidTimeInput = (input: string): boolean => {
   const isNotValidHour = Number(input[0]) > 2;
   const isValidLength = input?.length <= 4;
+  const secoundHourIsNotvalid = (Number(input[1]) > 3) && (Number(input[0]) >= 2); 
 
   if (
     isNotValidHour ||
     !isValidLength ||
-    Number(input[2]) >= 6 ||
-    input[1] > "4"
+    secoundHourIsNotvalid ||
+    Number(input[2]) >= 6
   ) {
     return false;
   }
@@ -111,9 +112,11 @@ const useFormTaskAction = () => {
   }, [defineHourState]);
 
   useEffect(() => {
-    form.setValue("endAt", TwoWeeksLater);
-    if (!repeatWatch) setDateOfFinishState(false);
-    if (!repeatWatch) form.setValue("startAt", initalStartAtParam);
+    if (!repeatWatch) {
+      form.setValue("startAt", initalStartAtParam);
+      form.setValue("endAt", null);
+      setDateOfFinishState(false)
+    }
   }, [repeatWatch]);
 
   return {
