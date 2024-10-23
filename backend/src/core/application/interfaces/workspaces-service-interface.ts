@@ -2,9 +2,10 @@ import { RenameWorkspaceDto } from '@core/application/dtos/workspaces-dtos/renam
 import { UpdateBackgroundWorkspaceByIdDto } from '@core/application/dtos/workspaces-dtos/update-background-by-id';
 import { UpdateBackgroundWorkspaceByCodeDto } from '@core/application/dtos/workspaces-dtos/update-background-dto';
 import { Workspace } from '@core/domain/entities/workspace.entity';
+import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
 
 export abstract class WorkspacesServiceInterface {
-  abstract save(data: Workspace): Promise<Workspace>;
+  abstract save(data: CreateWorkspaceDto): Promise<Workspace>;
   abstract findByUserWithCards(userId: string): Promise<Workspace[]>;
   abstract findByUserFormatTree(userId: string): Promise<Workspace[]>;
   abstract enable(workspaceId: string, userId: string): Promise<boolean>;

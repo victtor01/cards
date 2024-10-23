@@ -16,7 +16,14 @@ const WorkspacesRepositoryMock = {
   save: vi.fn(),
   findActivesByUserIdWithCards: vi.fn(),
   findOneByCodeWithWorkspacesAndCards: vi.fn(),
+  findByParentId: vi.fn(),
   findOneById: vi.fn(),
+  findOneActiveByIdWithRelations: vi.fn(),
+  findByRootsWithUser: vi.fn(),
+  findDisabledByUser: vi.fn(),
+  update: vi.fn(),
+  updateMany: vi.fn(),
+  delete: vi.fn(),
 } satisfies WorkspacesRepository;
 
 describe('worksapcesServices', () => {

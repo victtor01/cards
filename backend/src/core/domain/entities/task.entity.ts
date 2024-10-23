@@ -16,7 +16,7 @@ export class Task {
   @Column({ type: 'varchar', nullable: true })
   public description: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   public repeat: RepeatType;
 
   @Column({ type: 'date' })
@@ -41,11 +41,11 @@ export class Task {
   public createdAt: Date;
 
   @Column({ type: 'varchar' })
-  userId: string;
+  public userId: string;
 
   @ManyToOne(() => User, (user) => user.tasks)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  public user: User;
 
   constructor(props?: CreateTaskDto & { userId?: string }, id?: string) {
     Object.assign(this, props);

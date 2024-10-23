@@ -10,7 +10,7 @@ export abstract class TasksServiceInterface {
   abstract findOneByIdAndUserId(taskId: string, userId: string): Promise<Task>;
   abstract findByDate(data: FindByDateDto, userId: string): Promise<Task[]>;
   abstract updateArrayCompleted(data: UpdateCompletedTaskDto): Promise<any>;
-  abstract updateTask(data: UpdateTaskDto, userId: string): Promise<Task>;
+  abstract updateTask(data: UpdateTaskDto, userId: string): Promise<boolean>;
   abstract create(data: CreateTaskDto, userId: string): Promise<Task>;
   abstract deleteTask(data: DeleteTaskDto): Promise<boolean>;
   abstract findOneById(taskId: string): Promise<Task>;

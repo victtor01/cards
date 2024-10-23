@@ -17,8 +17,9 @@ export class UpdateTaskDto {
   @IsString()
   public description: string;
 
-  @IsIn(['weekly', false])
-  public repeat: RepeatType = 'weekly';
+  @IsIn(['weekly', null])
+  @IsOptional()
+  public repeat: RepeatType = null;
 
   @IsString()
   public startAt: Date | string;

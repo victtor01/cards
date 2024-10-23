@@ -7,7 +7,7 @@ export const CreateTaskSchema = z.object({
   hour: z.string().nullable(),
   description: z.string().max(255).nullable(),
   endAt: z.string().nullable(),
-  repeat: z.union([z.literal('weekly'), z.literal(false)]),
+  repeat: z.string().nullable(),
   days: z.array(z.number()).min(1),
 }).refine(data => {
   if (data.endAt && new Date(data.startAt) > new Date(data.endAt)) {

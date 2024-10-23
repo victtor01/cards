@@ -55,7 +55,7 @@ export class ImplementsTasksRepository implements TasksRepository {
         {
           userId,
           startAt: And(MoreThanOrEqual(startAt), LessThanOrEqual(endAt)),
-          repeat: false,
+          repeat: IsNull(),
           endAt: IsNull(),
         },
       ],

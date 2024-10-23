@@ -5,6 +5,7 @@ import { DeleteResult } from 'typeorm';
 import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
 import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
+import { UpdateTaskDto } from '../dtos/tasks-dtos/updateTaskDto';
 import { TasksServiceInterface } from '../interfaces/task-service-interface';
 import { TasksService } from './tasks-service';
 
@@ -14,9 +15,20 @@ const taskMock = new Task({
   startAt: '2024-10-23',
   endAt: '2024-10-23',
   hour: '',
-  repeat: false,
+  repeat: null,
   days: [0],
 });
+
+const updateTaskDtoMock = {
+  id: 'EXAMPLETASKID',
+  name: 'TASKEXAMPLE',
+  days: [0],
+  repeat: 'weekly',
+  startAt: '2024-10-10',
+  description: '',
+  endAt: null,
+  hour: null,
+} satisfies UpdateTaskDto;
 
 const deleteTaskDto = { taskId: '123', userId: 'THIS_USER' } satisfies DeleteTaskDto;
 
@@ -57,32 +69,34 @@ describe('tasks-service', () => {
     });
 
     it('should error in create a new task because of data', async () => {
-      const USERID = "USER1";
+      const USERID = 'USER1';
       const copyTask = { ...taskMock };
       delete copyTask.name;
 
       vi.spyOn(tasksService, 'parseToTask');
 
-      expect(tasksService.create(copyTask, USERID)).rejects.toThrow()
+      expect(tasksService.create(copyTask, USERID)).rejects.toThrow();
       expect(tasksRepositoryMock.save).toBeCalledTimes(0);
       expect(tasksService.parseToTask).toBeCalledTimes(1);
     });
   });
 
-  it('should be an error in updateCompletedTask because the task does not belong to the user', async () => {
-    const updatedTaskDataDto = {
-      taskId: '123',
-      userId: 'user1',
-      completedArray: [],
-    } satisfies UpdateCompletedTaskDto;
+  describe('#updateArrayCompleted', () => {
+    it('should be an error in updateCompletedTask because the task does not belong to the user', async () => {
+      const updatedTaskDataDto = {
+        taskId: '123',
+        userId: 'user1',
+        completedArray: [],
+      } satisfies UpdateCompletedTaskDto;
 
-    tasksRepositoryMock.findById.mockResolvedValueOnce(
-      await Promise.resolve({ ...taskMock, userId: 'user2' })
-    );
+      tasksRepositoryMock.findById.mockResolvedValueOnce(
+        await Promise.resolve({ ...taskMock, userId: 'user2' })
+      );
 
-    expect(tasksService.updateArrayCompleted(updatedTaskDataDto)).rejects.toThrow(
-      new UnauthorizedException('Usuário não pode fazer essa ação!')
-    );
+      expect(tasksService.updateArrayCompleted(updatedTaskDataDto)).rejects.toThrow(
+        new UnauthorizedException('Usuário não pode fazer essa ação!')
+      );
+    });
   });
 
   describe('#deleteTask', () => {
@@ -117,7 +131,7 @@ describe('tasks-service', () => {
       expect(tasksRepositoryMock.delete).toBeCalledTimes(1);
     });
   });
-  
+
   describe('#findByIdAndUser', () => {
     it('should error when trying to get a task and the user does not have permission', async () => {
       const taskIdMock = 'TASK_ID';
@@ -146,12 +160,30 @@ describe('tasks-service', () => {
     });
   });
 
-  describe("#updateTask", () => {
-    it("should give an error trying to update the task because task does not belong to the user" , async () => {
+  describe('#updateTask', () => {
+    it('should give an error trying to update the task because task does not belong to the user', async () => {
+      const userIdMock = 'USERIDMOMCK';
+
+      tasksRepositoryMock.findById.mockResolvedValueOnce({ ...taskMock, userId: 'OUTER_USER' });
+
+      await expect(tasksService.updateTask(updateTaskDtoMock, userIdMock)).rejects.toThrow(
+        UnauthorizedException
+      );
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+      expect(tasksRepositoryMock.update).toBeCalledTimes(0);
     });
 
-    it("should update task success", async () => {
+    it('should update task success', async () => {
+      const userIdMock = 'USERIDMOMCK';
+      const updatedDto = { ...taskMock, userId: userIdMock };
 
-    })
-  })
+      tasksRepositoryMock.findById.mockResolvedValue(updatedDto);
+
+      const updated = await tasksService.updateTask(updatedDto, userIdMock);
+
+      expect(updated).toBeDefined();
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+      expect(tasksRepositoryMock.update).toBeCalledTimes(1);
+    });
+  });
 });

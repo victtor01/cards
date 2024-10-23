@@ -38,7 +38,7 @@ export class TasksService implements TasksServiceInterface {
 
   public async findByDate({ startAt, endAt }: FindByDateDto, userId: string): Promise<Task[]> {
     const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
-    
+
     return allTasks;
   }
 
@@ -55,49 +55,45 @@ export class TasksService implements TasksServiceInterface {
     return true;
   }
 
-  
   public async findOneById(taskId: string): Promise<Task> {
     const task = await this.tasksRepository.findById(taskId);
     if (!task?.id) throw new NotFoundException('task não existe!');
-    
+
     return task;
   }
-  
+
   public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<any> {
     const { completedArray, taskId, userId } = updateCompletedTaskDto;
     const task = await this.findOneById(taskId);
 
     if (task.userId !== userId)
       throw new UnauthorizedException('Usuário não pode fazer essa ação!');
-    
+
     const filterString = completedArray.filter((date: string) => date.toString());
     const updated = await this.tasksRepository.update(taskId, { completed: filterString });
-    
+
     return updated;
   }
-  
+
   public async findOneByIdAndUserId(taskId: string, userId: string): Promise<Task> {
     const task = await this.findOneById(taskId);
-    
+
     if (task.userId !== userId) {
       throw new UnauthorizedException('Usuário não tem permissão!');
     }
-    
+
     return task;
   }
 
-  public async updateTask(updateTaskDto: UpdateTaskDto, userId: string): Promise<Task> {
-    try {
-      const validation = new UpdateTaskDto(updateTaskDto);
-      await validateOrReject(validation);
+  public async updateTask(updateTaskDto: UpdateTaskDto, userId: string): Promise<boolean> {
+    const validation = new UpdateTaskDto(updateTaskDto);
+    await validateOrReject(validation);
 
-      const task = await this.findOneByIdAndUserId(updateTaskDto.id, userId);
+    const task = await this.tasksRepository.findById(updateTaskDto.id);
+    if (task?.userId !== userId) throw new UnauthorizedException('usuário não tem permissão!');
 
-      const updated = await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto });
+    await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto })
 
-      return updated.raw
-    } catch (errors) {
-      console.log('Validation failed', errors);
-    }
+    return true;
   }
 }

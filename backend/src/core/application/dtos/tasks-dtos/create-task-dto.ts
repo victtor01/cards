@@ -10,4 +10,4 @@ export interface CreateTaskDto {
   repeat: RepeatType;
 }
 
-export type RepeatType = 'weekly' | false;
+export type RepeatType = 'weekly' | null;
