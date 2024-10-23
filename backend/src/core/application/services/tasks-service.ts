@@ -6,8 +6,10 @@ import { TasksServiceInterface } from '@core/application/interfaces/task-service
 import { CreateTaskSchema } from '@core/application/validations/tasks-schemas/create-task-schema';
 import { Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
-import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
+import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
+import { validateOrReject } from 'class-validator';
+import { UpdateTaskDto } from '../dtos/tasks-dtos/updateTaskDto';
 
 export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
@@ -34,47 +36,15 @@ export class TasksService implements TasksServiceInterface {
     return task;
   }
 
-  public async findOneById(taskId: string): Promise<Task> {
-    const task = await this.tasksRepository.findById(taskId);
-
-    if (!task?.id) throw new NotFoundException('task não existe!');
-
-    return task;
-  }
-
-  public async update(taskId: string, data: Partial<Task>) {
-    try {
-      const updated = await this.tasksRepository.update(taskId, data);
-
-      return updated;
-    } catch (error) {
-      throw new BadRequestException('Não foi possível atualizar a task!');
-    }
-  }
-
-  public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<any> {
-    const { completedArray, taskId, userId } = updateCompletedTaskDto;
-
-    const task = await this.findOneById(taskId);
-
-    if (task.userId !== userId)
-      throw new UnauthorizedException('Usuário não pode fazer essa ação!');
-
-    const filterString = completedArray.filter((date: string) => date.toString());
-    const updated = await this.update(taskId, { completed: filterString });
-
-    return updated;
-  }
-
   public async findByDate({ startAt, endAt }: FindByDateDto, userId: string): Promise<Task[]> {
     const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
+    
     return allTasks;
   }
 
   public async deleteTask(data: DeleteTaskDto): Promise<boolean> {
     const { taskId, userId } = data;
     const task = await this.tasksRepository.findById(taskId);
-
     if (!task?.id) throw new NotFoundException('Task não existe!');
 
     if (task.userId !== userId)
@@ -85,13 +55,49 @@ export class TasksService implements TasksServiceInterface {
     return true;
   }
 
-  public async findOneByIdAndUserId(taskId: string, userId: string): Promise<Task> {
+  
+  public async findOneById(taskId: string): Promise<Task> {
+    const task = await this.tasksRepository.findById(taskId);
+    if (!task?.id) throw new NotFoundException('task não existe!');
+    
+    return task;
+  }
+  
+  public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<any> {
+    const { completedArray, taskId, userId } = updateCompletedTaskDto;
     const task = await this.findOneById(taskId);
 
+    if (task.userId !== userId)
+      throw new UnauthorizedException('Usuário não pode fazer essa ação!');
+    
+    const filterString = completedArray.filter((date: string) => date.toString());
+    const updated = await this.tasksRepository.update(taskId, { completed: filterString });
+    
+    return updated;
+  }
+  
+  public async findOneByIdAndUserId(taskId: string, userId: string): Promise<Task> {
+    const task = await this.findOneById(taskId);
+    
     if (task.userId !== userId) {
       throw new UnauthorizedException('Usuário não tem permissão!');
     }
-
+    
     return task;
+  }
+
+  public async updateTask(updateTaskDto: UpdateTaskDto, userId: string): Promise<Task> {
+    try {
+      const validation = new UpdateTaskDto(updateTaskDto);
+      await validateOrReject(validation);
+
+      const task = await this.findOneByIdAndUserId(updateTaskDto.id, userId);
+
+      const updated = await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto });
+
+      return updated.raw
+    } catch (errors) {
+      console.log('Validation failed', errors);
+    }
   }
 }

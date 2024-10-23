@@ -1,5 +1,5 @@
 import { ErrorInstance } from "@src/utils/errors";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 function getMessageError(message: string) {
   let response: Object | string;
@@ -8,7 +8,6 @@ function getMessageError(message: string) {
   } catch (error) {
     response = message || "Internal Server Error";
   }
-
   return response;
 }
 
@@ -16,11 +15,12 @@ export function ErrorMiddleware(
   error: Error & Partial<ErrorInstance>,
   _: Request,
   res: Response,
+  next: NextFunction
 ) {
-  const statusCode = error.statusCode || 500;
+  const statusCode = error?.statusCode || 500;
   const message = getMessageError(error.message);
   const errorText = error.error || "Internal Server Error";
-
+  
   return res.status(statusCode).json({
     statusCode,
     errorText,

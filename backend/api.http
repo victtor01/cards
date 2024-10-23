@@ -86,3 +86,11 @@ Content-Type: application/json
   "days": [0],
   "repeat": false
 }
+###
+
+PUT {{HOST}}/tasks/teste HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "teste"
+}

@@ -1,4 +1,5 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
+import { UpdateTaskDto } from '@core/application/dtos/tasks-dtos/updateTaskDto';
 import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { STATUS } from '@infra/config/constants/status';
 import { Request, Response } from 'express';
@@ -12,7 +13,7 @@ export class TasksController {
 
     const created = await this.tasksService.create(body, id);
 
-    res.status(STATUS.CREATED).json(created);
+    return res.status(STATUS.CREATED).json(created);
   }
 
    public async findOneByIdAndUser(request: Request, response: Response) {
@@ -21,7 +22,7 @@ export class TasksController {
     
     const task = await this.tasksService.findOneByIdAndUserId(taskId, userId);
 
-    response.status(STATUS.OK).json(task);
+    return response.status(STATUS.OK).json(task);
   }
 
 
@@ -37,7 +38,7 @@ export class TasksController {
       userId,
     });
 
-    res.status(STATUS.OK).json(updated);
+    return res.status(STATUS.OK).json(updated);
   }
 
   public async delete(req: Request, res: Response) {
@@ -48,9 +49,21 @@ export class TasksController {
 
     await this.tasksService.deleteTask({ taskId, userId });
 
-    res.status(STATUS.OK).json({
+    return res.status(STATUS.OK).json({
       error: false,
     });
+  }
+
+  public async updateTask(req: Request, res: Response) {
+    const { params, session } = req;
+
+    const [taskId, userId] = [params.taskId, session.id];
+    const updateTaskDto: UpdateTaskDto = req.body;
+    updateTaskDto.id = taskId;
+
+    const updatedTask = await this.tasksService.updateTask(updateTaskDto, userId);
+    
+    return res.status(STATUS.OK).json(updatedTask)
   }
 
   public async findByDate(req: Request, res: Response) {
@@ -59,6 +72,6 @@ export class TasksController {
 
     const tasks = await this.tasksService.findByDate(query, id);
 
-    res.status(STATUS.OK).json(tasks);
+    return res.status(STATUS.OK).json(tasks);
   }
 }

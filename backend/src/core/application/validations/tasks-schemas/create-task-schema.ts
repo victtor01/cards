@@ -1,3 +1,4 @@
+import { BadRequestException } from '@src/utils/errors';
 import { z } from 'zod';
 
 export const CreateTaskSchema = z.object({
@@ -8,4 +9,11 @@ export const CreateTaskSchema = z.object({
   endAt: z.string().nullable(),
   repeat: z.union([z.literal('weekly'), z.literal(false)]),
   days: z.array(z.number()).min(1),
+}).refine(data => {
+  if (data.endAt && new Date(data.startAt) > new Date(data.endAt)) {
+    throw new BadRequestException("End date must be after start date");
+  }
+  return true;
+}, {
+  message: "Invalid date range"
 });

@@ -1,7 +1,7 @@
 import "dayjs/locale/pt-br";
 
 import { fontFiraCode } from "@/fonts";
-import { AnimatePresence, motion } from "framer-motion";
+import { animate, AnimatePresence, delay, motion } from "framer-motion";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { MdViewWeek } from "react-icons/md";
 
@@ -9,7 +9,7 @@ import { api } from "@/api";
 import { ITask } from "@/interfaces/ITask";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { Dayjs, locale } from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
@@ -17,6 +17,10 @@ import { FaEye, FaEyeSlash, FaFile } from "react-icons/fa";
 import { PiPlus } from "react-icons/pi";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
+import { get } from "http";
+import { type } from "os";
+import { format } from "path";
+import { set, map } from "zod";
 
 dayjs.locale("pt-br");
 
@@ -82,27 +86,13 @@ const useWeek = () => {
 
     const includesInCompleted = task?.completed?.includes(date) || null;
 
-    if (!includesInCompleted) {
-      const prevTasks = task?.completed || [];
-      const newArray: string[] = [...prevTasks, date];
-      await api.put(`/tasks/${taskId}`, {
-        arrayToConclude: newArray,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    } else {
-      const prevTasks = task?.completed || [];
-      const newArray: string[] = [
-        ...prevTasks?.filter((datePrev) => datePrev !== date),
-      ];
-      await api.put(`/tasks/${taskId}`, {
-        arrayToConclude: newArray,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    }
+    const prevTasks = task?.completed || [];
+    const newArray = includesInCompleted
+      ? prevTasks.filter((datePrev) => datePrev !== date)
+      : [...prevTasks, date];
+
+    await api.put(`/tasks/completed/${taskId}`, { arrayToConclude: newArray });
+    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
   };
 
   const daysArray = Array.from(
@@ -292,63 +282,63 @@ export function Week() {
                         {tasksForDay?.length} Tasks para esse dia!
                       </span>
                     </div>
-                      {tasksForDay?.map((task) => {
-                        const selectedLink = taskIdDetail === task.id;
-                        const completed = task?.completed?.includes(
-                          dayjs(day).format("YYYY-MM-DD")
-                        );
+                    {tasksForDay?.map((task) => {
+                      const selectedLink = taskIdDetail === task.id;
+                      const completed = task?.completed?.includes(
+                        dayjs(day).format("YYYY-MM-DD")
+                      );
 
-                        return (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            key={`${task.id}-${day}`}
+                      return (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          key={`${task.id}-${day}`}
+                          data-completed={completed}
+                          data-linkselected={!!taskIdDetail && !selectedLink}
+                          className="flex gap-2 p-1 rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                        >
+                          <button
+                            onClick={() =>
+                              completeTask(
+                                task.id,
+                                dayjs(day).format("YYYY-MM-DD")
+                              )
+                            }
+                            type="button"
                             data-completed={completed}
-                            data-linkselected={!!taskIdDetail && !selectedLink}
-                            className="flex gap-2 p-1 rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
-                          >
-                            <button
-                              onClick={() =>
-                                completeTask(
-                                  task.id,
-                                  dayjs(day).format("YYYY-MM-DD")
-                                )
-                              }
-                              type="button"
-                              data-completed={completed}
-                              className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
+                            className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
                               dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
-                            >
-                              {completed && (
-                                <motion.div
-                                  initial={{ opacity: 0, scale: 0 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                >
-                                  <CgCheck />
-                                </motion.div>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => openDetail(task.id)}
-                              data-completed={completed}
-                              className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
+                          >
+                            {completed && (
+                              <motion.div
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                              >
+                                <CgCheck />
+                              </motion.div>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => openDetail(task.id)}
+                            data-completed={completed}
+                            className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
                               data-[completed=true]:line-through data-[completed=true]:opacity-70`}
-                            >
-                              {task.name}
-                            </button>
-                            <div className="flex items-center gap-3">
-                              <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                                {task?.hour?.toString() || "Sem horário"}
-                              </div>
-                              <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-                                <FaFile size={12} />
-                                <span>2</span>
-                              </div>
-                              <span className="w-4 h-4 bg-orange-600 rounded" />
+                          >
+                            {task.name}
+                          </button>
+                          <div className="flex items-center gap-3">
+                            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+                              {task?.hour?.toString() || "Sem horário"}
                             </div>
-                          </motion.div>
-                        );
-                      })}
+                            <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
+                              <FaFile size={12} />
+                              <span>2</span>
+                            </div>
+                            <span className="w-4 h-4 bg-orange-600 rounded" />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </section>
                 </motion.div>
               );

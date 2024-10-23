@@ -145,4 +145,13 @@ describe('tasks-service', () => {
       expect(response).toBeInstanceOf(Task);
     });
   });
+
+  describe("#updateTask", () => {
+    it("should give an error trying to update the task because task does not belong to the user" , async () => {
+    });
+
+    it("should update task success", async () => {
+
+    })
+  })
 });
