@@ -9,7 +9,7 @@ type CreateTask = {
   days: number[];
   description: string | null;
   hour: string | null | undefined;
-  repeat: "weekly" | false;
+  repeat: "weekly" | null;
   startAt: Date | string;
   endAt: Date | string | null;
 };
@@ -28,7 +28,7 @@ export const useAddTask = () => {
       ?.filter((vl) => typeof vl === "number");
 
     const createTaskData = {
-      repeat: !!repeat ? "weekly" : false,
+      repeat: !!repeat ? "weekly" : null,
       startAt: startAt,
       endAt: endAt,
       hour: hour,

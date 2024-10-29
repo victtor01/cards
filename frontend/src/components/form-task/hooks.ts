@@ -9,7 +9,7 @@ import { useForm, useFormContext, UseFormReturn } from "react-hook-form";
 const isValidTimeInput = (input: string): boolean => {
   const isNotValidHour = Number(input[0]) > 2;
   const isValidLength = input?.length <= 4;
-  const secoundHourIsNotvalid = (Number(input[1]) > 3) && (Number(input[0]) >= 2); 
+  const secoundHourIsNotvalid = Number(input[1]) > 3 && Number(input[0]) >= 2;
 
   if (
     isNotValidHour ||
@@ -57,7 +57,7 @@ const useFormTask = (task?: Partial<ITask>) => {
       startAt: task?.startAt
         ? dayjs(task.startAt).format("YYYY-MM-DD")
         : initalStartAt || date.startOf("week").format("YYYY-MM-DD"),
-      endAt: task?.endAt ? dayjs(task?.endAt).format("YYYY-MM-DD") : null,
+      endAt: !!task?.endAt ? dayjs(task.endAt).format("YYYY-MM-DD") : null,
     },
   });
 
@@ -70,6 +70,7 @@ const getWatchsForm = (form: UseFormReturn<TaskSchema>) => ({
   startAtWatch: form.watch("startAt"),
   repeatWatch: form.watch("repeat"),
   daysWatch: form.watch("days"),
+  endAtWatch: form.watch("endAt"),
 });
 
 const getInitalValuesForm = (form: UseFormReturn<TaskSchema>) => ({
@@ -84,7 +85,7 @@ const useFormTaskAction = () => {
   const initalStartAtParam =
     searchParams.get("startAt") || dayjs().startOf("week").format("YYYY-MM-DD");
 
-  const { startAtWatch, repeatWatch, daysWatch } = getWatchsForm(form);
+  const { startAtWatch, repeatWatch, daysWatch, endAtWatch } = getWatchsForm(form);
   const { endAtField, initialHourState, repeatsField } =
     getInitalValuesForm(form);
 
@@ -103,7 +104,7 @@ const useFormTaskAction = () => {
 
   useEffect(() => {
     const endAtValue = dateOfFinishState ? TwoWeeksLater : null;
-    form.setValue("endAt", endAtValue);
+    if(!form.getValues("endAt")) form.setValue("endAt", endAtValue);
   }, [dateOfFinishState]);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ const useFormTaskAction = () => {
     if (!repeatWatch) {
       form.setValue("startAt", initalStartAtParam);
       form.setValue("endAt", null);
-      setDateOfFinishState(false)
+      setDateOfFinishState(false);
     }
   }, [repeatWatch]);
 

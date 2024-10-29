@@ -17,24 +17,33 @@ import { FaEye, FaEyeSlash, FaFile } from "react-icons/fa";
 import { PiPlus } from "react-icons/pi";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
+import { log } from "console";
 import { get } from "http";
 import { type } from "os";
 import { format } from "path";
 import { set, map } from "zod";
+import layout from "../layout";
 
 dayjs.locale("pt-br");
-
 type MdlOption = "new" | null | undefined;
 const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
+  const searchParams = useSearchParams();
+  const startAtInitial = searchParams.get("startAt")
+    ? dayjs(searchParams.get("startAt"))
+    : null;
+
   const [visibleConclued, setVisibleConclued] = useState<boolean>(true);
-  const [startOf, setStartOf] = useState<Dayjs>(dayjs().startOf("week"));
-  const [endOf, setEndOf] = useState<Dayjs>(dayjs().endOf("week"));
+  const [startOf, setStartOf] = useState<Dayjs>(
+    startAtInitial || dayjs().startOf("week")
+  );
+  const [endOf, setEndOf] = useState<Dayjs>(
+    startAtInitial?.endOf("week") || dayjs().endOf("week")
+  );
   const router = useRouter();
 
-  const searchParams = useSearchParams();
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
   const handleVisibleConcluedItems = () => {
@@ -58,6 +67,7 @@ const useWeek = () => {
   const handleNow = () => {
     setStartOf(dayjs().startOf("week"));
     setEndOf(dayjs().endOf("week"));
+    router.push("?");
   };
 
   const openDetail = (taskId: string) => {
@@ -228,25 +238,32 @@ export function Week() {
 
               const tasksForDay = tasks
                 ?.filter((task: ITask) => {
-                  const taskStartAt = new Date(task?.startAt) || null;
+                  const taskStartAt = task?.startAt
+                    ? new Date(task.startAt)
+                    : null;
+
                   const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
-
                   const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
+                  const taskCompletedOnCurrentDay = task?.completed?.includes(
+                    dayjs(day).format("YYYY-MM-DD")
+                  );
 
-                  if (
-                    !visibleConclued &&
-                    task?.completed?.includes(dayjs(day).format("YYYY-MM-DD"))
-                  ) {
-                    return false;
-                  }
+                  const taskIsVisible =
+                    visibleConclued || !taskCompletedOnCurrentDay;
 
-                  if (!taskEndAt)
-                    return task.days.includes(dayOfWeek.toString());
+                  const taskIsForToday = task.days.includes(
+                    dayOfWeek.toString()
+                  );
+
+                  const taskIsWithinDateRange =
+                    (!taskEndAt || taskEndAt >= currentDay) &&
+                    (!taskStartAt || currentDay >= taskStartAt);
 
                   return (
-                    task.days.includes(dayOfWeek.toString()) &&
-                    (!taskEndAt || taskEndAt >= currentDay) &&
-                    !(currentDay < taskStartAt)
+                    taskIsVisible &&
+                    (taskEndAt
+                      ? taskIsForToday && taskIsWithinDateRange
+                      : taskIsForToday)
                   );
                 })
                 .sort(
@@ -274,7 +291,7 @@ export function Week() {
                       {dayjs(day).format("DD/MM/YYYY")}
                     </span>
                   </header>
-                  <section className="flex flex-col gap-2 pb-4 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
+                  <section className="flex flex-col gap-3 pb-4 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
                     <div className="">
                       <span
                         className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
@@ -288,6 +305,50 @@ export function Week() {
                         dayjs(day).format("YYYY-MM-DD")
                       );
 
+                      const diffInDays =
+                        !!task.startAt && !!task.endAt
+                          ? dayjs(task.endAt, "YYYY-MM-DD").diff(
+                              dayjs(task.startAt, "YYYY-MM-DD"),
+                              "day"
+                            )
+                          : null;
+
+                      const diffWeekFormat =
+                        diffInDays !== null ? Math.ceil(diffInDays / 7) : null;
+
+                      const quantityOfTasks =
+                        !!task.startAt && !!task.endAt && diffInDays
+                          ? new Array(diffInDays)
+                              .fill(null)
+                              .reduce((count, _, i) => {
+                                const currentDay = dayjs(
+                                  task.startAt,
+                                  "YYYY-MM-DD"
+                                ).add(i, "day");
+                                return (
+                                  count +
+                                  (task.days.includes(
+                                    currentDay.day().toString()
+                                  )
+                                    ? 1
+                                    : 0)
+                                );
+                              }, 0)
+                          : 0;
+
+                      const percentage =
+                        !!task.completed?.length && quantityOfTasks
+                          ? Math.ceil(
+                              (task.completed.length / quantityOfTasks) * 100
+                            )
+                          : null;
+
+                      console.log(
+                        task?.completed?.length,
+                        quantityOfTasks,
+                        diffWeekFormat
+                      );
+
                       return (
                         <motion.div
                           initial={{ opacity: 0 }}
@@ -295,7 +356,7 @@ export function Week() {
                           key={`${task.id}-${day}`}
                           data-completed={completed}
                           data-linkselected={!!taskIdDetail && !selectedLink}
-                          className="flex gap-2 p-1 rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                          className="flex relative gap-2 p-1 overflow-visible rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
                         >
                           <button
                             onClick={() =>
@@ -336,6 +397,16 @@ export function Week() {
                             </div>
                             <span className="w-4 h-4 bg-orange-600 rounded" />
                           </div>
+
+                          {diffWeekFormat && (
+                            <div className="absolute top-[100%] flex left-0 bg-zinc-200 dark:bg-zinc-700 h-2 w-full rounded-b overflow-hidden">
+                              <motion.div
+                                layout
+                                style={{ width: `${percentage}%` }}
+                                className={`bg-gradient-to-r from-indigo-600 to-violet-500 h-full`}
+                              />
+                            </div>
+                          )}
                         </motion.div>
                       );
                     })}

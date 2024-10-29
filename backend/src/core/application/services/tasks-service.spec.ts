@@ -5,7 +5,7 @@ import { DeleteResult } from 'typeorm';
 import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
 import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
-import { UpdateTaskDto } from '../dtos/tasks-dtos/updateTaskDto';
+import { UpdateTaskDto } from '../dtos/tasks-dtos/update-task-dto';
 import { TasksServiceInterface } from '../interfaces/task-service-interface';
 import { TasksService } from './tasks-service';
 
@@ -46,12 +46,6 @@ describe('tasks-service', () => {
     } satisfies TasksRepository;
 
     tasksService = new TasksService(tasksRepositoryMock);
-  });
-
-  it('should error when not found task', async () => {
-    tasksRepositoryMock.findById.mockResolvedValueOnce(null);
-
-    expect(tasksService.findOneById('TASKID')).rejects.toThrow(NotFoundException);
   });
 
   describe('#create', () => {
@@ -185,5 +179,17 @@ describe('tasks-service', () => {
       expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
       expect(tasksRepositoryMock.update).toBeCalledTimes(1);
     });
+
+    it("shoud giva an error trying to update the task because task not exists", async () => {
+      const userIdMock = "USERIDMOCK"
+      const updateDto = {...taskMock, userId: userIdMock};
+
+      tasksRepositoryMock.findById.mockResolvedValue(null);
+
+      const updated = tasksService.updateTask(updateDto, userIdMock);
+
+      await expect(updated).rejects.toThrow(NotFoundException);
+      expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
+    })
   });
 });

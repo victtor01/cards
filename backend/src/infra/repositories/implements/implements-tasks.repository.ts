@@ -1,10 +1,11 @@
-import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
+import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
 import { Task } from '@core/domain/entities/task.entity';
 import {
   And,
   DeleteResult,
   IsNull,
   LessThanOrEqual,
+  MoreThan,
   MoreThanOrEqual,
   Repository,
   UpdateResult,
@@ -34,17 +35,17 @@ export class ImplementsTasksRepository implements TasksRepository {
         {
           userId,
           startAt: MoreThanOrEqual(startAt),
-          endAt: LessThanOrEqual(endAt),
+          endAt: MoreThan(endAt),
         },
         {
           userId,
           startAt: LessThanOrEqual(endAt),
-          endAt: MoreThanOrEqual(startAt),
+          endAt: MoreThan(startAt),
         },
         {
           userId,
           startAt: LessThanOrEqual(startAt),
-          endAt: MoreThanOrEqual(startAt),
+          endAt: MoreThan(startAt),
         },
         {
           userId,

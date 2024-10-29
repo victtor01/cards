@@ -1,7 +1,7 @@
 export type ITask = {
   id: string;
   name: string;
-  repeat: string | false;
+  repeat: string | null;
   description: string | null;
   completed: string[];
   startAt: string | Date;

@@ -306,7 +306,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
       {diff && (
         <div className="flex flex-1 justify-end gap-2">
           <span className="p-1 px-2 bg-zinc-200 text-zinc-500 text-sm rounded">
-            {(diff * days?.length) || 'infinita'} Tasks
+            {(diff * days.length) || 'infinita'} Tasks
           </span>
           <span className="px-2 p-1 bg-zinc-200 text-zinc-500 dark:text-zinc-500 rounded text-sm">
             {diff} Semanas

@@ -40,24 +40,28 @@ const useDetailsTasks = ({ taskId }: useDetailsTasksProps) => {
   };
 
   const updateTask = async (data: TaskSchema) => {
-    if(!taskId) {
-      toast.error("Houve um erro ao tentar atualizar a task!")
+    if (!taskId) {
+      toast.error("Houve um erro ao tentar atualizar a task!");
       return;
-    } 
+    }
 
     try {
       await api.put(`/tasks/${taskId}`, {
         ...data,
-        repeat: 'weekly',
-        days: task?.days.filter(day => !!day)
+        repeat: !!data.repeat ? "weekly" : null,
+        days: data?.days
+          ?.map((day, index) => (!!day ? index : null))
+          ?.filter((vl) => typeof vl === "number"),
       });
 
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] })
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks", taskId] });
 
       toast.success("atualizado com sucesso!");
     } catch (error) {
-      toast.error("Houve um erro ao tentar atualizar a task! Atualiza e tente novamente.")
+      toast.error(
+        "Houve um erro ao tentar atualizar a task! Atualiza e tente novamente."
+      );
     }
   };
 

@@ -1,4 +1,4 @@
-import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
+import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
 import { Task } from '@core/domain/entities/task.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 

@@ -1,5 +1,5 @@
-import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date.dto';
-import { UpdateTaskDto } from '@core/application/dtos/tasks-dtos/updateTaskDto';
+import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
+import { UpdateTaskDto } from '@core/application/dtos/tasks-dtos/update-task-dto';
 import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { STATUS } from '@infra/config/constants/status';
 import { Request, Response } from 'express';
@@ -10,7 +10,6 @@ export class TasksController {
   public async create(req: Request, res: Response) {
     const { body } = req;
     const { id } = req.session;
-
     const created = await this.tasksService.create(body, id);
 
     return res.status(STATUS.CREATED).json(created);
@@ -19,7 +18,6 @@ export class TasksController {
    public async findOneByIdAndUser(request: Request, response: Response) {
     const { session, params } = request;
     const [taskId, userId] = [params.taskId, session.id];
-    
     const task = await this.tasksService.findOneByIdAndUserId(taskId, userId);
 
     return response.status(STATUS.OK).json(task);
