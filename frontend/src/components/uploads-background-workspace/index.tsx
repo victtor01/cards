@@ -1,4 +1,5 @@
 import { fontFiraCode } from "@/fonts";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
@@ -69,7 +70,7 @@ export const ModalToUploadBackground = ({ update }: UpdateBackgroundProps) => {
               className="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer p-4 "
             >
               {preview ? (
-                <img
+                <Image
                   src={preview}
                   alt="File preview"
                   className="w-full h-full object-cover rounded-lg"

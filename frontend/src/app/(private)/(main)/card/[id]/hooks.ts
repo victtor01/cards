@@ -55,7 +55,7 @@ export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
         queryKey: ["card", "latest", card?.workspaceId],
       });
     };
-  }, []);
+  }, [card?.workspaceId]);
 
   const onChangeTitle = async (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -226,7 +226,7 @@ export function useUpdateContentCard(props: useUpdateContentCardProps) {
         };
       });
     };
-  }, [editor]);
+  }, [editor, card?.workspaceId]);
 
   return { loading, updateContent };
 }

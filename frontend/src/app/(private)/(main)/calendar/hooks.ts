@@ -1,6 +1,7 @@
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { TaskSchema } from "@/schemas/task-schema";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -17,26 +18,7 @@ type CreateTask = {
 export const useAddTask = () => {
   const router = useRouter();
 
-  const addTask = async (data: TaskSchema) => {
-    const { name, days, repeat, description, ...temp } = data;
-    const { startAt, hour } = temp;
-
-    const endAt = repeat ? (temp.endAt ? new Date(temp.endAt) : null) : null;
-
-    const daysInIndex = days
-      ?.map((day, index) => (!!day ? index : null))
-      ?.filter((vl) => typeof vl === "number");
-
-    const createTaskData = {
-      repeat: !!repeat ? "weekly" : null,
-      startAt: startAt,
-      endAt: endAt,
-      hour: hour,
-      name: name,
-      days: daysInIndex,
-      description: description,
-    } satisfies CreateTask;
-
+  const createTaskAndToastNotification = async (createTaskData: CreateTask) => {
     try {
       await api.post("/tasks", createTaskData);
       await queryClient.invalidateQueries({
@@ -48,6 +30,40 @@ export const useAddTask = () => {
     } catch (error) {
       toast.error("Houve um erro ao adicionar nova task!");
     }
+  };
+
+  const getDaysInArrayOfBoolean = (array: boolean[]): number[] => {
+    const daysInIndex = array
+      ?.map((day, index) => (!!day ? index : null))
+      ?.filter((vl) => typeof vl === "number");
+
+    return daysInIndex;
+  };
+
+  const createDtoOfTask = (data: TaskSchema): CreateTask => {
+    const { name, days, repeat, description, ...timeEvent } = data;
+    const { startAt, hour, endAt } = timeEvent;
+
+    const newEndAt = repeat && endAt ? dayjs(endAt).format("YYYY-MM-DD") : null;
+    const daysInIndex = getDaysInArrayOfBoolean(days);
+
+    const createTaskData = {
+      repeat: !!repeat ? "weekly" : null,
+      startAt: startAt,
+      endAt: newEndAt,
+      hour: hour,
+      name: name,
+      days: daysInIndex,
+      description: description,
+    } satisfies CreateTask;
+
+    return createTaskData;
+  };
+
+  const addTask = async (data: TaskSchema) => {
+    const dataToCreate = createDtoOfTask(data);
+    
+    await createTaskAndToastNotification(dataToCreate);
   };
 
   return {

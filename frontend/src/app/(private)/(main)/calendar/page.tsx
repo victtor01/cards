@@ -1,5 +1,3 @@
-"use client"
-
 import { Week } from "./week";
 
 export default function Calendar() {

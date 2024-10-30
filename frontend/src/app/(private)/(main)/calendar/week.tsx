@@ -1,3 +1,5 @@
+"use client"
+
 import "dayjs/locale/pt-br";
 
 import { fontFiraCode } from "@/fonts";
@@ -9,7 +11,7 @@ import { api } from "@/api";
 import { ITask } from "@/interfaces/ITask";
 import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
-import dayjs, { Dayjs, locale } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CgCheck } from "react-icons/cg";
@@ -232,11 +234,11 @@ export function Week() {
 
               const tasksForDay = tasks
                 ?.filter((task: ITask) => {
+                  const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
                   const taskStartAt = task?.startAt
                     ? new Date(task.startAt)
                     : null;
 
-                  const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
                   const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
                   const taskCompletedOnCurrentDay = task?.completed?.includes(
                     dayjs(day).format("YYYY-MM-DD")
@@ -250,7 +252,7 @@ export function Week() {
                   );
 
                   const taskIsWithinDateRange =
-                    (!taskEndAt || taskEndAt >= currentDay) &&
+                    (taskEndAt && taskEndAt > new Date(currentDay)) &&
                     (!taskStartAt || currentDay >= taskStartAt);
 
                   return (

@@ -8,7 +8,7 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-const InputTime = React.forwardRef((props: Props, _) => {
+const InputTime = React.forwardRef<HTMLInputElement, Props>((props, _) => {
   const { value, onChange } = props;
   const [showTime, setShowTime] = useState(false);
 
@@ -51,7 +51,11 @@ const InputTime = React.forwardRef((props: Props, _) => {
                   }}
                   className="cursor-pointer py-1 px-2 hover:bg-gray-100 rounded dark:hover:bg-zinc-800 text-zinc-500 flex gap-2 items-center"
                 >
-                  {Number(hour) >= 5 && Number(hour) <= 17   ? <PiSunFill /> : <FaMoon />}
+                  {Number(hour) >= 5 && Number(hour) <= 17 ? (
+                    <PiSunFill />
+                  ) : (
+                    <FaMoon />
+                  )}
                   {hour}:00
                 </li>
               );
@@ -62,5 +66,7 @@ const InputTime = React.forwardRef((props: Props, _) => {
     </div>
   );
 });
+
+InputTime.displayName = "InputTime";
 
 export default InputTime;

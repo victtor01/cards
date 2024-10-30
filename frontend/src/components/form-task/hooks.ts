@@ -82,7 +82,7 @@ const getInitalValuesForm = (form: UseFormReturn<TaskSchema>) => ({
 const useFormTaskAction = () => {
   const form = useFormContext<TaskSchema>();
   const searchParams = useSearchParams();
-  const initalStartAtParam =
+  const initialStartParam =
     searchParams.get("startAt") || dayjs().startOf("week").format("YYYY-MM-DD");
 
   const { startAtWatch, repeatWatch, daysWatch, endAtWatch } = getWatchsForm(form);
@@ -105,20 +105,20 @@ const useFormTaskAction = () => {
   useEffect(() => {
     const endAtValue = dateOfFinishState ? TwoWeeksLater : null;
     if(!form.getValues("endAt")) form.setValue("endAt", endAtValue);
-  }, [dateOfFinishState]);
+  }, [dateOfFinishState, form, TwoWeeksLater]);
 
   useEffect(() => {
     const newHour = defineHourState ? dayjs().format("HH:mm") : null;
     form.setValue("hour", newHour);
-  }, [defineHourState]);
+  }, [defineHourState, form]);
 
   useEffect(() => {
     if (!repeatWatch) {
-      form.setValue("startAt", initalStartAtParam);
+      form.setValue("startAt", initialStartParam);
       form.setValue("endAt", null);
       setDateOfFinishState(false);
     }
-  }, [repeatWatch]);
+  }, [repeatWatch, form, initialStartParam]);
 
   return {
     form,

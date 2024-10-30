@@ -29,10 +29,6 @@ function useTheme() {
   const storeTheme = useThemeStore();
   const cookies = Cookies.get();
 
-  useEffect(() => {
-    storeTheme.setTheme(cookies["_theme"]);
-  }, []);
-
   const handleTheme = () => {
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
@@ -40,9 +36,12 @@ function useTheme() {
     Cookies.set("_theme", newTheme, {
       path: "/",
     });
+    
     storeTheme.setTheme(newTheme);
     htmlElement.className = newTheme;
 
+    storeTheme.setTheme(cookies["_theme"]);
+    
     GenerateSoundClick();
   };
 
