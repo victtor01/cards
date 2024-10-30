@@ -1,4 +1,4 @@
-import { Week } from "./week";
+import { Week } from "@/components/Week";
 
 export default function Calendar() {
   return (
