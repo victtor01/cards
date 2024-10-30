@@ -1,7 +1,7 @@
 import "dayjs/locale/pt-br";
 
 import { fontFiraCode } from "@/fonts";
-import { animate, AnimatePresence, delay, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { MdViewWeek } from "react-icons/md";
 
@@ -17,12 +17,6 @@ import { FaEye, FaEyeSlash, FaFile } from "react-icons/fa";
 import { PiPlus } from "react-icons/pi";
 import AddTaskModal from "./add-task";
 import { DetailsTasks } from "./details-task";
-import { log } from "console";
-import { get } from "http";
-import { type } from "os";
-import { format } from "path";
-import { set, map } from "zod";
-import layout from "../layout";
 
 dayjs.locale("pt-br");
 type MdlOption = "new" | null | undefined;
@@ -343,12 +337,6 @@ export function Week() {
                             )
                           : null;
 
-                      console.log(
-                        task?.completed?.length,
-                        quantityOfTasks,
-                        diffWeekFormat
-                      );
-
                       return (
                         <motion.div
                           initial={{ opacity: 0 }}
@@ -356,54 +344,56 @@ export function Week() {
                           key={`${task.id}-${day}`}
                           data-completed={completed}
                           data-linkselected={!!taskIdDetail && !selectedLink}
-                          className="flex relative gap-2 p-1 overflow-visible rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
+                          className="flex flex-col relative gap-1 p-1 overflow-visible rounded border z-[0] data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 dark:data-[completed=true]:border-indigo-600 border-b-2 dark:border-zinc-800"
                         >
-                          <button
-                            onClick={() =>
-                              completeTask(
-                                task.id,
-                                dayjs(day).format("YYYY-MM-DD")
-                              )
-                            }
-                            type="button"
-                            data-completed={completed}
-                            className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
-                              dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
-                          >
-                            {completed && (
-                              <motion.div
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                              >
-                                <CgCheck />
-                              </motion.div>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => openDetail(task.id)}
-                            data-completed={completed}
-                            className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
+                          <div className="flex gap-3 w-full">
+                            <button
+                              onClick={() =>
+                                completeTask(
+                                  task.id,
+                                  dayjs(day).format("YYYY-MM-DD")
+                                )
+                              }
+                              type="button"
+                              data-completed={completed}
+                              className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
+                            dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
+                            >
+                              {completed && (
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                >
+                                  <CgCheck />
+                                </motion.div>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => openDetail(task.id)}
+                              data-completed={completed}
+                              className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
                               data-[completed=true]:line-through data-[completed=true]:opacity-70`}
-                          >
-                            {task.name}
-                          </button>
-                          <div className="flex items-center gap-3">
-                            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
-                              {task?.hour?.toString() || "Sem horário"}
+                            >
+                              {task.name}
+                            </button>
+                            <div className="flex items-center gap-3">
+                              <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+                                {task?.hour?.toString() || "Sem horário"}
+                              </div>
+                              <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
+                                <FaFile size={12} />
+                                <span>2</span>
+                              </div>
+                              <span className="w-4 h-4 bg-orange-600 rounded" />
                             </div>
-                            <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-                              <FaFile size={12} />
-                              <span>2</span>
-                            </div>
-                            <span className="w-4 h-4 bg-orange-600 rounded" />
                           </div>
 
                           {diffWeekFormat && (
-                            <div className="absolute top-[100%] flex left-0 bg-zinc-200 dark:bg-zinc-700 h-2 w-full rounded-b overflow-hidden">
+                            <div className="flex left-0 bg-zinc-200 dark:bg-zinc-700 h-2 w-full rounded overflow-hidden">
                               <motion.div
                                 layout
                                 style={{ width: `${percentage}%` }}
-                                className={`bg-gradient-to-r from-indigo-600 to-violet-500 h-full`}
+                                className={`bg-gradient-to-r rounded-r-md from-indigo-500 dark:from-indigo-600 to-violet-500 dark:to-purple-600 h-full`}
                               />
                             </div>
                           )}

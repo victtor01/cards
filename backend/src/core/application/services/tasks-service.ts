@@ -94,7 +94,7 @@ export class TasksService implements TasksServiceInterface {
       throw new UnauthorizedException('usuário não tem permissão!');
     }
 
-    await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto });
+    await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto, completed: [] });
 
     return true;
   }
