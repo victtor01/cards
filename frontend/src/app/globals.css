@@ -182,3 +182,69 @@ body {
     transform: rotate(360deg);
   }
 } 
+
+/* .alert {
+  display: flex;
+  align-items: center;
+  text-wrap: wrap;
+  border-radius: 4px;
+  height: auto;
+  padding: 4px;
+  width: 100%;
+  max-width: 50rem;
+}
+
+
+.dark .alert[data-alert-type="warning"] {
+  @apply bg-orange-500/10 !important;
+}
+
+.light .alert[data-alert-type="warning"] {
+  @apply bg-orange-100/60 !important; 
+}
+
+
+.alert[data-alert-type="warning"] {
+  background-color: #fff6e6;
+}
+
+.alert[data-alert-type="error"] {
+  background-color: #ffe6e6;
+}
+
+.alert[data-alert-type="info"] {
+  background-color: #e6ebff;
+}
+
+.alert[data-alert-type="success"] {
+  background-color: #e6ffe6;
+}
+
+.alert-icon-wrapper {
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 12px;
+  margin-right: 12px;
+  height: 18px;
+  width: 18px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.alert-icon[data-alert-icon-type="warning"] {
+  color: #e69819
+}
+
+.alert-icon[data-alert-icon-type="error"] {
+  color: #d80d0d
+}
+
+.alert-icon[data-alert-icon-type="info"] {
+  color: #507aff
+}
+
+.alert-icon[data-alert-icon-type="success"] {
+  color: #0bc10b
+} */

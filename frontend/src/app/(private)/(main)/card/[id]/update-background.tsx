@@ -1,9 +1,8 @@
-import { Modal } from "@/components/modal-template";
-import { useParams, useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { ModalToUploadBackground } from "@/components/uploads-background-workspace";
 import { api } from "@/api";
+import { ModalToUploadBackground } from "@/components/uploads-background-workspace";
 import { queryClient } from "@/providers/query-client";
+import { AnimatePresence } from "framer-motion";
+import { useParams, useSearchParams } from "next/navigation";
 
 // update background card
 const nameOfParam = "ub-card";

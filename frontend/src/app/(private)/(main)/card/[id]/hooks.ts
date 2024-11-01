@@ -1,130 +1,16 @@
 import { api } from "@/api";
 import { ICard } from "@/interfaces/ICard";
-import { IWorkspace } from "@/interfaces/IWorkspace";
 import { queryClient } from "@/providers/query-client";
-import { BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor, BlockSchemaFromSpecs } from "@blocknote/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
-type useUpdateTitleCardProps = {
-  card: ICard | undefined | null;
-};
+import { getRandomNumber } from "./utils-cards";
 
 type useUpdateContentCardProps = {
-  editor?: BlockNoteEditor | null;
+  editor?: BlockNoteEditor<BlockSchemaFromSpecs<any>> | null;
   card?: ICard | undefined | null;
-};
-
-function getRandomNumber(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const updateCardInWorkspace = (
-  nodes: IWorkspace[],
-  cardId: string,
-  newCardData: Partial<ICard>
-): IWorkspace[] => {
-  return nodes.map((node) => {
-    if (node.cards) {
-      node.cards = node.cards.map((card) => {
-        if (card.id === cardId) {
-          return { ...card, ...newCardData };
-        }
-        return card;
-      });
-    }
-    if (node.workspaces) {
-      node.workspaces = updateCardInWorkspace(
-        node.workspaces,
-        cardId,
-        newCardData
-      );
-    }
-    return node;
-  });
-};
-
-export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
-  const [title, setTitle] = useState<string | null>(card?.title || null);
-
-  useEffect(() => {
-    return () => {
-      queryClient.invalidateQueries({
-        queryKey: ["card", "latest", card?.workspaceId],
-      });
-    };
-  }, [card?.workspaceId]);
-
-  const onChangeTitle = async (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const value = e.currentTarget.value || "";
-
-    const cardId = card?.id || null;
-    const workspaceId = card?.workspaceId || null;
-
-    if (!cardId || !workspaceId) {
-      toast.error("Houve um erro, tente novamente mais tarde!");
-      return;
-    }
-
-    const element = window.document.getElementById(cardId);
-    if (element) element.innerHTML = value;
-
-    setTitle(value);
-
-    await Promise.all([
-      api.put(`/cards/${cardId}`, {
-        title: value,
-      }),
-
-      queryClient.setQueryData(["workspaces"], (workspaces: IWorkspace[]) => {
-        const updated = updateCardInWorkspace(workspaces, cardId, {
-          title: value,
-        });
-
-        return updated;
-      }),
-
-      queryClient.setQueryData(
-        ["workspaces", card?.workspaceId],
-        (workspace: IWorkspace) => {
-          if (!workspace) return;
-
-          const cards = workspace.cards || null;
-          const newCards = cards?.map((cardCurrent) => {
-            if (cardCurrent.id === cardId) {
-              return {
-                ...card,
-                title: value,
-              };
-            }
-
-            return cardCurrent;
-          });
-
-          return {
-            ...workspace,
-            cards: newCards,
-          };
-        }
-      ),
-
-      queryClient.setQueryData(["card", cardId], (prevCard: ICard) => {
-        return {
-          ...prevCard,
-          title: value,
-        };
-      }),
-    ]);
-  };
-
-  return {
-    title,
-    onChangeTitle,
-  };
 };
 
 export function useCard(cardId: string) {
@@ -140,7 +26,6 @@ export function useCard(cardId: string) {
 }
 
 export function useUpdateContentCard(props: useUpdateContentCardProps) {
-  
   const { card, editor } = props;
   const content = card?.content || null;
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
@@ -150,11 +35,11 @@ export function useUpdateContentCard(props: useUpdateContentCardProps) {
   const params = useParams();
   const cardId = params.id || null;
 
-  const save = async (content: string) => {
-    if (!card || !content) return;
+  const startLoading = () => setLoading(true);
+  const stopLoading = () => setLoading(false);
 
-    setLoading(false);
-    setLatest(content);
+  const save = async (content: string | null) => {
+    if (!card || !content) return;
 
     await Promise.all([
       api.put(`/cards/${params.id}`, {
@@ -168,28 +53,29 @@ export function useUpdateContentCard(props: useUpdateContentCardProps) {
     ]);
   };
 
+  const saveChanges = async (html: string | null) => {
+    try {
+      await save(html);
+      setLatest(html);
+    } catch (error) {
+      toast.error("Houve um erro ao tentar atualizar arquivo!");
+    } finally {
+      stopLoading();
+    }
+  };
+
   const updateContent = async () => {
+    stopLoading();
     const html = editor?.document ? JSON.stringify(editor.document) : null;
-
-    setLoading(false);
-
-    if (content) setLatest(content);
     if (timeoutId) clearTimeout(timeoutId);
-    if (latest === html || !content || !latest) return;
+    if (latest === html) return;
 
-    const min = 1;
-    const max = 3;
-    const timeInSecounds = getRandomNumber(min, max) * 1000;
-
-    setLoading(true);
-    const idTimeout = setTimeout(() => {
-      if (!!html && !!cardId) save(html);
-    }, timeInSecounds);
+    startLoading();
+    const MIN_RANDOM = 1;
+    const MAX_RANDOM = 3;
+    const timeInSecounds = getRandomNumber(MIN_RANDOM, MAX_RANDOM) * 1000;
+    const idTimeout = setTimeout(() => saveChanges(html), timeInSecounds);
     setTimeoutId(idTimeout);
-
-    return () => {
-      clearTimeout(idTimeout);
-    };
   };
 
   useEffect(() => {
@@ -212,7 +98,7 @@ export function useUpdateContentCard(props: useUpdateContentCardProps) {
       const html = editor?.document ? JSON.stringify(editor?.document) : null;
       if (!html) return;
 
-      setLoading(false);
+      stopLoading();
       save(html);
 
       queryClient.invalidateQueries({

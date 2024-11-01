@@ -32,11 +32,11 @@ export function Week() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const day = dayjs();
+  
 
   const addTaskModal = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(LINK_NAME, "new");
-
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -295,11 +295,11 @@ export function Week() {
                           </div>
 
                           {diffWeekFormat && (
-                            <div className="flex left-0 bg-zinc-200 dark:bg-zinc-700 h-2 w-full rounded overflow-hidden">
+                            <div className="flex left-0 bg-zinc-200 opacity-80 dark:bg-zinc-700 h-2 w-full rounded overflow-hidden">
                               <motion.div
                                 layout
                                 style={{ width: `${percentage}%` }}
-                                className={`bg-gradient-to-r rounded-r-md from-indigo-500 dark:from-indigo-600 to-violet-500 dark:to-purple-600 h-full`}
+                                className={`bg-gradient-to-r rounded-r-md from-indigo-500 dark:from-indigo-600 to-violet-500 dark:to-violet-600 h-full`}
                               />
                             </div>
                           )}

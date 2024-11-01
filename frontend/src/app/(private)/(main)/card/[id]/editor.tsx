@@ -1,16 +1,16 @@
 import { Loader } from "@/components/loader";
 import { fontFiraCode, fontRoboto } from "@/fonts";
-import { useEditorConfig } from "@/hooks/use-editor";
+import { insertAlert, useEditorConfig } from "@/hooks/use-editor";
 import { useThemeStore } from "@/hooks/use-theme";
 import { ICard } from "@/interfaces/ICard";
 import { getUpload } from "@/utils/get-upload";
 import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
 import {
   BlockNoteView,
   darkDefaultTheme,
   lightDefaultTheme,
 } from "@blocknote/mantine";
-import "@blocknote/mantine/style.css";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,22 +18,23 @@ import { FaCheck } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdPublish } from "react-icons/md";
 import TextareaAutosize from "react-textarea-autosize";
-import { FileBackgroundUpdate } from "./background";
-import { useUpdateContentCard, useUpdateTitleCard } from "./hooks";
+import { FileBackgroundUpdate } from "./update-background";
+import { useUpdateContentCard } from "./hooks";
 
+import { getDefaultReactSlashMenuItems, SuggestionMenuController } from "@blocknote/react";
+import { filterSuggestionItems } from "@blocknote/core";
+import { useUpdateTitleCard } from "@/hooks/use-update-title-card";
+
+const LENGTH_TITLE = 60;
 export function EditorComponent({ card }: { card: ICard }) {
   const content = card?.content || null;
-
   const { title, onChangeTitle } = useUpdateTitleCard({ card });
   const { editor, ...styles } = useEditorConfig({ content });
   const { loading, updateContent } = useUpdateContentCard({ card, editor });
   const { onScroll, refToHeader, fixed } = styles;
   const { theme } = useThemeStore((store) => store);
-
   const router = useRouter();
   const image = !!card?.background ? getUpload(card?.background) : null;
-  const lenghtTitle = 60;
-
   const defaultTheme = theme === "dark" ? darkDefaultTheme : lightDefaultTheme;
 
   return (
@@ -62,14 +63,14 @@ export function EditorComponent({ card }: { card: ICard }) {
             <input
               value={title || ""}
               id="title-input"
-              maxLength={lenghtTitle}
+              maxLength={LENGTH_TITLE}
               onChange={onChangeTitle}
               placeholder="This is my new project..."
               className="bg-transparent outline-none text-zinc-600 dark:text-zinc-100 font-semibold placeholder:text-zinc-600 text-lg w-auto flex-1 transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
             />
 
             <span className="text-zinc-400 text-sm opacity-0 group-focus-within/title:opacity-100">
-              {lenghtTitle - (title?.length || 0)}
+              {LENGTH_TITLE - (title?.length || 0)}
             </span>
           </label>
         </div>
@@ -143,6 +144,7 @@ export function EditorComponent({ card }: { card: ICard }) {
           <BlockNoteView
             onChange={updateContent}
             editor={editor}
+            slashMenu={false}
             theme={{
               borderRadius: 0,
               colors: {
@@ -153,7 +155,20 @@ export function EditorComponent({ card }: { card: ICard }) {
                 },
               },
             }}
-          />
+          >
+            <SuggestionMenuController
+              triggerCharacter={"/"}
+              getItems={async (query) =>
+                filterSuggestionItems(
+                  [
+                    ...getDefaultReactSlashMenuItems(editor),
+                    insertAlert(editor),
+                  ],
+                  query
+                )
+              }
+            />
+          </BlockNoteView>
         </section>
       </div>
     </div>

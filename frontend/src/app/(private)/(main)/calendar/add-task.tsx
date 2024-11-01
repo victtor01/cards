@@ -7,6 +7,7 @@ import { useAddTask } from "./hooks";
 
 export default function AddTaskModal() {
   const { addTask } = useAddTask();
+  
   return (
     <Modal.Container className="max-w-[40rem] mt-[5rem] mb-[5rem] bg-gray-100">
       <FormTask.Container handleSubmit={addTask}>

@@ -71,6 +71,7 @@ export const ModalToUploadBackground = ({ update }: UpdateBackgroundProps) => {
             >
               {preview ? (
                 <Image
+                  fill
                   src={preview}
                   alt="File preview"
                   className="w-full h-full object-cover rounded-lg"

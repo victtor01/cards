@@ -28,7 +28,7 @@ const variantsAnimation = {
 function useTheme() {
   const storeTheme = useThemeStore();
   const cookies = Cookies.get();
-
+  
   const handleTheme = () => {
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
@@ -40,8 +40,6 @@ function useTheme() {
     storeTheme.setTheme(newTheme);
     htmlElement.className = newTheme;
 
-    storeTheme.setTheme(cookies["_theme"]);
-    
     GenerateSoundClick();
   };
 

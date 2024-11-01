@@ -74,18 +74,23 @@ const useWeek = () => {
     },
   });
 
-  const completeTask = async (taskId: string, date: string) => {
-    const task = tasks?.filter((task) => task.id === taskId)[0];
-    if (!task) return;
-
+  const addOrRemoveDate = (task: ITask, date: string) =>{
     const includesInCompleted = task?.completed?.includes(date) || null;
-
     const prevTasks = task?.completed || [];
     const newArray = includesInCompleted
       ? prevTasks.filter((datePrev) => datePrev !== date)
       : [...prevTasks, date];
 
-    await api.put(`/tasks/completed/${taskId}`, { arrayToConclude: newArray });
+    return newArray
+  }
+
+  const completeTask = async (taskId: string, date: string) => {
+    const task = tasks?.filter((task) => task.id === taskId)[0];
+    if (!task) return;
+
+    const newArrayToUpdateTask = addOrRemoveDate(task, date);
+
+    await api.put(`/tasks/completed/${taskId}`, { arrayToConclude: newArrayToUpdateTask });
     await queryClient.invalidateQueries({ queryKey: ["tasks"] });
   };
 

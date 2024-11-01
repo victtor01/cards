@@ -1,7 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { Sidebar } from "@/components/sidebar/main-sidebar";
 import { ToastContainer } from "react-toastify";
-import { Week } from "./calendar/week";
 
 type LayoutMainProps = {
   children: React.ReactNode;
