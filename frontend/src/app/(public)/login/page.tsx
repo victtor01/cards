@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[28rem] border p-10 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 flex flex-col gap-6 z-20"
+      className="w-[99%] max-w-[28rem] border h-[90%] rounded-xl lg:h-auto p-10 m-auto lg:rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 flex flex-col gap-6 z-20"
     >
       <header className="cursor-default flex mb-10">
         <div className="bg-indigo-500 shadow-up text-white relative flex gap-2 items-center dark:bg-indigo-600 p-2 px-4 rounded text-sm">

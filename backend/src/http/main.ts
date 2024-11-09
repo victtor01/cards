@@ -5,10 +5,10 @@ import { AppDataSource } from '@infra/database';
 import { ErrorMiddleware } from '@src/infra/api/middlewares/error.middleware';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import express from 'express';
-import routes from './routes';
 import cors from 'cors';
+import express from 'express';
 import path from 'path';
+import routes from './routes';
 
 class Bootstrap {
   private port = 9000;
@@ -23,10 +23,9 @@ class Bootstrap {
       app.use(cookieParser());
       app.use(express.json());
       app.use(bodyParser.json());
-      
 
       app.use(cors({
-        origin: ['http://localhost:3000'],
+        origin: ["http://10.220.0.8:3000"],
         credentials: true,
       }));
 

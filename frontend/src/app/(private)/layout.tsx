@@ -17,7 +17,7 @@ export default async function Layout({ children }: LayoutProps) {
   const refreshToken = cookiesStore.get("__refresh_token")?.value;
 
   try {
-    const res = await fetch("http://localhost:9000/users/mine", {
+    const res = await fetch("http://10.220.0.8:9000/users/mine", {
       credentials: "include",
       headers: {
         Cookie: `__access_token=${accessToken}; __refresh_token=${refreshToken}`,

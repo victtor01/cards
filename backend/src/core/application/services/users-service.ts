@@ -27,6 +27,7 @@ export class UsersService implements UsersServiceInterface {
 
   public async updatePhoto({ userId, filename }: PropsToUpdataPhoto): Promise<any> {
     const user = await this.findOneById(userId);
+    
     if (!user?.id) {
       await unlinkUploadFile(filename);
       throw new BadRequestException('user(s) not exists!');

@@ -30,7 +30,7 @@ export default function Layout({ children }: PropsLayout) {
         </div>
       </header>
 
-      <section className="flex flex-1 w-full relative">{children}</section>
+      <section className="flex flex-1 w-[95%] mx-auto relative">{children}</section>
       <div className="fixed top-0 left-0 w-full h-screen overflow-hidden">
         <div className="grid-image"></div>
       </div>

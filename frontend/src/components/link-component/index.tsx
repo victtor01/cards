@@ -3,7 +3,6 @@ import "dayjs/locale/pt-br";
 import { getUpload } from "@/utils/get-upload";
 import dayjs from "dayjs";
 import Image from "next/image";
-import Link from "next/link";
 import { memo } from "react";
 import { FaCalendar, FaFile, FaFolder } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -34,15 +33,15 @@ const LinkComponent = (props: Props) => {
       onTap={() => router.push(href || "#")}
       className="w-full max-w-[12rem] text-left shadow group/link mb-2 rotate transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-zinc-50 hover:shadow-xl dark:bg-neutral-900 dark:shadow-black"
     >
-      <div className="bg-zinc-200 min-h-[6rem] dark:bg-zinc-800 h-[50%] relative overflow-hidden border dark:border-none shadow shadow-zinc-400/70 dark:border-zinc-800 dark:shadow-black rounded-lg m-2">
+      <header className="bg-zinc-100 min-h-[6rem] dark:bg-zinc-800 h-[50%] relative overflow-hidden border dark:border-none rounded-lg m-2">
         {backgroundImage && (
           <Image
-            quality={1}
+            quality={10}
             src={backgroundImage}
             alt="background"
             objectFit="cover"
             fill
-            className="dark:brightness-75 group-hover/link:scale-[1.05] transition-all"
+            className="dark:brightness-75 group-hover/link:scale-[1.05] transition-all blur-[1px]"
           />
         )}
         <div className="absolute w-full h-full top-0 left-0 z-20 text-zinc-800 dark:text-zinc-500 grid place-items-center">
@@ -50,7 +49,7 @@ const LinkComponent = (props: Props) => {
             {type === "file" ? <FaFile size={18} /> : <FaFolder size={18} />}
           </div>
         </div>
-      </div>
+      </header>
       <div className="px-2 text-zinc-500 relative">
         <header className="font-semibold">
           <h1 className="text-gray-700 dark:text-white whitespace-nowrap text-ellipsis overflow-hidden">
