@@ -13,16 +13,16 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: PropsLayout) {
   return (
-    <main className="w-full h-auto flex-1 flex flex-col bg-white dark:bg-neutral-950 ">
-      <header className="p-2 bg-zinc-50 border-b dark:border-zinc-800 dark:bg-zinc-900 z-30">
+    <main className="w-full h-auto flex-1 flex flex-col bg-white dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 ">
+      <header className="p-2 bg-zinc-50 border-b-2 dark:border-violet-600 dark:bg-zinc-900 z-30">
         <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
-          <div className="flex text-zinc-100 bg-indigo-600 p-1 px-2 rounded items-center gap-2">
+          <div className="flex text-zinc-100 bg-neutral-800 border-l border-t border-violet-500 p-1 px-3 rounded items-center gap-3">
             <PiCardsFill className="text-white" />
-            <h1 className={`${fontFiraCode} text-md`}>Flards</h1>
+            <h1 className={`${fontFiraCode} text-md`}>Organizze</h1>
           </div>
           <div className="flex text-zinc-500 dark:text-zinc-200">
             <button
-              className={`${fontFiraCode} border bg-white text-zinc-800 rounded text-sm hover:shadow-lg dark:bg-zinc-700 dark:text-white transition-all p-1 px-3 dark:border-zinc-700 opacity-90 hover:opacity-100 capitalize`}
+              className={`${fontFiraCode} border bg-white text-zinc-800 rounded text-sm hover:shadow-lg dark:bg-zinc-800 dark:text-white transition-all p-1 px-3 dark:border-zinc-700 opacity-90 hover:opacity-100 capitalize`}
             >
               Create account
             </button>

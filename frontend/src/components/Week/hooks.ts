@@ -2,7 +2,6 @@ import "dayjs/locale/pt-br";
 
 import { api } from "@/api";
 import { ITask } from "@/interfaces/ITask";
-import { queryClient } from "@/providers/query-client";
 import { useQuery } from "@tanstack/react-query";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,6 +13,8 @@ const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const startAtInitial = searchParams.get("startAt")
     ? dayjs(searchParams.get("startAt"))
@@ -26,7 +27,6 @@ const useWeek = () => {
   const [endOf, setEndOf] = useState<Dayjs>(
     startAtInitial?.endOf("week") || dayjs().endOf("week")
   );
-  const router = useRouter();
 
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
@@ -35,27 +35,21 @@ const useWeek = () => {
   };
 
   const next = () => {
-    setStartOf((prev) => {
-      router.push(`?startAt=${prev.add(1, "week").format("YYYY-MM-DD")}`);
-      return prev.add(1, "week");
-    });
-
+    setStartOf((prev) => prev.add(1, "week"));
     setEndOf((prev) => prev.add(1, "week"));
+    router.push(`?startAt=${startOf.add(1, "week").format("YYYY-MM-DD")}`);
   };
 
   const back = () => {
     setStartOf((prev) => prev.subtract(1, "week"));
     setEndOf((prev) => prev.subtract(1, "week"));
+    router.push(`?startAt=${startOf.subtract(1, "week").format("YYYY-MM-DD")}`);
   };
 
   const handleNow = () => {
     setStartOf(dayjs().startOf("week"));
     setEndOf(dayjs().endOf("week"));
     router.push("?");
-  };
-
-  const openDetail = (taskId: string) => {
-    router.push(`?${DETAIL_NAME}=${taskId}`);
   };
 
   const { data: tasks, isLoading } = useQuery<ITask[]>({
@@ -74,26 +68,6 @@ const useWeek = () => {
     },
   });
 
-  const addOrRemoveDate = (task: ITask, date: string) =>{
-    const includesInCompleted = task?.completed?.includes(date) || null;
-    const prevTasks = task?.completed || [];
-    const newArray = includesInCompleted
-      ? prevTasks.filter((datePrev) => datePrev !== date)
-      : [...prevTasks, date];
-
-    return newArray
-  }
-
-  const completeTask = async (taskId: string, date: string) => {
-    const task = tasks?.filter((task) => task.id === taskId)[0];
-    if (!task) return;
-
-    const newArrayToUpdateTask = addOrRemoveDate(task, date);
-
-    await api.put(`/tasks/completed/${taskId}`, { arrayToConclude: newArrayToUpdateTask });
-    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-  };
-
   const daysArray = Array.from(
     { length: endOf.diff(startOf, "day") + 1 },
     (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
@@ -103,9 +77,9 @@ const useWeek = () => {
   const modal: MdlOption = (params.get(LINK_NAME) as MdlOption) || null;
 
   return {
-    handles: { next, back, handleNow, openDetail, handleVisibleConcluedItems },
+    handles: { next, back, handleNow, handleVisibleConcluedItems },
     states: { startOf, endOf, daysArray, modal, visibleConclued },
-    data: { isLoading, tasks, completeTask },
+    data: { isLoading, tasks },
     params: { taskIdDetail },
   };
 };

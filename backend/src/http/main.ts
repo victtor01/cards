@@ -25,7 +25,7 @@ class Bootstrap {
       app.use(bodyParser.json());
 
       app.use(cors({
-        origin: ["http://10.220.0.8:3000"],
+        origin: ["http://10.220.0.8:3000", "http://localhost:3000"],
         credentials: true,
       }));
 
