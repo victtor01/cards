@@ -148,7 +148,7 @@ export function Week() {
                     {dayjs(day).format("DD/MM/YYYY")}
                   </span>
                 </header>
-                <section className="flex flex-col gap-3 pb-4 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
+                <section className="flex flex-col pb-9 gap-3 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
                   <div className="">
                     <span
                       className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}

@@ -48,7 +48,7 @@ const useTaskItem = () => {
   return {
     completeTask,
     openDetail,
-    params: { taskIdDetail }
+    params: { taskIdDetail },
   };
 };
 
@@ -58,10 +58,9 @@ const TaskItem = (props: AllTasksForDayProps) => {
   const { task, day } = props;
 
   const selectedLink = taskIdDetail === task.id;
-  
-  const completed = task?.completed?.includes(
-    dayjs(day).format("YYYY-MM-DD")
-  ) || false;
+
+  const completed =
+    task?.completed?.includes(dayjs(day).format("YYYY-MM-DD")) || false;
 
   const diffInDays =
     !!task.startAt && !!task.endAt
@@ -94,20 +93,18 @@ const TaskItem = (props: AllTasksForDayProps) => {
       animate={{ opacity: 1 }}
       data-completed={completed}
       data-linkselected={!!taskIdDetail && !selectedLink}
-      className="flex flex-col relative gap-1 p-1 overflow-visible rounded border z-[0] 
+      className="flex flex-col relative gap-1 p-1 overflow-visible rounded z-[0] 
       data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 
-      bg-zinc-100 dark:bg-neutral-900 transition-all data-[completed=true]:border-indigo-600 
-      dark:data-[completed=true]:border-indigo-600 border-b-2 
+      hover:bg-zinc-100 hover:dark:bg-neutral-900 data-[completed=true]:border-indigo-600 
+      dark:data-[completed=true]:border-indigo-600 transition-none group
       dark:border-zinc-800"
     >
       <div className="flex gap-3 w-full">
         <button
-          onClick={() =>
-            completeTask(task, dayjs(day).format("YYYY-MM-DD"))
-          }
+          onClick={() => completeTask(task, dayjs(day).format("YYYY-MM-DD"))}
           type="button"
           data-completed={completed}
-          className="min-w-6 min-h-6 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
+          className="min-w-6 min-h-4 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 
             dark:data-[completed=true]:bg-indigo-600  rounded grid place-items-center border dark:border-zinc-700/70"
         >
           {completed && (
@@ -123,30 +120,27 @@ const TaskItem = (props: AllTasksForDayProps) => {
           onClick={() => openDetail(task.id)}
           data-completed={completed}
           className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
-              data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+          data-[completed=true]:line-through data-[completed=true]:opacity-70`}
         >
           {task.name}
         </button>
-        <div className="flex items-center gap-3">
-          <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs opacity-60">
+        <div className="flex items-center gap-3 pointer-events-none flex-1">
+          <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs whitespace-nowrap flex flex-1 opacity-60">
             {task?.hour?.toString() || "Sem horário"}
           </div>
-          {task?.endAt && (
-          <div className="flex gap-1 items-center text-zinc-400 opacity-70 text-sm">
-            <span>{percentage?.toString()}%</span>
+          <div className="gap-1 items-center absolute top-[100%] z-40 left-[2rem] bg-violet-600 text-zinc-400 px-2 rounded shadow dark:shadow-black group-hover:flex hidden text-sm flex-1">
+            {task?.endAt && <span>{percentage?.toString()}%</span>}
           </div>
-
-          )}
           <span className="w-4 h-4 bg-orange-600 rounded" />
         </div>
       </div>
 
       {diffWeekFormat && (
-        <div className="flex left-0 bg-zinc-200 dark:bg-zinc-700 h-2 w-full rounded-[2px] overflow-hidden">
+        <div className="flex left-0 bg-zinc-200 dark:bg-zinc-700 h-[0.2rem] opacity-70 group-hover:opacity-100 group-hover:h-2 transition-all w-full rounded-[2px] overflow-hidden">
           <motion.div
             layout
             style={{ width: `${percentage}%` }}
-            className={`bg-gradient-to-r rounded-r-[2px] from-indigo-500 dark:from-indigo-500 to-violet-500 dark:to-violet-600 h-full`}
+            className={`bg-gradient-to-r group-hover:rounded-r-[2px] from-indigo-500 rounded-none dark:from-indigo-500 to-violet-500 dark:to-violet-600 h-full`}
           />
         </div>
       )}
