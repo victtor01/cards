@@ -1,39 +1,52 @@
 import { ITask } from "@/interfaces/ITask";
 import dayjs from "dayjs";
 
+const isRepeatInifiniteTask = ({ startAt, endAt, repeat }: ITask) =>
+  !!startAt && !endAt && !!repeat;
+
+const isRepeatFinite = ({ startAt, endAt, repeat }: ITask) =>
+  !!startAt && !!endAt && !!repeat;
+
+const isNotRepat = ({ startAt, repeat }: ITask) => !!startAt && !repeat;
+
 export function GetTasksInDay(tasks: ITask[], day: string) {
+  const currentDate = dayjs(day);
   const dayOfWeek = dayjs(day).day();
 
-  const newArrayOfTasks = tasks?.filter((task: ITask) => {
-    const taskEndAt = task?.endAt ? new Date(task.endAt) : null;
+  const newArrayOfTasks = tasks
+    ?.filter((task: ITask) => {
+      const taskPertencesToIndexDay = task.days.includes(dayOfWeek.toString());
 
-    const taskStartAt = task?.startAt
-      ? new Date(task.startAt)
-      : null;
+      if (!taskPertencesToIndexDay) return false;
 
-    const currentDay = new Date(dayjs(day).format("YYYY-MM-DD"));
-    const taskCompletedOnCurrentDay = task?.completed?.includes(
-      dayjs(day).format("YYYY-MM-DD")
+      if (isRepeatInifiniteTask(task)) {
+        return true;
+      };
+
+      if (isRepeatFinite(task)) {
+        const endAt = dayjs(task.endAt);
+
+        const currentDateIsLessTo =
+          new Date(endAt.format("YYYY-MM-DD")) >=
+          new Date(currentDate.format("YYYY-MM-DD"));
+
+        return currentDateIsLessTo;
+      }
+
+      if (isNotRepat(task)) {
+        const finalStart = dayjs(task.startAt).endOf("week");
+
+        const currentDateIsLessTo =
+          new Date(currentDate.format("YYYY-MM-DD")) <=
+          new Date(finalStart.format("YYYY-MM-DD"));
+
+        return currentDateIsLessTo;
+      }
+    })
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
-
-    const taskIsForToday = task.days.includes(dayOfWeek.toString());
-
-    const taskIsWithinDateRange =
-      taskEndAt &&
-      taskEndAt > new Date(currentDay) &&
-      (!taskStartAt || currentDay >= taskStartAt);
-
-    return (
-      (taskEndAt
-        ? taskIsForToday && taskIsWithinDateRange
-        : taskIsForToday)
-    );
-  })
-  .sort(
-    (a, b) =>
-      new Date(a.createdAt).getTime() -
-      new Date(b.createdAt).getTime()
-  );
 
   return newArrayOfTasks;
 }

@@ -360,7 +360,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
 
 function FormTaskFooter({ children }: FormTaskFooterProps) {
   return (
-    <footer className="w-full flex justify-between items-center p-5 border-t-4 dark:border-zinc-800 rounded-lg">
+    <footer className="w-full flex justify-between items-center p-5 border-t-4 dark:border-zinc-800">
       {children}
     </footer>
   );

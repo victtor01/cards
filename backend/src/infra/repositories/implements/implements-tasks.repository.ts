@@ -8,7 +8,7 @@ import {
   MoreThan,
   MoreThanOrEqual,
   Repository,
-  UpdateResult,
+  UpdateResult
 } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
@@ -36,22 +36,31 @@ export class ImplementsTasksRepository implements TasksRepository {
           userId,
           startAt: MoreThanOrEqual(startAt),
           endAt: MoreThan(endAt),
+          repeat: IsNull(),
         },
         {
           userId,
           startAt: LessThanOrEqual(endAt),
           endAt: MoreThan(startAt),
+          repeat: IsNull()
         },
         {
           userId,
           startAt: LessThanOrEqual(startAt),
           endAt: MoreThan(startAt),
+          repeat: IsNull(),
         },
         {
           userId,
           startAt: LessThanOrEqual(endAt),
           repeat: 'weekly',
-          endAt: IsNull(),
+          endAt: IsNull()
+        },
+        {
+          userId,
+          startAt: LessThanOrEqual(endAt),
+          repeat: 'weekly',
+          endAt: MoreThan(startAt),
         },
         {
           userId,

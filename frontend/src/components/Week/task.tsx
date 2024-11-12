@@ -5,19 +5,21 @@ import { CgCheck } from "react-icons/cg";
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { fontFiraCode } from "@/fonts";
 dayjs.locale("pt-br");
 
 type AllTasksForDayProps = {
   task: ITask;
-  taskIdDetail: string | null;
+  day: string;
 };
 
 const DETAIL_NAME = "mdl-detail";
 
 const useTaskItem = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const taskIdDetail = searchParams.get(DETAIL_NAME);
 
   const addOrRemoveDate = (task: ITask, date: string) => {
     const includesInCompleted = task?.completed?.includes(date) || null;
@@ -46,18 +48,20 @@ const useTaskItem = () => {
   return {
     completeTask,
     openDetail,
+    params: { taskIdDetail }
   };
 };
 
 const TaskItem = (props: AllTasksForDayProps) => {
-  const { completeTask, openDetail } = useTaskItem();
-  const { task, taskIdDetail } = props;
-  const currentDay = dayjs();
+  const { completeTask, openDetail, params } = useTaskItem();
+  const { taskIdDetail } = params;
+  const { task, day } = props;
 
   const selectedLink = taskIdDetail === task.id;
+  
   const completed = task?.completed?.includes(
-    dayjs(currentDay).format("YYYY-MM-DD")
-  );
+    dayjs(day).format("YYYY-MM-DD")
+  ) || false;
 
   const diffInDays =
     !!task.startAt && !!task.endAt
@@ -99,7 +103,7 @@ const TaskItem = (props: AllTasksForDayProps) => {
       <div className="flex gap-3 w-full">
         <button
           onClick={() =>
-            completeTask(task, dayjs(currentDay).format("YYYY-MM-DD"))
+            completeTask(task, dayjs(day).format("YYYY-MM-DD"))
           }
           type="button"
           data-completed={completed}

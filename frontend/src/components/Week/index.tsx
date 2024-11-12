@@ -2,20 +2,19 @@
 
 import "dayjs/locale/pt-br";
 
-import { fontFiraCode } from "@/fonts";
-import { AnimatePresence, motion } from "framer-motion";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import { MdViewWeek } from "react-icons/md";
 import AddTaskModal from "@/app/(private)/(main)/calendar/add-task";
 import { DetailsTasks } from "@/app/(private)/(main)/calendar/details-task";
+import { fontFiraCode } from "@/fonts";
 import { ITask } from "@/interfaces/ITask";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CgCheck } from "react-icons/cg";
-import { FaEye, FaEyeSlash, FaFile } from "react-icons/fa";
-import { PiPlus } from "react-icons/pi";
-import dayjs from "dayjs";
-import { useWeek } from "./hooks";
 import { GetTasksInDay } from "@/utils/get-tasks-in-day";
+import dayjs from "dayjs";
+import { AnimatePresence, motion } from "framer-motion";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { MdViewWeek } from "react-icons/md";
+import { PiPlus } from "react-icons/pi";
+import { useWeek } from "./hooks";
 import { TaskItem } from "./task";
 
 const LINK_NAME = "mdl-option";
@@ -137,7 +136,7 @@ export function Week() {
               <motion.div
                 key={day}
                 initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: [1.5,1] }}
+                animate={{ opacity: 1, scale: [1.5, 1] }}
                 transition={{ delay: (index + 1) / 100 }}
                 className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white flex-1 relative w-full lg:min-w-[22rem] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900/50`}
               >
@@ -160,9 +159,10 @@ export function Week() {
 
                   {tasksForDay?.map((task: ITask) => (
                     <TaskItem
+                      day={day}
                       task={task}
+                      
                       key={`${task.id}-${day}`}
-                      taskIdDetail={taskIdDetail}
                     />
                   ))}
                 </section>

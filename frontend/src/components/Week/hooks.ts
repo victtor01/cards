@@ -14,19 +14,20 @@ const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
   const router = useRouter();
-
+  const params = useSearchParams();
   const searchParams = useSearchParams();
-  const startAtInitial = searchParams.get("startAt")
-    ? dayjs(searchParams.get("startAt"))
-    : null;
+
+  const startOfWeek = dayjs().startOf("week");
+  const endOfWeek = dayjs().endOf("week");
+  const startAtParam = searchParams.get("startAt") || null;
+  const startAtValueInitial = startAtParam ? dayjs(startAtParam) : null;
+
+  const startOfValue = startAtValueInitial?.startOf("week") || startOfWeek;
+  const endOfValue = startAtValueInitial?.endOf("week") || endOfWeek;
 
   const [visibleConclued, setVisibleConclued] = useState<boolean>(true);
-  const [startOf, setStartOf] = useState<Dayjs>(
-    startAtInitial || dayjs().startOf("week")
-  );
-  const [endOf, setEndOf] = useState<Dayjs>(
-    startAtInitial?.endOf("week") || dayjs().endOf("week")
-  );
+  const [startOf, setStartOf] = useState<Dayjs>(startOfValue);
+  const [endOf, setEndOf] = useState<Dayjs>(endOfValue);
 
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
@@ -69,11 +70,11 @@ const useWeek = () => {
   });
 
   const daysArray = Array.from(
+    // {length: 14},
     { length: endOf.diff(startOf, "day") + 1 },
     (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
   );
 
-  const params = useSearchParams();
   const modal: MdlOption = (params.get(LINK_NAME) as MdlOption) || null;
 
   return {
