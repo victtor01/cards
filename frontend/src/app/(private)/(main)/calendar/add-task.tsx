@@ -9,7 +9,7 @@ export default function AddTaskModal() {
   const { addTask } = useAddTask();
   
   return (
-    <Modal.Container className="max-w-[40rem] mt-[5rem] mb-[5rem] bg-gray-100">
+    <Modal.Container className="max-w-[40rem] mt-0 mb-0 lg:mt-[5rem] lg:mb-[5rem] bg-gray-100">
       <FormTask.Container handleSubmit={addTask}>
         <FormTask.Header>
           <Link

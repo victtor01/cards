@@ -26,14 +26,13 @@ const LinkComponent = (props: Props) => {
   const router = useRouter();
 
   return (
-    <motion.button
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      whileTap={{ scale: 0.9 }}
-      onTap={() => router.push(href || "#")}
-      className="w-full max-w-[12rem] text-left shadow group/link mb-2 rotate transition-shadow opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-zinc-50 hover:shadow-xl dark:bg-neutral-900 dark:shadow-black"
+    <button
+      onClick={() => router.push(href || "#")}
+      className="w-full max-w-[12rem] rotate-x transition-all relative text-left shadow group/link mb-2 opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-white hover:shadow-xl dark:bg-neutral-900 dark:shadow-black"
     >
-      <header className="bg-zinc-100 min-h-[6rem] dark:bg-zinc-800 h-[50%] relative overflow-hidden border dark:border-none rounded-lg m-2">
+      <div className="absolute top-[-1.5rem] left-[30%] z-20 opacity-80 translate-x-[-50%] dark:bg-zinc-700 transition-all bg-gray-200 w-0 h-0 group-hover/link:w-[60%] group-hover/link:h-16 blur-xl rotate-[45deg]"/>
+
+      <header className="bg-zinc-100  min-h-[6rem] dark:bg-zinc-800/70 h-[50%] relative overflow-hidden border dark:border-none rounded-lg m-2">
         {backgroundImage && (
           <Image
             quality={10}
@@ -41,16 +40,16 @@ const LinkComponent = (props: Props) => {
             alt="background"
             objectFit="cover"
             fill
-            className="dark:brightness-75 group-hover/link:scale-[1.05] transition-all blur-[1px]"
+            className="dark:brightness-75 rotate-x z-30 scale-[1.05] group-hover/link:scale-[1.1] group-hover/link:blur-0 transition-all blur-[1px]"
           />
         )}
-        <div className="absolute w-full h-full top-0 left-0 z-20 text-zinc-800 dark:text-zinc-500 grid place-items-center">
+        <div className="absolute z-30 w-full h-full top-0 left-0 text-zinc-800 dark:text-zinc-500 grid place-items-center">
           <div className="bg-white dark:bg-zinc-900 shadow-md dark:shadow-black p-3 rounded-full relative z-20">
             {type === "file" ? <FaFile size={18} /> : <FaFolder size={18} />}
           </div>
         </div>
       </header>
-      <div className="px-2 text-zinc-500 relative">
+      <div className="px-2 text-zinc-500 relative pb-2">
         <header className="font-semibold">
           <h1 className="text-gray-700 dark:text-white whitespace-nowrap text-ellipsis overflow-hidden">
             {name}
@@ -68,7 +67,7 @@ const LinkComponent = (props: Props) => {
           </div>
         </section>
       </div>
-    </motion.button>
+    </button>
   );
 };
 

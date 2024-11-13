@@ -23,20 +23,23 @@
 /* Regra para quando for tema dark o botão de adicionar imagem
 ficar de acordo! */
 .dark .bn-add-file-button {
-  @apply bg-zinc-900 opacity-80 hover:opacity-100 !important; 
+  @apply bg-zinc-900 opacity-80 hover:opacity-100 !important;
 }
 .light .bn-add-file-button {
-  @apply bg-zinc-100 opacity-80 hover:opacity-100 !important; 
+  @apply bg-zinc-100 opacity-80 hover:opacity-100 !important;
+}
+
+.rotate-x:hover {
+  transform: rotateX(12deg) rotateY(4deg) !important;
 }
 
 /* Regra para as referencias <a> no editor de texto! */
 .references a {
-  cursor: pointer; 
+  cursor: pointer;
   text-decoration: underline !important;
   text-underline-offset: 3px !important;
 
-  @apply opacity-95 hover:opacity-100 text-indigo-700 transition-opacity
-
+  @apply opacity-95 hover:opacity-100 text-indigo-700 transition-opacity;
 }
 
 body {
@@ -141,7 +144,7 @@ body {
 }
 
 .shadow-up::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 100%;
   margin-top: 0;
@@ -154,11 +157,11 @@ body {
   filter: blur(20px);
   border-radius: 50%;
 
-  @apply bg-zinc-400 dark:bg-black
+  @apply bg-zinc-400 dark:bg-black;
 }
 
 .shadow-light {
-  box-shadow: 6px 5px 10px -6px rgba(0,0,0,0.5),
+  box-shadow: 6px 5px 10px -6px rgba(0, 0, 0, 0.5),
     inset 3px 3px 10px rgba(200, 200, 200, 0.2),
     inset -3px -3px 5px rgba(0, 0, 0, 0.2);
 }
@@ -181,7 +184,7 @@ body {
   100% {
     transform: rotate(360deg);
   }
-} 
+}
 
 /* .alert {
   display: flex;

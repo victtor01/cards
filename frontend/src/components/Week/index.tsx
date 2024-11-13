@@ -125,7 +125,7 @@ export function Week() {
               dayjs().format("DD-MM-YYYY") === dayjs(day).format("DD-MM-YYYY");
 
             const style = isCurrentDay
-              ? "shadow-lg border-4 dark:border-indigo-600 shadow-none"
+              ? "shadow-lg border-4 border-opacity-50 dark:border-zinc-800 hover:border-opacity-100 shadow-none"
               : "dark:border-zinc-800/30";
 
             const tasksForDay = tasks?.length
@@ -138,7 +138,7 @@ export function Week() {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: [1.5, 1] }}
                 transition={{ delay: (index + 1) / 100 }}
-                className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white flex-1 relative w-full lg:min-w-[22rem] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900/50`}
+                className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white flex-1 relative w-full lg:min-w-[22rem] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900/70`}
               >
                 <header className="w-full p-5 pb-0 items-center rounded gap-2 text-zinc-700 capitalize dark:text-zinc-200 text-sm flex justify-between">
                   <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">

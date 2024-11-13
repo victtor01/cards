@@ -119,16 +119,16 @@ const TaskItem = (props: AllTasksForDayProps) => {
         <button
           onClick={() => openDetail(task.id)}
           data-completed={completed}
-          className={`${fontFiraCode} overflow-hidden flex-1 whitespace-nowrap text-ellipsis text-md text-start gap-1 
-          data-[completed=true]:line-through data-[completed=true]:opacity-70`}
+          className={`${fontFiraCode} overflow-hidden whitespace-nowrap text-ellipsis text-md text-start gap-1 
+          data-[completed=true]:line-through data-[completed=true]:opacity-70 flex-1`}
         >
           {task.name}
         </button>
-        <div className="flex items-center gap-3 pointer-events-none flex-1">
-          <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs whitespace-nowrap flex flex-1 opacity-60">
+        <div className="flex items-center gap-3 pointer-events-none">
+          <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded text-xs whitespace-nowrap flex opacity-60">
             {task?.hour?.toString() || "Sem horário"}
           </div>
-          <div className="gap-1 items-center absolute top-[100%] z-40 left-[2rem] bg-violet-600 text-zinc-400 px-2 rounded shadow dark:shadow-black group-hover:flex hidden text-sm flex-1">
+          <div className="gap-1 items-center absolute top-[100%] z-40 left-[2rem] bg-indigo-600 text-zinc-200 px-2 rounded shadow dark:shadow-black group-hover:flex hidden text-sm flex-1">
             {task?.endAt && <span>{percentage?.toString()}%</span>}
           </div>
           <span className="w-4 h-4 bg-orange-600 rounded" />

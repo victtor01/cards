@@ -85,7 +85,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
       : "";
 
   return (
-    <section className="flex flex-col gap-2 px-5 pb-5 ">
+    <section className="flex flex-col gap-2 px-5 pb-5">
       <label htmlFor="description" className="flex flex-col gap-1">
         <div className="flex justify-between items-center">
           <div
@@ -103,44 +103,12 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           <TextareaAutosize
             maxLength={255}
             id="description"
-            className={` bg-white dark:bg-neutral-900 w-full placeholder:text-opacity-55 border dark:border-zinc-700 resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
-            placeholder="Sem descrição..."
+            className={`bg-white dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 border resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
+            placeholder="Digite uma descrição..."
             {...register("description")}
           />
         </div>
       </label>
-      <div className="flex flex-col gap-2">
-        <div
-          className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
-        >
-          <div className="w-6">
-            <CgCalendarToday size={18} />
-          </div>
-          <span>Dias.</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-6" />
-          {days?.map((day: string, index: number) => {
-            return (
-              <label
-                key={index}
-                data-selected={!!daysWatch[index]}
-                htmlFor={`check-day-${index}`}
-                className="w-10 h-10 data-[selected=false]:shadow data-[selected=true]:scale-[0.9] transition-all grid mr-2 place-items-center bg-white data-[selected=true]:bg-indigo-600 cursor-pointer
-                data-[selected=true]:text-white data-[selected=true]:opacity-100 dark:data-[selected=true]:bg-indigo-600 border-l dark:bg-zinc-800 dark:border-zinc-700 rounded-md opacity-90 hover:opacity-100"
-              >
-                <input
-                  type="checkbox"
-                  className="hidden"
-                  id={`check-day-${index}`}
-                  {...register(`days.${index}`)}
-                />
-                <span className="text-sm font-semibold">{day}</span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
       <div
         className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-200 flex items-center`}
       >
@@ -149,7 +117,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
         <span className="">Customize</span>
       </div>
-      <div className="flex gap-2 ml-6 p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800/30 rounded-md border dark:border-zinc-800">
+      <div className="flex gap-2 ml-6 p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md border-l dark:bg-neutral-800/60 dark:border-zinc-700/60">
         <label htmlFor="repeat" className="flex items-center gap-2">
           <div className="flex-1 flex gap-2 items-center px-2">
             <FaRepeat />
@@ -184,8 +152,8 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
 
         {repeatWatch && (
           <div className="flex items-center gap-2">
-            <div className=" flex-1 flex gap-2 items-center px-2">
-              <CgCheck size={20} />
+            <div className=" flex-1 flex gap-2 items-center px-2 w-14">
+              <CgCheck />
               <span className="text-md">Definir data de termino</span>
             </div>
 
@@ -229,8 +197,41 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
       </div>
 
-      <div className="flex flex-1 mt-4">
-        <div className="flex gap-2 items-center justify-between flex-1">
+      <div className="flex flex-col gap-2">
+        <div
+          className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
+        >
+          <div className="w-6">
+            <CgCalendarToday size={18} />
+          </div>
+          <span>Dias.</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-6" />
+          {days?.map((day: string, index: number) => {
+            return (
+              <label
+                key={index}
+                data-selected={!!daysWatch[index]}
+                htmlFor={`check-day-${index}`}
+                className="w-10 h-10 data-[selected=false]:shadow data-[selected=true]:scale-[0.9] transition-all grid mr-2 place-items-center bg-white data-[selected=true]:bg-indigo-600 cursor-pointer
+                data-[selected=true]:text-white data-[selected=true]:opacity-100 dark:data-[selected=true]:bg-indigo-600 border-l dark:bg-zinc-800 dark:border-zinc-700 rounded-md opacity-90 hover:opacity-100"
+              >
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  id={`check-day-${index}`}
+                  {...register(`days.${index}`)}
+                />
+                <span className="text-sm font-semibold">{day}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex flex-1 mt-4 *:whitespace-nowrap">
+        <div className="flex gap-2 items-center flex-wrap justify-between flex-1">
           <label
             htmlFor="startAt"
             data-repeat={repeatWatch}
@@ -265,17 +266,14 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
 
           <span
             data-finish={dateOfFinishState}
-            className="opacity-50 w-10 data-[finish=false]:hidden dark:bg-zinc-800 h-10 mx-5 rounded-full bg-zinc-300 grid place-items-center"
+            className="opacity-50 w-10 data-[finish=false]:hidden lg:grid hidden dark:bg-zinc-800 h-10 mx-5 rounded-full bg-zinc-300 place-items-center"
           >
             <TiMediaPlay size={20} />
           </span>
 
-          <motion.label
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            data-finish={dateOfFinishState}
+          <label
             htmlFor="endAt"
+            data-finish={dateOfFinishState}
             className="flex flex-col gap-2 flex-1 data-[finish=false]:hidden"
           >
             <div
@@ -296,22 +294,18 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               required
               {...register("endAt")}
               autoComplete="off"
-              className="p-2 bg-white dark:bg-zinc-800 border dark:border-zinc-700 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+              className="p-2 bg-white dark:bg-zinc-800 flex-1 lg:ml-0 ml-5 border dark:border-zinc-700 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               placeholder="Terminar projeto..."
             />
-          </motion.label>
+          </label>
         </div>
       </div>
 
       {diff && (
         <div className="flex flex-1 justify-end gap-2">
-          <span className="p-1 px-2 bg-zinc-200 text-zinc-500 text-sm rounded">
-            {(diff * days.length) || 'infinita'} Tasks
-          </span>
-          <span className="px-2 p-1 bg-zinc-200 text-zinc-500 dark:text-zinc-500 rounded text-sm">
+          <span className="px-2 p-1 bg-zinc-200 text-zinc-500 dark:text-zinc-500 dark:bg-zinc-800 rounded text-sm">
             {diff} Semanas
           </span>
-
         </div>
       )}
 

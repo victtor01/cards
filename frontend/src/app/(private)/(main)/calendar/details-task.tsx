@@ -82,11 +82,11 @@ export function DetailsTasks(props: DetailsTasksProps) {
   if (isLoading) return <LoaderLogo />;
 
   return (
-    <div className="fixed top-0 left-0 w-full scroll-default h-screen bg-black/50 flex flex-col px-0 p-1 z-20 overflow-auto">
+    <div className="fixed top-0 left-0 w-full scroll-default h-screen bg-zinc-950/70 flex flex-col px-0 p-1 z-20 overflow-auto">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[40rem] mx-auto relative mt-[10rem] mb-[10rem] rounded-xl flex flex-col bg-gray-100 dark:bg-neutral-900/80 backdrop-blur-md"
+        className="w-full max-w-[40rem] mx-auto relative mt-0 mb-0 lg:mt-[5rem] lg:mb-[5rem] rounded-xl flex flex-col bg-gray-100 dark:bg-neutral-900 backdrop-blur-md"
       >
         {task && (
           <FormTask.Container task={task} handleSubmit={updateTask}>

@@ -11,6 +11,7 @@ import { Background } from "./background";
 import { Dashboards } from "./dashboards";
 import { Files } from "./files";
 import { useWorkspace } from "./hooks";
+import { motion } from "framer-motion";
 
 type WorkspaceProps = {
   params: {
@@ -36,7 +37,7 @@ export default function Workspace({ params }: WorkspaceProps) {
     <div className="w-full flex flex-col flex-1 gap-6 relative">
       <Background photoUrl={workspace?.background} workspaceId={workspace.id} />
 
-      <div className="absolute top-0 left-0 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
+      <div className="absolute top-0 left-0 dark:opacity-50 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
         <div className="grid-image w-full h-full"></div>
       </div>
 
@@ -64,7 +65,11 @@ export default function Workspace({ params }: WorkspaceProps) {
         </div>
       </header>
 
-      <section className="flex flex-col gap-10 pb-20 px-5 z-10">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col gap-10 pb-20 px-5 z-10"
+      >
         <Dashboards workspace={workspace} />
 
         <Files workspace={workspace} />
@@ -73,7 +78,7 @@ export default function Workspace({ params }: WorkspaceProps) {
           {modal === "delete" && <DeleteWorkspace id={id} name={name} />}
           {modal === "rename" && <RenameWorkspace id={id} name={name} />}
         </AnimatePresence>
-      </section>
+      </motion.section>
     </div>
   );
 }

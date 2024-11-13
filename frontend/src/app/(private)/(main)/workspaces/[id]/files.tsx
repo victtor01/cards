@@ -47,7 +47,7 @@ export function Files({ workspace }: FilesProps) {
   const { createFolderHandle, createCardHandle } = useFiles();
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <div className="w-full max-w-main mx-auto flex flex-col gap-1">
         <header className="justify-between flex w-full items-center gap-4 rounded-lg">
           <div className="flex gap-3 items-center cursor-default">
