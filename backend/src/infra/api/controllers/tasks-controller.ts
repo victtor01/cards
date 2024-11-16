@@ -15,7 +15,7 @@ export class TasksController {
     return res.status(STATUS.CREATED).json(created);
   }
 
-   public async findOneByIdAndUser(request: Request, response: Response) {
+  public async findOneByIdAndUser(request: Request, response: Response) {
     const { session, params } = request;
     const [taskId, userId] = [params.taskId, session.id];
     const task = await this.tasksService.findOneByIdAndUserId(taskId, userId);
@@ -23,12 +23,11 @@ export class TasksController {
     return response.status(STATUS.OK).json(task);
   }
 
-
   public async updateCompletedArray(req: Request, res: Response) {
     const { params, body, session } = req;
     const { id: userId } = session;
     const { arrayToConclude } = body;
-    const { taskId } = params;  
+    const { taskId } = params;
 
     const updated = await this.tasksService.updateArrayCompleted({
       completedArray: arrayToConclude,
@@ -60,8 +59,18 @@ export class TasksController {
     updateTaskDto.id = taskId;
 
     const updatedTask = await this.tasksService.updateTask(updateTaskDto, userId);
-    
-    return res.status(STATUS.OK).json(updatedTask)
+
+    return res.status(STATUS.OK).json(updatedTask);
+  }
+
+  public async FindLates(req: Request, res: Response) {
+    const { params } = req;
+    const date: string | null = params.date;
+    const userId = req.session.id;
+
+    const tasks = await this.tasksService.findLates(userId, date);
+
+    return res.status(STATUS.OK).json(tasks);
   }
 
   public async findByDate(req: Request, res: Response) {

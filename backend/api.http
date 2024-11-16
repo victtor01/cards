@@ -93,9 +93,4 @@ Content-Type: application/json
 }
 ###
 
-PUT {{HOST}}/tasks/teste HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "teste"
-}
+GET {{HOST}}/tasks/lates HTTP/1.1

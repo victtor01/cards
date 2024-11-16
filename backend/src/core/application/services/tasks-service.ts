@@ -9,6 +9,7 @@ import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { validateOrReject } from 'class-validator';
+import dayjs, { Dayjs } from 'dayjs';
 import { UpdateTaskDto } from '../dtos/tasks-dtos/update-task-dto';
 
 export class TasksService implements TasksServiceInterface {
@@ -97,5 +98,73 @@ export class TasksService implements TasksServiceInterface {
     await this.tasksRepository.update(task.id, { ...task, ...updateTaskDto, completed: [] });
 
     return true;
+  }
+
+  public GetOldestTask(tasks: Task[]) {
+    const oldestStart = tasks.reduce((maisAntigo, task) => {
+      const currentTaskDate = new Date(task.startAt);
+      const maisAntigoDate = new Date(maisAntigo.startAt);
+      return currentTaskDate < maisAntigoDate ? task : maisAntigo;
+    }, tasks[0])?.startAt;
+
+    return oldestStart;
+  }
+
+  public isDateOverdue(currentDay: Dayjs, taskStartDate: Dayjs, taskEndAt?: Dayjs | undefined) {
+    const isOverdue = !taskEndAt || currentDay.isBefore(taskEndAt, 'day');
+
+    return isOverdue;
+  }
+
+  public checkTask(task: Task, currentDate: Dayjs) {
+    const dayOfWeek = currentDate.day();
+    const taskDays = task?.days?.map(Number);
+    const completedArrayIncludesDate = task.completed?.includes(currentDate.format('YYYY-MM-DD'));
+    const taskStartDate = dayjs(task.startAt);
+    const taskEndAt = task.endAt ? dayjs(task.endAt) : undefined;
+
+    if (completedArrayIncludesDate) return null;
+
+    if (
+      taskDays?.includes(dayOfWeek) &&
+      this.isDateOverdue(currentDate, taskStartDate, taskEndAt)
+    ) {
+      return task;
+    }
+  }
+
+  public async findLates(userId: string, dateString?: string): Promise<any> {
+    const date = dateString ? new Date(dateString) : new Date();
+    const allTasksBeforeDay = await this.tasksRepository.tasksLates(userId, date);
+
+    if (!allTasksBeforeDay) return [];
+
+    const tasksNotRepeat = allTasksBeforeDay?.filter((task) => task.repeat === null) || [];
+    const tasksRepeat = allTasksBeforeDay?.filter((task) => task.repeat === 'weekly') || [];
+    const overdueTasks: string[] = [];
+    const oldestStart = this.GetOldestTask(allTasksBeforeDay);
+    const startDate = dayjs(oldestStart);
+    const endDate = dayjs(date);
+
+    const formatDate = (date: Dayjs) => date.format('YYYY-MM-DD');
+
+    const datesArray = Array.from({ length: endDate.diff(startDate, 'day') + 1 }, (_, i) =>
+      startDate.add(i, 'day')
+    );
+
+    datesArray.forEach((currentDate) => {
+      tasksNotRepeat
+        .filter((task) => task.startAt === formatDate(currentDate))
+        .forEach((task) => {
+          const check = this.checkTask(task, currentDate);
+          if (!!check) overdueTasks.push(check.name);
+        });
+      tasksRepeat.forEach((task) => {
+        const check = this.checkTask(task, currentDate);
+        if (!!check) overdueTasks.push(check.name);
+      });
+    });
+
+    return overdueTasks;
   }
 }

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: PropsLayout) {
   return (
     <main className="w-full h-auto flex-1 flex flex-col bg-white dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 ">
-      <header className="p-2 bg-zinc-50 border-b-2 dark:border-violet-600 dark:bg-zinc-900 z-30">
+      <header className="p-2 bg-zinc-50 border-b-4 dark:border-violet-600/30 dark:bg-zinc-900 z-30">
         <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
           <div className="flex text-zinc-100 bg-neutral-800 border-l border-t border-violet-500 p-1 px-3 rounded items-center gap-3">
             <PiCardsFill className="text-white" />

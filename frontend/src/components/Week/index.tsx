@@ -12,7 +12,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { MdViewWeek } from "react-icons/md";
 import { PiPlus } from "react-icons/pi";
 import { useWeek } from "./hooks";
 import { TaskItem } from "./task";
@@ -21,12 +20,12 @@ const LINK_NAME = "mdl-option";
 
 dayjs.locale("pt-br");
 
-export function Week() {
+function Week() {
   const {
     handles: { next, back, handleNow, handleVisibleConcluedItems },
     states: { startOf, endOf, daysArray, modal, visibleConclued },
     params: { taskIdDetail },
-    data: { tasks },
+    data: { tasks }
   } = useWeek();
 
   const router = useRouter();
@@ -47,13 +46,6 @@ export function Week() {
   return (
     <div className="flex w-full flex-col gap-3 relative">
       <header className="mx-auto w-full max-w-[100rem]">
-        <div className="justify-between flex w-full items-center gap-4 ">
-          <div className="flex gap-3 items-center cursor-default">
-            <MdViewWeek />
-            <span className={fontFiraCode}>Minha semana</span>
-          </div>
-        </div>
-
         <div className="flex-1 flex items-center scroll-hidden justify-between gap-3 overflow-auto bg-white border-b-4 dark:bg-neutral-900/60 border dark:border-neutral-800 rounded-md p-2">
           <div className="flex gap-2 items-center">
             <button
@@ -180,3 +172,5 @@ export function Week() {
     </div>
   );
 }
+
+export { Week }

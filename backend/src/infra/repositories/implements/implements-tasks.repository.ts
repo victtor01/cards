@@ -8,7 +8,7 @@ import {
   MoreThan,
   MoreThanOrEqual,
   Repository,
-  UpdateResult
+  UpdateResult,
 } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
@@ -19,6 +19,17 @@ export class ImplementsTasksRepository implements TasksRepository {
     const created = await this.tasksRepo.save(task);
 
     return created;
+  }
+
+  public async tasksLates(userId: string, date: Date): Promise<Task[]> {
+    const tasks = await this.tasksRepo.find({
+      where: {
+        userId,
+        startAt: LessThanOrEqual(date),
+      },
+    });
+
+    return tasks;
   }
 
   public async delete(taskId: string): Promise<DeleteResult> {
@@ -42,7 +53,7 @@ export class ImplementsTasksRepository implements TasksRepository {
           userId,
           startAt: LessThanOrEqual(endAt),
           endAt: MoreThan(startAt),
-          repeat: IsNull()
+          repeat: IsNull(),
         },
         {
           userId,
@@ -54,7 +65,7 @@ export class ImplementsTasksRepository implements TasksRepository {
           userId,
           startAt: LessThanOrEqual(endAt),
           repeat: 'weekly',
-          endAt: IsNull()
+          endAt: IsNull(),
         },
         {
           userId,

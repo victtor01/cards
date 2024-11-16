@@ -28,8 +28,8 @@ export const useAddTask = () => {
       toast.success("Criado com sucesso!");
       router.push("?");
     } catch (error) {
-      toast.error("Houve um erro ao adicionar nova task!");
     }
+      toast.error("Houve um erro ao adicionar nova task!");
   };
 
   const getDaysInArrayOfBoolean = (array: boolean[]): number[] => {
