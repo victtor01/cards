@@ -14,4 +14,5 @@ export abstract class TasksServiceInterface {
   abstract findLates(userId: string, date?: string): Promise<Task[]>;
   abstract deleteTask(data: DeleteTaskDto): Promise<boolean>;
   abstract parseToTask(data: Task): Promise<Task>;
+  abstract GetOldestTask(tasks: Task[]): string | Date;
 }

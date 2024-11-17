@@ -101,10 +101,10 @@ export class TasksService implements TasksServiceInterface {
   }
 
   public GetOldestTask(tasks: Task[]) {
-    const oldestStart = tasks.reduce((maisAntigo, task) => {
+    const oldestStart = tasks.reduce((oldestTask, task) => {
       const currentTaskDate = new Date(task.startAt);
-      const maisAntigoDate = new Date(maisAntigo.startAt);
-      return currentTaskDate < maisAntigoDate ? task : maisAntigo;
+      const oldestDate = new Date(oldestTask.startAt);
+      return currentTaskDate < oldestDate ? task : oldestTask;
     }, tasks[0])?.startAt;
 
     return oldestStart;
@@ -135,13 +135,12 @@ export class TasksService implements TasksServiceInterface {
 
   public async findLates(userId: string, dateString?: string): Promise<any> {
     const date = dateString ? new Date(dateString) : new Date();
-    const allTasksBeforeDay = await this.tasksRepository.tasksLates(userId, date);
+    const allTasksBeforeDay = await this.tasksRepository.findLates(userId, date);
 
     if (!allTasksBeforeDay) return [];
 
     const tasksNotRepeat = allTasksBeforeDay?.filter((task) => task.repeat === null) || [];
     const tasksRepeat = allTasksBeforeDay?.filter((task) => task.repeat === 'weekly') || [];
-    const overdueTasks: string[] = [];
     const oldestStart = this.GetOldestTask(allTasksBeforeDay);
     const startDate = dayjs(oldestStart);
     const endDate = dayjs(date);
@@ -152,6 +151,7 @@ export class TasksService implements TasksServiceInterface {
       startDate.add(i, 'day')
     );
 
+    const overdueTasks: string[] = [];
     datesArray.forEach((currentDate) => {
       tasksNotRepeat
         .filter((task) => task.startAt === formatDate(currentDate))
@@ -159,6 +159,7 @@ export class TasksService implements TasksServiceInterface {
           const check = this.checkTask(task, currentDate);
           if (!!check) overdueTasks.push(check.name);
         });
+
       tasksRepeat.forEach((task) => {
         const check = this.checkTask(task, currentDate);
         if (!!check) overdueTasks.push(check.name);

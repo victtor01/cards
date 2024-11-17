@@ -1,14 +1,14 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
 import { Task } from '@core/domain/entities/task.entity';
 import {
-  And,
-  DeleteResult,
-  IsNull,
-  LessThanOrEqual,
-  MoreThan,
-  MoreThanOrEqual,
-  Repository,
-  UpdateResult,
+    And,
+    DeleteResult,
+    IsNull,
+    LessThanOrEqual,
+    MoreThan,
+    MoreThanOrEqual,
+    Repository,
+    UpdateResult,
 } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
@@ -21,7 +21,7 @@ export class ImplementsTasksRepository implements TasksRepository {
     return created;
   }
 
-  public async tasksLates(userId: string, date: Date): Promise<Task[]> {
+  public async findLates(userId: string, date: Date): Promise<Task[]> {
     const tasks = await this.tasksRepo.find({
       where: {
         userId,

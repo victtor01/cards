@@ -1,6 +1,7 @@
 import { Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
+import dayjs from 'dayjs';
 import { DeleteResult } from 'typeorm';
 import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
@@ -41,6 +42,7 @@ describe('tasks-service', () => {
       save: vi.fn(),
       findById: vi.fn(),
       findByStartAndUser: vi.fn(),
+      findLates: vi.fn(),
       delete: vi.fn(),
       update: vi.fn(),
     } satisfies TasksRepository;
@@ -180,9 +182,9 @@ describe('tasks-service', () => {
       expect(tasksRepositoryMock.update).toBeCalledTimes(1);
     });
 
-    it("shoud giva an error trying to update the task because task not exists", async () => {
-      const userIdMock = "USERIDMOCK"
-      const updateDto = {...taskMock, userId: userIdMock};
+    it('shoud giva an error trying to update the task because task not exists', async () => {
+      const userIdMock = 'USERIDMOCK';
+      const updateDto = { ...taskMock, userId: userIdMock };
 
       tasksRepositoryMock.findById.mockResolvedValue(null);
 
@@ -190,6 +192,20 @@ describe('tasks-service', () => {
 
       await expect(updated).rejects.toThrow(NotFoundException);
       expect(tasksRepositoryMock.findById).toBeCalledTimes(1);
-    })
+    });
+  });
+
+  describe('#findLates', () => {
+    it('should get oldest tasks', async () => {
+      const oldestDate = dayjs().subtract(1, 'day');
+      const tasksMocks = [{ startAt: new Date() }, { startAt: oldestDate.toISOString() }] as Task[];
+
+      const oldestTask = tasksService.GetOldestTask(tasksMocks);
+
+      expect(oldestTask).toBeDefined();
+      expect(oldestTask).toBe(oldestDate.toISOString());
+    });
+
+    it('should get ');
   });
 });
