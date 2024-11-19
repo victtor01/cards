@@ -14,7 +14,6 @@ const DETAIL_NAME = "mdl-detail";
 
 const useWeek = () => {
   const router = useRouter();
-  const params = useSearchParams();
   const searchParams = useSearchParams();
 
   const startOfWeek = dayjs().startOf("week");
@@ -75,13 +74,15 @@ const useWeek = () => {
     (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
   );
 
-  const modal: MdlOption = (params.get(LINK_NAME) as MdlOption) || null;
+  const modal: MdlOption = (searchParams.get(LINK_NAME) as MdlOption) || null;
 
   return {
     handles: { next, back, handleNow, handleVisibleConcluedItems },
     states: { startOf, endOf, daysArray, modal, visibleConclued },
     data: { isLoading, tasks },
     params: { taskIdDetail },
+    searchParams,
+    router,
   };
 };
 

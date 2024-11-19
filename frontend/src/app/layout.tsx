@@ -1,8 +1,6 @@
-import { LoaderLogo } from "@/components/loader-logo";
 import { QueryProvider } from "@/providers/query-client";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { Suspense } from "react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });

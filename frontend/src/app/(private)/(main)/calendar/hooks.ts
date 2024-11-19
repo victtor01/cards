@@ -26,10 +26,9 @@ export const useAddTask = () => {
       });
 
       toast.success("Criado com sucesso!");
-      router.push("?");
     } catch (error) {
-    }
       toast.error("Houve um erro ao adicionar nova task!");
+    }
   };
 
   const getDaysInArrayOfBoolean = (array: boolean[]): number[] => {
@@ -62,8 +61,8 @@ export const useAddTask = () => {
 
   const addTask = async (data: TaskSchema) => {
     const dataToCreate = createDtoOfTask(data);
-    
     await createTaskAndToastNotification(dataToCreate);
+    router.push("?")
   };
 
   return {

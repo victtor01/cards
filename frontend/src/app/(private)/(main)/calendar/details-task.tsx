@@ -30,7 +30,7 @@ const useDetailsTasks = ({ taskId }: useDetailsTasksProps) => {
   const deleteTask = async (taskId: string) => {
     try {
       await api.delete(`/tasks/${taskId}`);
-      await queryClient.refetchQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("Task deletada com sucesso!");
     } catch (error) {
       toast.error("Houve um erro ao excluir task!");

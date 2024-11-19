@@ -40,7 +40,7 @@ function DashboardTasks() {
             className={`${fontFiraCode} data-[lates=true]:text-rose-600 font-semibold text-indigo-600 
               dark:text-indigo-600 items-center gap-1 flex data-[lates=true]:dark:text-rose-600 transition-colors`}
           >
-            <span className="text-[3rem]">{data?.length}</span>
+            <span className="text-[3rem]">{data?.length || 0}</span>
             <span className="mt-4 mx-2">Tasks atrasadas</span>
           </div>
         </section>

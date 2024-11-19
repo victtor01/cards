@@ -110,31 +110,29 @@ export class TasksService implements TasksServiceInterface {
     return oldestStart;
   }
 
-  public isDateOverdue(currentDay: Dayjs, taskStartDate: Dayjs, taskEndAt?: Dayjs | undefined) {
+  public isDateOverdue(currentDay: Dayjs, taskEndAt?: Dayjs | undefined) {
     const isOverdue = !taskEndAt || currentDay.isBefore(taskEndAt, 'day');
 
     return isOverdue;
   }
 
-  public checkTask(task: Task, currentDate: Dayjs) {
+  public checkRepeatTask(task: Task, currentDate: Dayjs) {
     const dayOfWeek = currentDate.day();
     const taskDays = task?.days?.map(Number);
-    const completedArrayIncludesDate = task.completed?.includes(currentDate.format('YYYY-MM-DD'));
+
     const taskStartDate = dayjs(task.startAt);
     const taskEndAt = task.endAt ? dayjs(task.endAt) : undefined;
 
+    const completedArrayIncludesDate = task.completed?.includes(currentDate.format('YYYY-MM-DD'));
     if (completedArrayIncludesDate) return null;
 
-    if (
-      taskDays?.includes(dayOfWeek) &&
-      this.isDateOverdue(currentDate, taskStartDate, taskEndAt)
-    ) {
+    if (taskDays?.includes(dayOfWeek) && this.isDateOverdue(currentDate, taskEndAt)) {
       return task;
     }
   }
 
   public async findLates(userId: string, dateString?: string): Promise<any> {
-    const date = dateString ? new Date(dateString) : new Date();
+    const date = dateString ? new Date(dateString) : dayjs().toDate();
     const allTasksBeforeDay = await this.tasksRepository.findLates(userId, date);
 
     if (!allTasksBeforeDay) return [];
@@ -142,6 +140,7 @@ export class TasksService implements TasksServiceInterface {
     const tasksNotRepeat = allTasksBeforeDay?.filter((task) => task.repeat === null) || [];
     const tasksRepeat = allTasksBeforeDay?.filter((task) => task.repeat === 'weekly') || [];
     const oldestStart = this.GetOldestTask(allTasksBeforeDay);
+
     const startDate = dayjs(oldestStart);
     const endDate = dayjs(date);
 
@@ -152,16 +151,29 @@ export class TasksService implements TasksServiceInterface {
     );
 
     const overdueTasks: string[] = [];
-    datesArray.forEach((currentDate) => {
-      tasksNotRepeat
-        .filter((task) => task.startAt === formatDate(currentDate))
-        .forEach((task) => {
-          const check = this.checkTask(task, currentDate);
-          if (!!check) overdueTasks.push(check.name);
-        });
 
+    tasksNotRepeat?.forEach((taskNotRepeat) => {
+      const { startAt, days, completed, name } = taskNotRepeat;
+      const date = dayjs(startAt);
+      const daysIndex = days.map(Number);
+      const isSameWeek = endDate.startOf('week').isSame(startAt);
+      const arrayOfDays = isSameWeek
+        ? Array.from({ length: endDate.day() }, (_, i) => i)
+        : Array.from({ length: 7 }, (_, i) => i);
+
+      arrayOfDays.forEach((indexDay: number) => {
+        const formattedDate = date.set('day', indexDay).format('YYYY-MM-DD');
+        const dayIndexIncludes = daysIndex.includes(indexDay);
+        const completedDay = completed?.includes(formattedDate);
+        if (dayIndexIncludes && !completedDay) {
+          overdueTasks.push(name);
+        }
+      });
+    });
+
+    datesArray.forEach((currentDate) => {
       tasksRepeat.forEach((task) => {
-        const check = this.checkTask(task, currentDate);
+        const check = this.checkRepeatTask(task, currentDate);
         if (!!check) overdueTasks.push(check.name);
       });
     });

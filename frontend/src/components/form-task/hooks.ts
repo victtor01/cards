@@ -85,7 +85,7 @@ const useFormTaskAction = () => {
   const initialStartParam =
     searchParams.get("startAt") || dayjs().startOf("week").format("YYYY-MM-DD");
 
-  const { startAtWatch, repeatWatch, daysWatch, endAtWatch } = getWatchsForm(form);
+  const { startAtWatch, repeatWatch, daysWatch } = getWatchsForm(form);
   const { endAtField, initialHourState, repeatsField } =
     getInitalValuesForm(form);
 
@@ -104,13 +104,17 @@ const useFormTaskAction = () => {
 
   useEffect(() => {
     const endAtValue = dateOfFinishState ? TwoWeeksLater : null;
-    if(!form.getValues("endAt")) form.setValue("endAt", endAtValue);
-  }, [dateOfFinishState, form, TwoWeeksLater]);
+    if (!form.getValues("endAt")) form.setValue("endAt", endAtValue);
+  }, [dateOfFinishState, TwoWeeksLater]);
 
   useEffect(() => {
-    const newHour = defineHourState ? dayjs().format("HH:mm") : null;
-    form.setValue("hour", newHour);
-  }, [defineHourState, form]);
+    if (defineHourState) {
+      const newHour = defineHourState ? dayjs().format("HH:mm") : null;
+      form.setValue("hour", newHour);
+    } else {
+      form.setValue("hour", null);
+    }
+  }, [defineHourState]);
 
   useEffect(() => {
     if (!repeatWatch) {
@@ -118,7 +122,7 @@ const useFormTaskAction = () => {
       form.setValue("endAt", null);
       setDateOfFinishState(false);
     }
-  }, [repeatWatch, form, initialStartParam]);
+  }, [repeatWatch, initialStartParam]);
 
   return {
     form,
