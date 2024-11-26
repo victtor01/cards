@@ -5,8 +5,9 @@ const taskSchema = z.object({
   days:   z.array(z.boolean()),
   description: z.string().max(255).nullable(),
   hour:   z.string().nullable().optional(),
-  repeat: z.union([z.boolean(), z.string()]),
+  repeat: z.union([z.boolean(), z.string()]).nullable(),
   endAt:  z.string().optional().nullable(),
+  color: z.string().nullable(),
   startAt: z.string(),
 });
 

@@ -1,21 +1,29 @@
 import { Week } from "@/components/Week";
-import { fontFiraCode } from "@/fonts";
+import { fontFiraCode, fontSaira } from "@/fonts";
 import { MdViewWeek } from "react-icons/md";
 import { DashboardTasks } from "./dashboard";
 
 export default function Calendar() {
   return (
-    <div className="w-full flex-col max-w-[75rem] flex gap-2 p-5 bg-transparent mx-auto">
-      <header className="flex gap-3">
-        <div
-          className={`${fontFiraCode} rounded bg-white dark:bg-zinc-800/70 px-2 border dark:border-zinc-700/40 p-1 text-zinc-600 items-center flex gap-2 font-semibold text-md dark:text-zinc-200`}
-        >
+    <div className="w-full flex-col max-w-[75rem] flex gap-2 p-5 mx-auto">
+      <div className="flex gap-3">
+        <div className="flex items-center gap-2 text-gray-500 text-lg font-semibold">
           <MdViewWeek />
-          Minha semana
+          <span className={fontSaira}>Dashboards</span>
         </div>
-      </header>
+      </div>
+      
       <DashboardTasks />
+
+      <div className="flex gap-3">
+        <div className="flex items-center gap-2 text-gray-500 text-lg font-semibold">
+          <MdViewWeek />
+          <span className={fontSaira}>Minha semana</span>
+        </div>
+      </div>
+      
       <Week />
+      
     </div>
   );
 }

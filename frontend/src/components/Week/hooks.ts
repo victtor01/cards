@@ -69,7 +69,6 @@ const useWeek = () => {
   });
 
   const daysArray = Array.from(
-    // {length: 14},
     { length: endOf.diff(startOf, "day") + 1 },
     (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
   );

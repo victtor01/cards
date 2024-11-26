@@ -9,5 +9,6 @@ export type ITask = {
   hour: string | Date | null;
   days: string[];
   deleted: string[];
+  color: string | null;
   createdAt: Date | string;
 };

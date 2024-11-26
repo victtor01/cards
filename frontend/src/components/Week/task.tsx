@@ -82,6 +82,8 @@ const TaskItem = (props: AllTasksForDayProps) => {
         }, 0)
       : 0;
 
+    console.log(task)
+
   const percentage =
     !!task.completed?.length && quantityOfTasks
       ? Math.ceil((task.completed.length / quantityOfTasks) * 100)
@@ -131,7 +133,12 @@ const TaskItem = (props: AllTasksForDayProps) => {
           <div className="gap-1 items-center absolute top-[100%] z-40 left-[2rem] bg-indigo-600 text-zinc-200 px-2 rounded shadow dark:shadow-black group-hover:flex hidden text-sm flex-1">
             {task?.endAt && <span>{percentage?.toString()}%</span>}
           </div>
-          <span className="w-4 h-4 bg-orange-600 rounded" />
+          {task?.color && (
+            <span
+              className="w-4 h-4 rounded"
+              style={{ background: task.color }}
+            />
+          )}
         </div>
       </div>
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { EditorContent, FloatingMenu } from "@tiptap/react";
+import { EditorContent } from "@tiptap/react";
 import { useEditorConfig } from "./hooks";
-import { Bubble } from "./bubble";
 
 interface EditorProps {
   content?: string | undefined;

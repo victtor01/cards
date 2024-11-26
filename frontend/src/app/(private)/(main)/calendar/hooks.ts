@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 type CreateTask = {
   name: string;
   days: number[];
+  color: string | null;
   description: string | null;
   hour: string | null | undefined;
   repeat: "weekly" | null;
@@ -28,6 +29,8 @@ export const useAddTask = () => {
       toast.success("Criado com sucesso!");
     } catch (error) {
       toast.error("Houve um erro ao adicionar nova task!");
+    }finally {
+      router.push("?");
     }
   };
 
@@ -40,7 +43,7 @@ export const useAddTask = () => {
   };
 
   const createDtoOfTask = (data: TaskSchema): CreateTask => {
-    const { name, days, repeat, description, ...timeEvent } = data;
+    const { name, days, repeat, description, color, ...timeEvent } = data;
     const { startAt, hour, endAt } = timeEvent;
 
     const newEndAt = repeat && endAt ? dayjs(endAt).format("YYYY-MM-DD") : null;
@@ -51,6 +54,7 @@ export const useAddTask = () => {
       startAt: startAt,
       endAt: newEndAt,
       hour: hour,
+      color: color,
       name: name,
       days: daysInIndex,
       description: description,

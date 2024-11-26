@@ -47,17 +47,23 @@ const useFormTask = (task?: Partial<ITask>) => {
       task?.days?.includes(value.toString())
     );
 
+  const startAtInitialValueForm = task?.startAt
+    ? dayjs(task.startAt).format("YYYY-MM-DD")
+    : initalStartAt || date.startOf("week").format("YYYY-MM-DD");
+
+  const endAtInitialValueForm =  !!task?.endAt ? dayjs(task.endAt).format("YYYY-MM-DD") : null;
+
+
   const form = useForm<TaskSchema>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       name: task?.name,
       days: [...status()],
-      repeat: !!task?.repeat,
+      color: task?.color || null,
+      repeat: task?.repeat || null,
       hour: task?.hour?.toString() || null,
-      startAt: task?.startAt
-        ? dayjs(task.startAt).format("YYYY-MM-DD")
-        : initalStartAt || date.startOf("week").format("YYYY-MM-DD"),
-      endAt: !!task?.endAt ? dayjs(task.endAt).format("YYYY-MM-DD") : null,
+      startAt: startAtInitialValueForm,
+      endAt: endAtInitialValueForm
     },
   });
 

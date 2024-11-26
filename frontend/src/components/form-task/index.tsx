@@ -1,6 +1,6 @@
 "use client";
 
-import { fontFiraCode, fontOpenSans } from "@/fonts";
+import { fontFiraCode, fontOpenSans, fontSaira } from "@/fonts";
 import { ITask } from "@/interfaces/ITask";
 import { TaskSchema } from "@/schemas/task-schema";
 import dayjs from "dayjs";
@@ -16,16 +16,28 @@ import { TiMediaPlay } from "react-icons/ti";
 import TextareaAutosize from "react-textarea-autosize";
 import InputTime from "../input-time";
 import { useFormTask, useFormTaskAction, verifyInputTypeTime } from "./hooks";
+import { FaBookmark } from "react-icons/fa";
+import { MdBlockFlipped } from "react-icons/md";
+import { useEffect } from "react";
 
 type FormTaskBaseProps = { children?: React.ReactNode | null };
+
 type FormTaskHeaderProps = {} & FormTaskBaseProps;
+
 type FormTaskFooterProps = {} & FormTaskBaseProps;
+
 type FormTaskContainerProps = {
   task?: ITask;
   handleSubmit: (data: any) => any;
 } & FormTaskBaseProps;
 
 const days = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+const marks = [
+  { name: "Urgencia", color: "rgb(225 29 72 / 1)" },
+  { name: "Alerta", color: "rgb(234 179 8)" },
+  { name: "Sem pressa", color: "rgb(79 70 229)" },
+];
 
 function FormTaskContainer({
   children,
@@ -78,6 +90,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
 
   const startAtField = watch("startAt");
   const endAtField = watch("endAt");
+  const colorSelected = watch("color");
 
   const diff =
     !!startAtField && !!endAtField
@@ -85,8 +98,8 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
       : "";
 
   return (
-    <section className="flex flex-col gap-2 px-5 pb-5">
-      <label htmlFor="description" className="flex flex-col gap-1">
+    <section className="flex flex-col gap-2 pb-5">
+      <label htmlFor="description" className="flex flex-col gap-1 px-5">
         <div className="flex justify-between items-center">
           <div
             className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
@@ -99,25 +112,27 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           <span>{255 - (watch("description")?.length || 0)}</span>
         </div>
         <div className="flex w-full flex-1">
-          <div className="w-6" />
+          <div className="w-6" />{" "}
           <TextareaAutosize
             maxLength={255}
             id="description"
-            className={`bg-white dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 border resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
+            className={`bg-white dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
             placeholder="Digite uma descrição..."
             {...register("description")}
           />
         </div>
       </label>
+
       <div
-        className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-200 flex items-center`}
+        className={`${fontOpenSans} mt-2 px-5 text-zinc-500 dark:text-zinc-200 flex items-center`}
       >
         <div className="w-6">
           <IoIosOptions size={18} />
         </div>
         <span className="">Customize</span>
       </div>
-      <div className="flex gap-2 ml-6 p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md border-l dark:bg-neutral-800/60 dark:border-zinc-700/60">
+
+      <div className="flex mr-5  gap-2 ml-[2.5rem] p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
         <label htmlFor="repeat" className="flex items-center gap-2">
           <div className="flex-1 flex gap-2 items-center px-2">
             <FaRepeat />
@@ -197,7 +212,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 px-5 mt-4">
         <div
           className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
         >
@@ -230,7 +245,56 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
       </div>
 
-      <div className="flex flex-1 mt-4 *:whitespace-nowrap">
+      <div className="flex flex-col gap-2 px-5">
+        <div
+          className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
+        >
+          <div className="w-6">
+            <FaBookmark size={16} />
+          </div>
+          <span>Marcador</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-6" />
+
+          <button
+            type="button"
+            data-selectedNull={!!colorSelected}
+            onClick={() => form.setValue("color", null)}
+            className="w-8 h-8 opacity-60 data-[selectedNull=false]:opacity-100 bg-gray-300 dark:bg-zinc-800 mr-2 rounded grid place-items-center text-zinc-600 dark:text-gray-600"
+          >
+            <MdBlockFlipped />
+          </button>
+
+          {marks?.map(({ name, color }, index: number) => {
+            return (
+              <Controller
+                name="color"
+                key={index}
+                render={({ field }) => {
+                  const selected = field.value === color;
+
+                  return (
+                    <button
+                      type="button"
+                      data-selected={selected}
+                      onClick={() => field.onChange(color)}
+                      style={{ background: color }}
+                      className="relative px-2 mr-2 rounded group/button z-30 w-8 h-8 opacity-50 data-[selected=true]:opacity-100  data-[selected=true]:scale-[0.90]"
+                    >
+                      <span className="top-[100%] bg-white dark:bg-neutral-800 text-sm z-50 rounded-md shadow mt-1 hidden text-nowrap whitespace-nowrap group-hover/button:flex left-0 p-2 absolute">
+                        {name}
+                      </span>
+                    </button>
+                  );
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex flex-1 mt-4 *:whitespace-nowrap px-5">
         <div className="flex gap-2 items-center flex-wrap justify-between flex-1">
           <label
             htmlFor="startAt"
@@ -259,14 +323,14 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
                 required
                 autoComplete="off"
                 {...register("startAt")}
-                className="p-2 bg-white dark:bg-zinc-800 border dark:border-zinc-700 flex-1 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                className="p-2 bg-white dark:bg-zinc-800 flex-1 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               />
             </div>
           </label>
 
           <span
             data-finish={dateOfFinishState}
-            className="opacity-50 w-10 data-[finish=false]:hidden lg:grid hidden dark:bg-zinc-800 h-10 mx-5 rounded-full bg-zinc-300 place-items-center"
+            className="opacity-50 w-10 data-[finish=false]:hidden lg:grid hidden dark:bg-zinc-800 h-16 mx-5 rounded-lg bg-zinc-300 place-items-center"
           >
             <TiMediaPlay size={20} />
           </span>
@@ -294,7 +358,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               required
               {...register("endAt")}
               autoComplete="off"
-              className="p-2 bg-white dark:bg-zinc-800 flex-1 lg:ml-0 ml-5 border dark:border-zinc-700 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+              className="p-2 bg-white dark:bg-zinc-800 flex-1 lg:ml-0 ml-5 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               placeholder="Terminar projeto..."
             />
           </label>
@@ -302,7 +366,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
       </div>
 
       {diff && (
-        <div className="flex flex-1 justify-end gap-2">
+        <div className="flex flex-1 px-5 justify-end gap-2">
           <span className="px-2 p-1 bg-zinc-200 text-zinc-500 dark:text-zinc-500 dark:bg-zinc-800 rounded text-sm">
             {diff} Semanas
           </span>
@@ -314,7 +378,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         animate={{ opacity: 1 }}
         data-hour={defineHourState}
         htmlFor="hour"
-        className="flex flex-col gap-2 mt-2 data-[hour=false]:hidden"
+        className="flex flex-col gap-2 px-5 mt-2 data-[hour=false]:hidden"
       >
         <div
           className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}

@@ -1,7 +1,6 @@
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef } from "react";
-
 import Document from "@tiptap/extension-document";
 import Highlight from "@tiptap/extension-highlight";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -51,18 +50,17 @@ export const useEditorConfig = ({ content = null }: useEditorConfigProps) => {
     }
   }, [editor?.getHTML()]);
 
+  const handleClick = (event: MouseEvent) => {
+    const focus =
+      editorContentRef.current &&
+      editor &&
+      editorContentRef.current.contains(event.target as Node);
+
+    if (focus) editor.commands.focus();
+  };
+
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      const focus =
-        editorContentRef.current &&
-        editor &&
-        editorContentRef.current.contains(event.target as Node);
-
-      if (focus) editor.commands.focus();
-    };
-
     document.addEventListener("click", handleClick);
-
     return () => {
       document.removeEventListener("click", handleClick);
     };

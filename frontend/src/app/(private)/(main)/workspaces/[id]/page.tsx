@@ -54,7 +54,7 @@ export default function Workspace({ params }: WorkspaceProps) {
           <div className="flex gap-2 items-center rounded-md">
             <button
               onClick={() => router.push("?mdw=rename")}
-              className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-black shadow dark:shadow-black border-l dark:border-zinc-800/90"
+              className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-neutral-800 shadow dark:shadow-black border-l dark:border-zinc-800/90"
             >
               <MdOutlineDriveFileRenameOutline />
               <span className={`${fontFiraCode}`}>Edit</span>

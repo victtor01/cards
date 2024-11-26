@@ -1,5 +1,5 @@
 import DashboardCard from "@/components/workspaces";
-import { fontFiraCode } from "@/fonts";
+import { fontFiraCode, fontSaira } from "@/fonts";
 import { IWorkspace } from "@/interfaces/IWorkspace";
 import { useRouter } from "next/navigation";
 import { BsArrowRight } from "react-icons/bs";
@@ -19,13 +19,13 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
   return (
     <div className="flex flex-col gap-4 w-full max-w-main mx-auto">
       <header className="justify-between flex w-full items-center gap-4 rounded-lg">
-        <div className="flex gap-3 items-center cursor-default">
+        <div className="flex gap-3 items-center cursor-default text-gray-500 font-semibold">
           <FaSquarePollVertical />
-          <span className={fontFiraCode}>Dashboard</span>
+          <span className={fontSaira}>Dashboard</span>
         </div>
       </header>
 
-      <div className="w-full flex justify-between items-center gap-6 mx-auto">
+      <div className="w-full flex justify-between gap-6 mx-auto">
         <DashboardCard.Container title="Total de documentos">
           <div className="text-lg mt-2 font-semibold flex">
             <span className="text-violet-500 w-5">{workspaceLength || 0}</span>{" "}

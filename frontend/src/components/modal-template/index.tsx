@@ -42,7 +42,7 @@ function ModalHeader({ title }: { title: string }) {
 
 function ModalContainer({ children, className }: ModalProps) {
   const style = twMerge(
-    "flex m-auto w-full max-w-[30rem] bg-zinc-50 dark:bg-zinc-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
+    "flex m-auto w-full max-w-[30rem] bg-neutral-50 dark:bg-neutral-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
     className
   );
 

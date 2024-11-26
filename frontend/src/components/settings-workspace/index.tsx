@@ -21,7 +21,7 @@ export const Settings = () => {
     <div className="relative">
       <button
         onClick={handleOpen}
-        className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-black/80 shadow dark:shadow-black border-l dark:border-zinc-800/90"
+        className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-neutral-800 shadow dark:shadow-black border-l dark:border-zinc-800/90"
       >
         <span
           data-open={!!open}

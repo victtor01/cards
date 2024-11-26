@@ -37,6 +37,9 @@ export class Task {
   @Column({ type: 'time', nullable: true })
   public hour: string | null = null;
 
+  @Column({ type: "varchar", nullable: true })
+  public color: string | null = null;
+
   @CreateDateColumn()
   public createdAt: Date;
 

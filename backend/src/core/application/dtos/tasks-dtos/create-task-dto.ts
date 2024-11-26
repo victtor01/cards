@@ -20,6 +20,9 @@ export class CreateTaskDto {
   @IsArray()
   days: Day[];
 
+  @IsString()
+  color: string;
+  
   repeat: RepeatType;
 }
 

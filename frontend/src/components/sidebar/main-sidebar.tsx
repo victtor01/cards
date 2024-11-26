@@ -1,6 +1,6 @@
 "use client";
 
-import { fontFiraCode, fontRoboto } from "@/fonts";
+import { fontFiraCode, fontRoboto, fontSaira } from "@/fonts";
 import { useResize, useSidebar } from "@/hooks/use-sidebar";
 import { useActionsWorkspaces } from "@/hooks/use-workspace";
 import Link from "next/link";
@@ -28,9 +28,9 @@ export function Sidebar() {
         style={{ width: size.x }}
       >
         <header className="flex p-2 items-center justify-between w-full">
-          <div className={`flex gap-2 cursor-default dark:opacity-80`}>
-            <div className="text-zinc-200 bg-indigo-600 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
-              <span className={`text-md font-semibold`}>Flards</span>
+          <div className={`flex gap-2 cursor-default`}>
+            <div className="text-gray-200 bg-indigo-600 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
+              <span className={`${fontSaira} text-sm font-semibold`}>Organizze</span>
             </div>
           </div>
 

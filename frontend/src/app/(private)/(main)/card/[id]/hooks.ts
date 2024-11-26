@@ -112,7 +112,7 @@ export function useUpdateContentCard(props: useUpdateContentCardProps) {
         };
       });
     };
-  }, [editor, card?.workspaceId]);
+  }, [editor, cardId, card?.workspaceId]);
 
   return { loading, updateContent };
 }

@@ -43,7 +43,6 @@ export class AuthService implements AuthServiceInterface {
         refreshToken,
       };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException('There was an error when trying to log in!');
     }
   }

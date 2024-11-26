@@ -11,7 +11,7 @@ export abstract class TasksServiceInterface {
   abstract updateArrayCompleted(data: UpdateCompletedTaskDto): Promise<any>;
   abstract updateTask(data: UpdateTaskDto, userId: string): Promise<boolean>;
   abstract create(data: CreateTaskDto, userId: string): Promise<Task>;
-  abstract findLates(userId: string, date?: string): Promise<Task[]>;
+  abstract findLates(userId: string, date?: string): Promise<string[]>;
   abstract deleteTask(data: DeleteTaskDto): Promise<boolean>;
   abstract parseToTask(data: Task): Promise<Task>;
   abstract GetOldestTask(tasks: Task[]): string | Date;
