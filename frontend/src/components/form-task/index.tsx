@@ -5,26 +5,27 @@ import { ITask } from "@/interfaces/ITask";
 import { TaskSchema } from "@/schemas/task-schema";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
+import { HtmlHTMLAttributes } from "react";
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
 import { BsCalendar2Date } from "react-icons/bs";
 import { CgCalendarToday, CgCheck } from "react-icons/cg";
 import { CiTextAlignLeft } from "react-icons/ci";
+import { FaBookmark } from "react-icons/fa";
 import { FaRepeat } from "react-icons/fa6";
 import { IoIosOptions } from "react-icons/io";
+import { MdBlockFlipped } from "react-icons/md";
 import { TbClockHour12Filled } from "react-icons/tb";
-import { TiMediaPlay } from "react-icons/ti";
 import TextareaAutosize from "react-textarea-autosize";
+import { twMerge } from "tailwind-merge";
 import InputTime from "../input-time";
 import { useFormTask, useFormTaskAction, verifyInputTypeTime } from "./hooks";
-import { FaBookmark } from "react-icons/fa";
-import { MdBlockFlipped } from "react-icons/md";
-import { useEffect } from "react";
 
 type FormTaskBaseProps = { children?: React.ReactNode | null };
 
 type FormTaskHeaderProps = {} & FormTaskBaseProps;
 
-type FormTaskFooterProps = {} & FormTaskBaseProps;
+type FormTaskFooterProps = {} & FormTaskBaseProps &
+  HtmlHTMLAttributes<HTMLDivElement>;
 
 type FormTaskContainerProps = {
   task?: ITask;
@@ -109,7 +110,9 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             </div>
             <span>Descrição</span>
           </div>
-          <span>{255 - (watch("description")?.length || 0)}</span>
+          <span className={`${fontSaira} opacity-50`}>
+            {255 - (watch("description")?.length || 0)}
+          </span>
         </div>
         <div className="flex w-full flex-1">
           <div className="w-6" />{" "}
@@ -117,7 +120,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             maxLength={255}
             id="description"
             className={`bg-white dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
-            placeholder="Digite uma descrição..."
+            placeholder="Descrição..."
             {...register("description")}
           />
         </div>
@@ -212,7 +215,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 px-5 mt-4">
+      <div className="flex flex-col gap-2 px-5">
         <div
           className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
         >
@@ -294,11 +297,11 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </div>
       </div>
 
-      <div className="flex flex-1 mt-4 *:whitespace-nowrap px-5">
+      <div className="flex flex-col flex-1 mt-4 *:whitespace-nowrap px-5">
         <div className="flex gap-2 items-center flex-wrap justify-between flex-1">
           <label
             htmlFor="startAt"
-            data-repeat={repeatWatch}
+            data-repeat={!!repeatWatch}
             className="flex flex-col gap-2 flex-1 data-[repeat=false]:hidden"
           >
             <div
@@ -327,13 +330,6 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               />
             </div>
           </label>
-
-          <span
-            data-finish={dateOfFinishState}
-            className="opacity-50 w-10 data-[finish=false]:hidden lg:grid hidden dark:bg-zinc-800 h-16 mx-5 rounded-lg bg-zinc-300 place-items-center"
-          >
-            <TiMediaPlay size={20} />
-          </span>
 
           <label
             htmlFor="endAt"
@@ -416,12 +412,13 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
   );
 }
 
-function FormTaskFooter({ children }: FormTaskFooterProps) {
-  return (
-    <footer className="w-full flex justify-between items-center p-5 border-t-4 dark:border-zinc-800">
-      {children}
-    </footer>
+function FormTaskFooter({ children, className }: FormTaskFooterProps) {
+  const style = twMerge(
+    "w-full flex justify-between items-center p-5 border-t-4 dark:border-zinc-800",
+    className
   );
+
+  return <footer className={style}>{children}</footer>;
 }
 
 const FormTask = {

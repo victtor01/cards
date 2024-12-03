@@ -3,6 +3,7 @@ import { DeleteTaskDto } from '@core/application/dtos/tasks-dtos/delete-task-dto
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
 import { UpdateCompletedTaskDto } from '@core/application/dtos/tasks-dtos/update-completed-task';
 import { Task } from '@core/domain/entities/task.entity';
+import { Dayjs } from 'dayjs';
 import { UpdateTaskDto } from '../dtos/tasks-dtos/update-task-dto';
 
 export abstract class TasksServiceInterface {
@@ -14,5 +15,6 @@ export abstract class TasksServiceInterface {
   abstract findLates(userId: string, date?: string): Promise<string[]>;
   abstract deleteTask(data: DeleteTaskDto): Promise<boolean>;
   abstract parseToTask(data: Task): Promise<Task>;
-  abstract GetOldestTask(tasks: Task[]): string | Date;
+  abstract getOldestTask(tasks: Task[]): string | Date;
+  abstract isTaskDueToday(task: Task, currentDate: Dayjs): null | Task;
 }

@@ -82,7 +82,7 @@ const TaskItem = (props: AllTasksForDayProps) => {
         }, 0)
       : 0;
 
-    console.log(task)
+  console.log(task);
 
   const percentage =
     !!task.completed?.length && quantityOfTasks
@@ -97,7 +97,7 @@ const TaskItem = (props: AllTasksForDayProps) => {
       data-linkselected={!!taskIdDetail && !selectedLink}
       className="flex flex-col relative gap-1 p-1 overflow-visible rounded z-[0] 
       data-[linkselected=true]:blur-[2px] items-center data-[linkselected=true]:opacity-50 
-      hover:bg-zinc-100 hover:dark:bg-neutral-900 data-[completed=true]:border-indigo-600 
+      hover:bg-zinc-100 hover:dark:bg-neutral-800 data-[completed=true]:border-indigo-600 
       dark:data-[completed=true]:border-indigo-600 transition-none group
       dark:border-zinc-800"
     >
@@ -133,12 +133,10 @@ const TaskItem = (props: AllTasksForDayProps) => {
           <div className="gap-1 items-center absolute top-[100%] z-40 left-[2rem] bg-indigo-600 text-zinc-200 px-2 rounded shadow dark:shadow-black group-hover:flex hidden text-sm flex-1">
             {task?.endAt && <span>{percentage?.toString()}%</span>}
           </div>
-          {task?.color && (
-            <span
-              className="w-4 h-4 rounded"
-              style={{ background: task.color }}
-            />
-          )}
+          <span
+            className={`w-2 h-2 rounded-full`}
+            style={{ background: task.color || "transparent" }}
+          />
         </div>
       </div>
 

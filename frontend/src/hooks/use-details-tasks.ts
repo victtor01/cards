@@ -18,6 +18,10 @@ export const useDetailsTasks = ({ taskId }: useDetailsTasksProps) => {
     queryFn: async () => (await api.get(`/tasks/${taskId}`)).data,
   });
 
+  const closeModal = () => {
+    router.push("?");
+  };
+
   const deleteTask = async (taskId: string) => {
     try {
       await api.delete(`/tasks/${taskId}`);
@@ -25,9 +29,9 @@ export const useDetailsTasks = ({ taskId }: useDetailsTasksProps) => {
       toast.success("Task deletada com sucesso!");
     } catch (error) {
       toast.error("Houve um erro ao excluir task!");
-    } finally {
-      router.push("?");
     }
+
+    closeModal();
   };
 
   const updateTask = async (data: TaskSchema) => {
@@ -54,6 +58,8 @@ export const useDetailsTasks = ({ taskId }: useDetailsTasksProps) => {
         "Houve um erro ao tentar atualizar a task! Atualiza e tente novamente."
       );
     }
+
+    closeModal();
   };
 
   return {

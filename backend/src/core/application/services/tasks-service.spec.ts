@@ -16,6 +16,7 @@ const taskMock = new Task({
   startAt: '2024-10-23',
   endAt: '2024-10-23',
   hour: '',
+  color: null,
   repeat: null,
   days: [0],
 });
@@ -200,12 +201,25 @@ describe('tasks-service', () => {
       const oldestDate = dayjs().subtract(1, 'day');
       const tasksMocks = [{ startAt: new Date() }, { startAt: oldestDate.toISOString() }] as Task[];
 
-      const oldestTask = tasksService.GetOldestTask(tasksMocks);
+      const oldestTask = tasksService.getOldestTask(tasksMocks);
 
       expect(oldestTask).toBeDefined();
       expect(oldestTask).toBe(oldestDate.toISOString());
     });
+  });
 
-    it('should get ');
+  describe('#isTaskDueToday', () => {
+    it('should show task in day', () =>  {
+      taskMock.startAt = dayjs().subtract(1, "week").format('YYYY-MM-DD');
+      taskMock.endAt = dayjs().add(1, 'week').format('YYYY-MM-DD');
+      taskMock.days = [0, 1, 2, 3, 4, 5, 6];
+      taskMock.completed = [];
+      taskMock.repeat = 'weekly';
+
+      const res = tasksService.isTaskDueToday(taskMock, dayjs().subtract(1, "day"))
+
+      expect(res).toBeDefined();
+      expect(res).toBe(taskMock)
+    });
   });
 });
