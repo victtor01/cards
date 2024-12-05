@@ -3,6 +3,7 @@ import 'reflect-metadata';
 
 import { AppDataSource } from '@infra/database';
 import { ErrorMiddleware } from '@src/infra/api/middlewares/error.middleware';
+import logger from '@src/utils/logger';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -17,26 +18,28 @@ class Bootstrap {
     try {
       await AppDataSource.initialize();
       const app = express();
-      
+
       app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
       app.use(cookieParser());
       app.use(express.json());
       app.use(bodyParser.json());
 
-      app.use(cors({
-        origin: ["http://10.220.0.8:3000", "http://localhost:3000"],
-        credentials: true,
-      }));
+      app.use(
+        cors({
+          origin: ['http://10.220.0.8:3000', 'http://localhost:3000'],
+          credentials: true,
+        })
+      );
 
       app.use(routes);
       app.use(ErrorMiddleware);
 
       app.listen(this.port, () => {
-        console.log('Servidor iniciado com sucesso!');
+        logger.info('Servidor iniciado com sucesso!');
       });
     } catch (err) {
-      console.error('Erro ao tentar conectar ao banco de dados!', err);
+      logger.error('Erro ao tentar conectar ao banco de dados!', err);
     }
   }
 }
