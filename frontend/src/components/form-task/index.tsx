@@ -20,7 +20,9 @@ import { twMerge } from "tailwind-merge";
 import InputTime from "../input-time";
 import { useFormTask, useFormTaskAction, verifyInputTypeTime } from "./hooks";
 
-type FormTaskBaseProps = { children?: React.ReactNode | null };
+interface FormTaskBaseProps extends HtmlHTMLAttributes<HTMLDivElement> {
+  children?: React.ReactNode | null;
+}
 
 type FormTaskHeaderProps = {} & FormTaskBaseProps;
 
@@ -41,9 +43,9 @@ const marks = [
 ];
 
 function FormTaskContainer({
+  handleSubmit,
   children,
   task,
-  handleSubmit,
 }: FormTaskContainerProps) {
   const { form } = useFormTask(task);
 

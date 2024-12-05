@@ -1,14 +1,13 @@
 import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dto';
 import { Task } from '@core/domain/entities/task.entity';
 import {
-    And,
-    DeleteResult,
-    IsNull,
-    LessThanOrEqual,
-    MoreThan,
-    MoreThanOrEqual,
-    Repository,
-    UpdateResult,
+  Between,
+  DeleteResult,
+  LessThanOrEqual,
+  MoreThan,
+  Or,
+  Repository,
+  UpdateResult,
 } from 'typeorm';
 import { TasksRepository } from '../tasks.repository';
 
@@ -42,44 +41,11 @@ export class ImplementsTasksRepository implements TasksRepository {
     const { startAt, endAt } = data;
 
     const tasks = await this.tasksRepo.find({
-      where: [
-        {
-          userId,
-          startAt: MoreThanOrEqual(startAt),
-          endAt: MoreThan(endAt),
-          repeat: IsNull(),
-        },
-        {
-          userId,
-          startAt: LessThanOrEqual(endAt),
-          endAt: MoreThan(startAt),
-          repeat: IsNull(),
-        },
-        {
-          userId,
-          startAt: LessThanOrEqual(startAt),
-          endAt: MoreThan(startAt),
-          repeat: IsNull(),
-        },
-        {
-          userId,
-          startAt: LessThanOrEqual(endAt),
-          repeat: 'weekly',
-          endAt: IsNull(),
-        },
-        {
-          userId,
-          startAt: LessThanOrEqual(endAt),
-          repeat: 'weekly',
-          endAt: MoreThan(startAt),
-        },
-        {
-          userId,
-          startAt: And(MoreThanOrEqual(startAt), LessThanOrEqual(endAt)),
-          repeat: IsNull(),
-          endAt: IsNull(),
-        },
-      ],
+      where: {
+        userId: userId,
+        startAt: Or(Between(startAt, endAt), LessThanOrEqual(startAt)),
+        endAt: Or(Between(startAt, endAt), MoreThan(endAt)),
+      },
       order: {
         name: 'DESC',
       },

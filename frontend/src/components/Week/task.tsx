@@ -64,10 +64,9 @@ const TaskItem = (props: AllTasksForDayProps) => {
 
   const diffInDays =
     !!task.startAt && !!task.endAt
-      ? dayjs(task.endAt, "YYYY-MM-DD").diff(
-          dayjs(task.startAt, "YYYY-MM-DD"),
-          "day"
-        )
+      ? dayjs(task.endAt, "YYYY-MM-DD")
+          .add(1, "day")
+          .diff(dayjs(task.startAt, "YYYY-MM-DD"), "day")
       : null;
 
   const diffWeekFormat = diffInDays !== null ? Math.ceil(diffInDays / 7) : null;

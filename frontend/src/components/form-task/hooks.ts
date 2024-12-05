@@ -51,8 +51,9 @@ const useFormTask = (task?: Partial<ITask>) => {
     ? dayjs(task.startAt).format("YYYY-MM-DD")
     : initalStartAt || date.startOf("week").format("YYYY-MM-DD");
 
-  const endAtInitialValueForm =  !!task?.endAt ? dayjs(task.endAt).format("YYYY-MM-DD") : null;
-
+  const endAtInitialValueForm = !!task?.endAt
+    ? dayjs(task.endAt).format("YYYY-MM-DD")
+    : null;
 
   const form = useForm<TaskSchema>({
     resolver: zodResolver(taskSchema),
@@ -63,7 +64,7 @@ const useFormTask = (task?: Partial<ITask>) => {
       repeat: task?.repeat || null,
       hour: task?.hour?.toString() || null,
       startAt: startAtInitialValueForm,
-      endAt: endAtInitialValueForm
+      endAt: endAtInitialValueForm,
     },
   });
 
@@ -106,7 +107,10 @@ const useFormTaskAction = () => {
   const handleDateOfFinish = () => setDateOfFinishState((prev) => !prev);
   const handleDefineHour = () => setDefineHourState((prev) => !prev);
 
-  const TwoWeeksLater = dayjs(startAtWatch).add(2, "week").format("YYYY-MM-DD");
+  const TwoWeeksLater = dayjs(startAtWatch)
+    .add(2, "week")
+    .subtract(1, "day")
+    .format("YYYY-MM-DD");
 
   useEffect(() => {
     const endAtValue = dateOfFinishState ? TwoWeeksLater : null;
