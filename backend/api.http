@@ -79,7 +79,7 @@ Content-Type: application/json
 
 # @name tasks
 
-GET {{HOST}}/tasks?startAt=2024-09-02&endAt=2024-10-08 HTTP/1.1
+GET {{HOST}}/tasks?startAt=2024-12-01&endAt=2024-12-07 HTTP/1.1
 
 ###
 POST {{HOST}}/tasks HTTP/1.1

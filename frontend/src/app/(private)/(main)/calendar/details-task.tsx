@@ -61,8 +61,9 @@ function Form({ task, updateTask }: FormProps) {
   );
 }
 
-function NavBar({ page, handlePage }: LinksProps) {
-  const styleSelected = "border-2 border-indigo-600 opacity-100 cursor-default";
+function NavBar({ page, handlePage, children }: LinksProps) {
+  const styleSelected =
+    "shadow-xl bg-white dark:bg-neutral-700 opacity-100 cursor-default";
 
   const keysOfPageState: Record<PageState, any> = {
     edit: { name: "editar", icon: <FaPen size={14} /> },
@@ -71,7 +72,7 @@ function NavBar({ page, handlePage }: LinksProps) {
   };
 
   return (
-    <section className="flex py-4 flex-col min-w-[12rem] gap-2 px-4 border-l-4 border-gray-400 dark:border-zinc-800">
+    <section className="flex py-4 flex-col min-w-[12rem] gap-2 px-4 border-l-4 border-gray-200 dark:border-zinc-800">
       <Link
         href={"?"}
         className="w-8 h-8 bg-white shadow hover:shadow-lg transition justify-self-end self-end grid place-items-center rounded opacity-90 hover:opacity-100 dark:bg-zinc-800"
@@ -87,7 +88,7 @@ function NavBar({ page, handlePage }: LinksProps) {
               key={key}
               type="button"
               onClick={() => handlePage(key as PageState)}
-              className={`${selectedStyle} bg-gray-200 flex items-center text-gray-500 dark:text-gray-300 justify-between dark:bg-neutral-800 rounded-md opacity-90 hover:opacity-100 p-1 px-2`}
+              className={`${selectedStyle} bg-gray-200 transition-all flex items-center text-gray-500 dark:text-gray-300 justify-between dark:bg-neutral-800 rounded-md opacity-90 hover:opacity-100 p-1 px-2`}
             >
               <span className={fontSaira}>{value.name}</span>
               {value.icon}
@@ -95,6 +96,8 @@ function NavBar({ page, handlePage }: LinksProps) {
           );
         })}
       </div>
+
+      {children}
     </section>
   );
 }

@@ -3,6 +3,8 @@ import { Task } from '@core/domain/entities/task.entity';
 import {
   Between,
   DeleteResult,
+  FindOptionsWhere,
+  IsNull,
   LessThanOrEqual,
   MoreThan,
   Or,
@@ -40,15 +42,31 @@ export class ImplementsTasksRepository implements TasksRepository {
   public async findByStartAndUser(data: FindByDateDto, userId: string): Promise<Task[]> {
     const { startAt, endAt } = data;
 
+    const staticWhere = {
+      startAt: Or(Between(startAt, endAt), LessThanOrEqual(startAt)),
+      userId,
+      repeat: 'weekly',
+      endAt: IsNull(),
+    } satisfies FindOptionsWhere<Task>;
+
+    const whereRepeatWeeklyButHaveEnd = {
+      ...staticWhere,
+      endAt: Or(Between(startAt, endAt), MoreThan(endAt)),
+    } satisfies FindOptionsWhere<Task>;
+
+    const whereRepeatWeeklyButDontHaveEnd = {
+      ...staticWhere,
+    } satisfies FindOptionsWhere<Task>;
+
+    const whereDontRepeat = {
+      ...staticWhere,
+      startAt: Between(startAt, endAt),
+      repeat: IsNull(),
+    } satisfies FindOptionsWhere<Task>;
+
     const tasks = await this.tasksRepo.find({
-      where: {
-        userId: userId,
-        startAt: Or(Between(startAt, endAt), LessThanOrEqual(startAt)),
-        endAt: Or(Between(startAt, endAt), MoreThan(endAt)),
-      },
-      order: {
-        name: 'DESC',
-      },
+      where: [whereRepeatWeeklyButHaveEnd, whereRepeatWeeklyButDontHaveEnd, whereDontRepeat],
+      order: { name: 'DESC' },
     });
 
     return tasks;

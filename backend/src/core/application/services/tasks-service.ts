@@ -142,14 +142,14 @@ export class TasksService implements TasksServiceInterface {
       return null;
     }
 
+    const taskStartAt = dayjs(task.startAt);
+    const currentDateIsInvalid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
+    if (!currentDateIsInvalid) return null;
+
     const isInfiniteTask = this.isTaskInfinite(task);
     if (isInfiniteTask) {
       return task;
     }
-
-    const taskStartAt = dayjs(task.startAt);
-    const currentDateIsInvalid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
-    if (!currentDateIsInvalid) return null;
 
     const taskEndAt = task.endAt ? dayjs(task.endAt) : undefined;
     const currentDateItsBeforeThatEnd = taskEndAt && currentDate.isBefore(taskEndAt, 'day');

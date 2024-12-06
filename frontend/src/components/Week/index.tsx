@@ -40,6 +40,8 @@ function Week() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  console.log(tasks);
+  
   const EyeComponent = visibleConclued ? FaEye : FaEyeSlash;
   const now = day.isBefore(endOf) && day.isAfter(startOf);
 

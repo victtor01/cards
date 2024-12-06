@@ -7,13 +7,14 @@ import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { HtmlHTMLAttributes } from "react";
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
-import { BsCalendar2Date } from "react-icons/bs";
-import { CgCalendarToday, CgCheck } from "react-icons/cg";
-import { CiTextAlignLeft } from "react-icons/ci";
+import { BsCalendar3EventFill } from "react-icons/bs";
+import { CgCheck } from "react-icons/cg";
 import { FaBookmark } from "react-icons/fa";
 import { FaRepeat } from "react-icons/fa6";
-import { IoIosOptions } from "react-icons/io";
+import { IoCalendarNumberSharp } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
+import { PiTextAlignLeftFill } from "react-icons/pi";
+import { SlOptionsVertical } from "react-icons/sl";
 import { TbClockHour12Filled } from "react-icons/tb";
 import TextareaAutosize from "react-textarea-autosize";
 import { twMerge } from "tailwind-merge";
@@ -108,7 +109,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
           >
             <div className="w-6">
-              <CiTextAlignLeft size={18} />
+              <PiTextAlignLeftFill size={20} />
             </div>
             <span>Descrição</span>
           </div>
@@ -132,12 +133,34 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         className={`${fontOpenSans} mt-2 px-5 text-zinc-500 dark:text-zinc-200 flex items-center`}
       >
         <div className="w-6">
-          <IoIosOptions size={18} />
+          <SlOptionsVertical />
         </div>
-        <span className="">Customize</span>
+        <span className="">Opções</span>
       </div>
 
       <div className="flex mr-5  gap-2 ml-[2.5rem] p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
+        <label htmlFor="repeat" className="flex items-center gap-2">
+          <div className="flex-1 flex gap-2 items-center px-2">
+            <TbClockHour12Filled />
+            <span className="text-md">Definir horário</span>
+          </div>
+
+          <button
+            type="button"
+            id="repeat"
+            data-selected={defineHourState}
+            onClick={handleDefineHour}
+            className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg data-[selected=true]:justify-end overflow-hidden"
+          >
+            <motion.div
+              layout
+              data-selected={defineHourState}
+              transition={{ type: "spring", duration: 0.1 }}
+              className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50 data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
+            />
+          </button>
+        </label>
+
         <label htmlFor="repeat" className="flex items-center gap-2">
           <div className="flex-1 flex gap-2 items-center px-2">
             <FaRepeat />
@@ -171,10 +194,10 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </label>
 
         {repeatWatch && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <div className=" flex-1 flex gap-2 items-center px-2 w-14">
-              <CgCheck />
-              <span className="text-md">Definir data de termino</span>
+              <CgCheck size={30} />
+              <span className="text-md">Data de termino</span>
             </div>
 
             <button
@@ -194,27 +217,6 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
             </button>
           </div>
         )}
-
-        <div className="flex items-center gap-2">
-          <div className="flex-1 flex gap-2 items-center px-2">
-            <TbClockHour12Filled />
-            <span className="text-md">Definir horário</span>
-          </div>
-
-          <button
-            type="button"
-            data-selected={defineHourState}
-            onClick={handleDefineHour}
-            className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg data-[selected=true]:justify-end overflow-hidden"
-          >
-            <motion.div
-              layout
-              data-selected={defineHourState}
-              transition={{ type: "spring", duration: 0.1 }}
-              className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50 data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-            />
-          </button>
-        </div>
       </div>
 
       <div className="flex flex-col gap-2 px-5">
@@ -222,9 +224,9 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
         >
           <div className="w-6">
-            <CgCalendarToday size={18} />
+            <BsCalendar3EventFill size={15} />
           </div>
-          <span>Dias.</span>
+          <span>Dias</span>
         </div>
         <div className="flex items-center">
           <div className="w-6" />
@@ -310,14 +312,9 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center`}
             >
               <div className="w-6">
-                <BsCalendar2Date />
+                <IoCalendarNumberSharp size={18} />
               </div>
               <span className="flex-1">Começa em</span>
-              <span
-                className={`${fontFiraCode} p-1 text-sm bg-zinc-200 rounded px-2 dark:bg-zinc-800 `}
-              >
-                {dayjs(watch("startAt")).format("ddd, DD [de] MMM") || ""}
-              </span>
             </div>
             <div className="flex">
               <div className="w-6" />
@@ -342,11 +339,6 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               className={`${fontOpenSans} mt-2 text-zinc-500 dark:text-zinc-100 flex items-center gap-2`}
             >
               <span className="flex-1">Termina em</span>
-              <span
-                className={`${fontFiraCode} text-sm p-1 bg-zinc-200 rounded px-2 dark:bg-zinc-800 `}
-              >
-                {dayjs(watch("endAt")).format("ddd, DD [de] MMM") || ""}
-              </span>
             </div>
             <input
               type="date"
