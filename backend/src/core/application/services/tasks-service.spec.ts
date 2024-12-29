@@ -201,7 +201,7 @@ describe('tasks-service', () => {
       const oldestDate = dayjs().subtract(1, 'day');
       const tasksMocks = [{ startAt: new Date() }, { startAt: oldestDate.toISOString() }] as Task[];
 
-      const oldestTask = tasksService.getOldestTask(tasksMocks);
+      const oldestTask = tasksService.getOldestTaskDate(tasksMocks);
 
       expect(oldestTask).toBeDefined();
       expect(oldestTask).toBe(oldestDate.toISOString());
@@ -216,7 +216,7 @@ describe('tasks-service', () => {
       taskMock.completed = [];
       taskMock.repeat = 'weekly';
 
-      const res = tasksService.isTaskDueToday(taskMock, dayjs().subtract(1, "day"))
+      const res = tasksService.isTaskDueTodayLates(taskMock, dayjs().subtract(1, "day"))
 
       expect(res).toBeDefined();
       expect(res).toBe(taskMock)

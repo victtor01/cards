@@ -40,7 +40,7 @@ function Week() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  console.log(tasks);
+  console.log("tests", tasks);
   
   const EyeComponent = visibleConclued ? FaEye : FaEyeSlash;
   const now = day.isBefore(endOf) && day.isAfter(startOf);
@@ -114,17 +114,13 @@ function Week() {
         </div>
 
         <div className="w-full relative flex-col lg:flex-row flex flex-wrap px-0 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
-          {daysArray?.map((day: string, index: number) => {
+          {tasks && Object.entries(tasks)?.map(([day, tasks], index: number) => {
             const isCurrentDay =
               dayjs().format("DD-MM-YYYY") === dayjs(day).format("DD-MM-YYYY");
 
             const style = isCurrentDay
               ? "shadow-lg border-4 border-opacity-50 dark:border-zinc-800 hover:border-opacity-100 shadow-none"
               : "dark:border-zinc-800/30";
-
-            const tasksForDay = tasks?.length
-              ? GetTasksInDay(tasks, day)
-              : null;
 
             return (
               <motion.div
@@ -147,11 +143,11 @@ function Week() {
                     <span
                       className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
                     >
-                      {tasksForDay?.length} Tasks para esse dia!
+                      {tasks?.length} Tasks para esse dia!
                     </span>
                   </div>
 
-                  {tasksForDay?.map((task: ITask) => (
+                  {tasks?.map((task: ITask) => (
                     <TaskItem day={day} task={task} key={`${task.id}-${day}`} />
                   ))}
                 </section>

@@ -7,10 +7,12 @@ import dayjs, { Dayjs } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+type ResponseTasks = { [key: string]: ITask[] }
 dayjs.locale("pt-br");
 type MdlOption = "new" | null | undefined;
 const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
+
 
 const useWeek = () => {
   const router = useRouter();
@@ -52,7 +54,7 @@ const useWeek = () => {
     router.push("?");
   };
 
-  const { data: tasks, isLoading } = useQuery<ITask[]>({
+  const { data: tasks, isLoading } = useQuery<ResponseTasks>({
     queryKey: [
       "tasks",
       startOf.format("YYYY-MM-DD"),

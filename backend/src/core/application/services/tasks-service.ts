@@ -48,10 +48,35 @@ export class TasksService implements TasksServiceInterface {
     return task;
   }
 
-  public async findByDate({ startAt, endAt }: FindByDateDto, userId: string): Promise<Task[]> {
-    const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
+  private createDaysWithTasks(tasks: Task[], arrayOfDays: Dayjs[]) {
+    const tasksWithDays = Object.fromEntries(
+      arrayOfDays.map((day) => [day.format('YYYY-MM-DD'), []])
+    );
 
-    return allTasks;
+    arrayOfDays.forEach((date: Dayjs) => {
+      tasks.forEach((task) => {
+        const taskOverdue = this.taskPertencesToday(task, date);
+        const dateKey = date.format('YYYY-MM-DD');
+
+        if (!tasksWithDays[dateKey]) {
+          tasksWithDays[dateKey] = [];
+        }
+
+        if (taskOverdue) {
+          tasksWithDays[dateKey].push(task);
+        }
+      });
+    });
+
+    return tasksWithDays;
+  }
+
+  public async findByDate({ startAt, endAt }: FindByDateDto, userId: string): Promise<any> {
+    const allTasks = await this.tasksRepository.findByStartAndUser({ startAt, endAt }, userId);
+    const endAtToCreate = endAt || dayjs(startAt).endOf('week').toDate();
+    const days = this.createArrayFromDateToDate(dayjs(startAt), dayjs(endAtToCreate));
+    var createdArray = this.createDaysWithTasks(allTasks, days);
+    return createdArray;
   }
 
   public async deleteTask(data: DeleteTaskDto): Promise<boolean> {
@@ -112,7 +137,7 @@ export class TasksService implements TasksServiceInterface {
     return true;
   }
 
-  public getOldestTask(tasks: Task[]): string | Date {
+  public getOldestTaskDate(tasks: Task[]): string | Date {
     const oldestStart = tasks.reduce((oldestTask, task) => {
       const currentTaskDate = new Date(task.startAt);
       const oldestDate = new Date(oldestTask.startAt);
@@ -133,27 +158,52 @@ export class TasksService implements TasksServiceInterface {
     return Array.from({ length: endAt.diff(startAt, 'day') + 1 }, (_, i) => startAt.add(i, 'day'));
   }
 
-  public isTaskDueToday(task: Task, currentDate: Dayjs): Task | null {
+  public taskPertencesToday(task: Task, currentDate: Dayjs) {
+    const taskStartAt = dayjs(task.startAt);
+
+    const currentDateIsValid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
+    if (!currentDateIsValid) return null;
+
+    const isInfiniteTask = this.isTaskInfinite(task);
+    if (isInfiniteTask) return task;
+
+    const taskEndAt = task.endAt ? dayjs(task.endAt) : dayjs(task.startAt).endOf('week');
+    const currentDateItsBeforeThatEnd =
+      currentDate.isBefore(taskEndAt, 'day') || currentDate.isSame(taskEndAt, 'day');
+
+    const { days } = task;
+    const daysString = days.map((day) => day.toString());
+    const daysPertencesToDay = daysString.includes(currentDate.day().toString());
+
+    if (currentDateItsBeforeThatEnd && daysPertencesToDay) {
+      return task;
+    }
+
+    return null;
+  }
+
+  public isTaskDueTodayLates(task: Task, currentDate: Dayjs): Task | null {
     const dayOfWeek = currentDate.day();
     const taskDays = task?.days?.map(Number);
 
     const currentDateFormatted = currentDate.format('YYYY-MM-DD');
-    if (!taskDays?.includes(dayOfWeek) || task?.completed?.includes(currentDateFormatted)) {
+    const taskIsCompleted = task?.completed?.includes(currentDateFormatted);
+    if (!taskDays?.includes(dayOfWeek) || taskIsCompleted) {
       return null;
     }
 
     const taskStartAt = dayjs(task.startAt);
-    const currentDateIsInvalid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
-    if (!currentDateIsInvalid) return null;
+
+    const currentDateIsValid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
+    if (!currentDateIsValid) return null;
 
     const isInfiniteTask = this.isTaskInfinite(task);
-    if (isInfiniteTask) {
-      return task;
-    }
+    if (isInfiniteTask) return task;
 
     const taskEndAt = task.endAt ? dayjs(task.endAt) : undefined;
     const currentDateItsBeforeThatEnd = taskEndAt && currentDate.isBefore(taskEndAt, 'day');
     const currentDateIsBeforeToday = currentDate.isBefore(dayjs().format('YYYY-MM-DD'), 'day');
+
     if (currentDateItsBeforeThatEnd && currentDateIsBeforeToday) {
       return task;
     }
@@ -192,7 +242,7 @@ export class TasksService implements TasksServiceInterface {
 
     try {
       const overdueTasks: OverdueTask[] = [];
-      const oldestStart = this.getOldestTask(allTasksBeforeDay);
+      const oldestStart = this.getOldestTaskDate(allTasksBeforeDay);
       const startDate = dayjs(oldestStart);
       const endDate = dayjs(date);
 
@@ -206,7 +256,7 @@ export class TasksService implements TasksServiceInterface {
       const tasksRepeat = allTasksBeforeDay?.filter((task) => task.repeat === 'weekly') || [];
       const overdueRepeatTasks = datesArray.flatMap((currentDate) =>
         tasksRepeat
-          .map((task) => this.isTaskDueToday(task, currentDate))
+          .map((task) => this.isTaskDueTodayLates(task, currentDate))
           .filter((repeatedTask) => !!repeatedTask)
           .map(({ id, name }) => ({ id, name, date: currentDate.format('YYYY-MM-DD') }))
       );
