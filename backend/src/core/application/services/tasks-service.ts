@@ -52,22 +52,15 @@ export class TasksService implements TasksServiceInterface {
     const tasksWithDays = Object.fromEntries(
       arrayOfDays.map((day) => [day.format('YYYY-MM-DD'), []])
     );
-
-    arrayOfDays.forEach((date: Dayjs) => {
+  
+    arrayOfDays.forEach((date) => {
       tasks.forEach((task) => {
-        const taskOverdue = this.taskPertencesToday(task, date);
-        const dateKey = date.format('YYYY-MM-DD');
-
-        if (!tasksWithDays[dateKey]) {
-          tasksWithDays[dateKey] = [];
-        }
-
-        if (taskOverdue) {
-          tasksWithDays[dateKey].push(task);
+        if (this.taskPertencesToday(task, date)) {
+          tasksWithDays[date.format('YYYY-MM-DD')].push(task);
         }
       });
     });
-
+  
     return tasksWithDays;
   }
 
@@ -158,57 +151,44 @@ export class TasksService implements TasksServiceInterface {
     return Array.from({ length: endAt.diff(startAt, 'day') + 1 }, (_, i) => startAt.add(i, 'day'));
   }
 
-  public taskPertencesToday(task: Task, currentDate: Dayjs) {
+  private isValidTaskForDate(task: Task, currentDate: Dayjs): Task | null {
     const taskStartAt = dayjs(task.startAt);
-
-    const currentDateIsValid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
-    if (!currentDateIsValid) return null;
-
-    const isInfiniteTask = this.isTaskInfinite(task);
-    if (isInfiniteTask) return task;
-
+    
+    // Verifica se a data atual é depois ou igual ao início da tarefa
+    if (!this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt)) return null;
+  
+    // Verifica se a tarefa é infinita
+    if (this.isTaskInfinite(task)) return task;
+  
+    // Verifica o fim da tarefa
     const taskEndAt = task.endAt ? dayjs(task.endAt) : dayjs(task.startAt).endOf('week');
-    const currentDateItsBeforeThatEnd =
-      currentDate.isBefore(taskEndAt, 'day') || currentDate.isSame(taskEndAt, 'day');
-
-    const { days } = task;
-    const daysString = days.map((day) => day.toString());
-    const daysPertencesToDay = daysString.includes(currentDate.day().toString());
-
-    if (currentDateItsBeforeThatEnd && daysPertencesToDay) {
+    if (currentDate.isBefore(taskEndAt, 'day') || currentDate.isSame(taskEndAt, 'day')) {
       return task;
     }
-
+  
     return null;
+  }
+
+  public taskPertencesToday(task: Task, currentDate: Dayjs) {
+    const { days } = task;
+    const daysString = days.map((day) => day.toString());
+  
+    // Verifica se a tarefa pertence ao dia
+    if (!daysString.includes(currentDate.day().toString())) return null;
+  
+    return this.isValidTaskForDate(task, currentDate);
   }
 
   public isTaskDueTodayLates(task: Task, currentDate: Dayjs): Task | null {
     const dayOfWeek = currentDate.day();
     const taskDays = task?.days?.map(Number);
-
     const currentDateFormatted = currentDate.format('YYYY-MM-DD');
     const taskIsCompleted = task?.completed?.includes(currentDateFormatted);
-    if (!taskDays?.includes(dayOfWeek) || taskIsCompleted) {
-      return null;
-    }
-
-    const taskStartAt = dayjs(task.startAt);
-
-    const currentDateIsValid = this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt);
-    if (!currentDateIsValid) return null;
-
-    const isInfiniteTask = this.isTaskInfinite(task);
-    if (isInfiniteTask) return task;
-
-    const taskEndAt = task.endAt ? dayjs(task.endAt) : undefined;
-    const currentDateItsBeforeThatEnd = taskEndAt && currentDate.isBefore(taskEndAt, 'day');
-    const currentDateIsBeforeToday = currentDate.isBefore(dayjs().format('YYYY-MM-DD'), 'day');
-
-    if (currentDateItsBeforeThatEnd && currentDateIsBeforeToday) {
-      return task;
-    }
-
-    return null;
+  
+    // Verifica se a tarefa pertence ao dia e não está completa
+    if (!taskDays?.includes(dayOfWeek) || taskIsCompleted) return null;
+  
+    return this.isValidTaskForDate(task, currentDate);
   }
 
   private processNonRepeatingTask(task: Task, endDate: Dayjs) {
