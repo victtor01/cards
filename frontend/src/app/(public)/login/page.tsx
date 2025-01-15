@@ -15,13 +15,8 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[25rem] border p-6 m-auto rounded bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
+      className="w-[99%] max-w-[25rem] border p-8 mx-auto mt-20 mb-auto rounded-lg bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
     >
-      <header className="cursor-default flex">
-        <div className="text-white bg-gradient-45 from-indigo-600 to-violet-600 shadow-lg shadow-zinc-300 dark:shadow-black p-1 px-3">
-          <h1 className={`${fontRoboto} text-lg`}>Flards</h1>
-        </div>
-      </header>
       <section className="w-full flex flex-col gap-3">
         <label htmlFor="email" className="w-full flex flex-col gap-1">
           <span className="">Email</span>
@@ -29,10 +24,10 @@ export default function Page() {
             <MdEmail className="text-zinc-700 w-10" size={20} />
             <input
               type="text"
-              {...register("email")}
+              {...register("email")} 
               placeholder="jonhDoe@example.com.br"
               className="p-2 rounded bg-transparent outline-none flex-1 "
-            />
+            /> 
           </div>
         </label>
         <label htmlFor="password" className="w-full flex flex-col gap-1">
@@ -58,8 +53,8 @@ export default function Page() {
         <button
           type="submit"
           disabled={isSubmitting}
-          style={{ opacity: isSubmitting ? 0.6 : 0.9 }}
-          className="w-full bg-indigo-600 p-2 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
+          data-sub={!!isSubmitting}
+          className="w-full bg-indigo-600 p-2 data-[sub=true]:opacity-50 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
         >
           {isSubmitting && <ImSpinner2 className="animate-spin" />}
           {!isSubmitting && <>Login</>}
