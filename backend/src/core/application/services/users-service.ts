@@ -11,7 +11,10 @@ import { UsersServiceInterface } from '../interfaces/users-interfaces/users-serv
 import { createUserSchema } from '../validations/users-schemas/create-user-schema';
 
 export class UsersService implements UsersServiceInterface {
-  constructor(private readonly usersRepo: UsersRepository, private readonly multer: Multer) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly multer: Multer
+  ) {}
 
   public async findOneByEmail(email: string): Promise<User | null> {
     const user = await this.usersRepo.findOneByEmail(email);
@@ -27,6 +30,7 @@ export class UsersService implements UsersServiceInterface {
 
   public async updatePhoto({ userId, filename }: PropsToUpdataPhoto): Promise<any> {
     const user = await this.findOneById(userId);
+
     if (!user?.id) {
       await unlinkUploadFile(filename);
       throw new BadRequestException('user(s) not exists!');
