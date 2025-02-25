@@ -4,7 +4,7 @@ import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dt
 import { UpdateCompletedTaskDto } from '@core/application/dtos/tasks-dtos/update-completed-task';
 import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { CreateTaskSchema } from '@core/application/validations/tasks-schemas/create-task-schema';
-import { Task } from '@core/domain/entities/task.entity';
+import { Day, Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
@@ -52,7 +52,7 @@ export class TasksService implements TasksServiceInterface {
     const tasksWithDays = Object.fromEntries(
       arrayOfDays.map((day) => [day.format('YYYY-MM-DD'), []])
     );
-  
+
     arrayOfDays.forEach((date) => {
       tasks.forEach((task) => {
         if (this.taskPertencesToday(task, date)) {
@@ -60,7 +60,7 @@ export class TasksService implements TasksServiceInterface {
         }
       });
     });
-  
+
     return tasksWithDays;
   }
 
@@ -85,17 +85,24 @@ export class TasksService implements TasksServiceInterface {
     return true;
   }
 
-  public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<any> {
+  public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<boolean> {
     const { completedArray, taskId, userId } = updateCompletedTaskDto;
+
     const task = await this.findOneById(taskId);
 
-    if (task.userId !== userId)
+    if (task?.userId !== userId) {
       throw new UnauthorizedException('Usuário não pode fazer essa ação!');
+    }
 
-    const filterString = completedArray.filter((date: string) => date.toString());
-    const updated = await this.tasksRepository.update(taskId, { completed: filterString });
+    const days = task?.days?.map(day => Number(day));
+    const verifyDatesOfCompleted: string[] = completedArray.filter((date: string) => {
+      const dayOfWeek = dayjs(date);
+      return days?.includes(dayOfWeek.day() as Day);
+    });
 
-    return updated;
+    await this.tasksRepository.update(taskId, { completed: verifyDatesOfCompleted });
+
+    return true;
   }
 
   public async findOneByIdAndUserId(taskId: string, userId: string): Promise<Task> {
@@ -153,29 +160,29 @@ export class TasksService implements TasksServiceInterface {
 
   private isValidTaskForDate(task: Task, currentDate: Dayjs): Task | null {
     const taskStartAt = dayjs(task.startAt);
-    
+
     // Verifica se a data atual é depois ou igual ao início da tarefa
     if (!this.isCurrentDateIsAfterOrSame(currentDate, taskStartAt)) return null;
-  
+
     // Verifica se a tarefa é infinita
     if (this.isTaskInfinite(task)) return task;
-  
+
     // Verifica o fim da tarefa
     const taskEndAt = task.endAt ? dayjs(task.endAt) : dayjs(task.startAt).endOf('week');
     if (currentDate.isBefore(taskEndAt, 'day') || currentDate.isSame(taskEndAt, 'day')) {
       return task;
     }
-  
+
     return null;
   }
 
   public taskPertencesToday(task: Task, currentDate: Dayjs) {
     const { days } = task;
     const daysString = days.map((day) => day.toString());
-  
+
     // Verifica se a tarefa pertence ao dia
     if (!daysString.includes(currentDate.day().toString())) return null;
-  
+
     return this.isValidTaskForDate(task, currentDate);
   }
 
@@ -184,10 +191,10 @@ export class TasksService implements TasksServiceInterface {
     const taskDays = task?.days?.map(Number);
     const currentDateFormatted = currentDate.format('YYYY-MM-DD');
     const taskIsCompleted = task?.completed?.includes(currentDateFormatted);
-  
+
     // Verifica se a tarefa pertence ao dia e não está completa
     if (!taskDays?.includes(dayOfWeek) || taskIsCompleted) return null;
-  
+
     return this.isValidTaskForDate(task, currentDate);
   }
 

@@ -1,12 +1,11 @@
 "use client";
 
-import { fontFiraCode, fontOpenSans, fontRoboto, fontSaira } from "@/fonts";
+import { fontSaira } from "@/fonts";
+import Link from "next/link";
 import { FaLock } from "react-icons/fa";
+import { ImSpinner2 } from "react-icons/im";
 import { MdEmail } from "react-icons/md";
 import { useLogin } from "./hooks";
-import Link from "next/link";
-import { ImSpinner2 } from "react-icons/im";
-import { BiCheck } from "react-icons/bi";
 
 export default function Page() {
   const { form, auth } = useLogin();

@@ -6,7 +6,6 @@ import AddTaskModal from "@/app/(private)/(main)/calendar/add-task";
 import { DetailsTasks } from "@/app/(private)/(main)/calendar/details-task";
 import { fontFiraCode, fontSaira } from "@/fonts";
 import { ITask } from "@/interfaces/ITask";
-import { GetTasksInDay } from "@/utils/get-tasks-in-day";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -23,7 +22,7 @@ dayjs.locale("pt-br");
 function Week() {
   const {
     handles: { next, back, handleNow, handleVisibleConcluedItems },
-    states: { startOf, endOf, daysArray, modal, visibleConclued },
+    states: { startOf, endOf, modal, visibleConclued },
     params: { taskIdDetail },
     data: { tasks },
   } = useWeek();
@@ -40,14 +39,12 @@ function Week() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  console.log("tests", tasks);
-  
   const EyeComponent = visibleConclued ? FaEye : FaEyeSlash;
   const now = day.isBefore(endOf) && day.isAfter(startOf);
 
   return (
     <div className="flex w-full flex-col gap-3 relative">
-      <header className="mx-auto w-full max-w-[100rem]">
+      <header className="mx-auto w-full max-w-main">
         <div className="flex-1 flex items-center scroll-hidden justify-between gap-3 overflow-auto">
           <div className="flex gap-2 items-center">
             <button
@@ -73,9 +70,7 @@ function Week() {
               className="opacity-95 hover:opacity-100 items-center px-3 flex gap-2 h-8 rounded-md bg-indigo-600 dark:bg-indigo-600 text-white hover:shadow shadow"
             >
               <PiPlus />
-              <span className={`${fontSaira} whitespace-nowrap`}>
-                Tarefa
-              </span>
+              <span className={`${fontSaira} whitespace-nowrap`}>Tarefa</span>
             </button>
           </div>
           <div
@@ -108,52 +103,68 @@ function Week() {
         </div>
       </header>
 
-      <div className="mx-auto gap-2 flex w-full relative transition-all max-w-[100rem] rounded-md">
+      <div className="mx-auto gap-2 flex w-full relative transition-all max-w-main rounded-md">
         <div className="absolute top-0 left-0 overflow-hidden flex items-center flex-1 w-full h-full z-[0]">
           <div className="grid-image w-full h-full"></div>
         </div>
 
-        <div className="w-full relative flex-col lg:flex-row flex flex-wrap px-0 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
-          {tasks && Object.entries(tasks)?.map(([day, tasks], index: number) => {
-            const isCurrentDay =
-              dayjs().format("DD-MM-YYYY") === dayjs(day).format("DD-MM-YYYY");
+        <div className="w-full relative flex flex-wrap flex-wrap px-0 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
+          {tasks &&
+            Object.entries(tasks)?.map(([day, tasks], index: number) => {
+              const isCurrentDay =
+                dayjs().format("DD-MM-YYYY") ===
+                dayjs(day).format("DD-MM-YYYY");
 
-            const style = isCurrentDay
-              ? "shadow-lg border-4 border-opacity-50 dark:border-zinc-800 hover:border-opacity-100 shadow-none"
-              : "dark:border-zinc-800/30";
+              const style = isCurrentDay
+                ? "shadow-lg border-4 border-opacity-50 dark:border-zinc-800 hover:border-opacity-100 shadow-none"
+                : "dark:border-zinc-800/30";
 
-            return (
-              <motion.div
-                key={day}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: [1.5, 1] }}
-                transition={{ delay: (index + 1) / 100 }}
-                className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white flex-1 relative w-full lg:min-w-[22rem] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900`}
-              >
-                <header className="w-full p-5 pb-0 items-center rounded gap-2 text-zinc-700 capitalize dark:text-white text-sm flex justify-between">
-                  <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">
-                    {isCurrentDay ? "Hoje" : dayjs(day).format("dddd")}
-                  </span>
-                  <span className="text-xs opacity-40">
-                    {dayjs(day).format("DD/MM/YYYY")}
-                  </span>
-                </header>
-                <section className="flex flex-col pb-9 gap-3 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
-                  <div className="">
-                    <span
-                      className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
-                    >
-                      {tasks?.length} Tasks para esse dia!
+              return (
+                <motion.div
+                  key={day}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: [1.5, 1] }}
+                  transition={{ delay: (index + 1) / 100 }}
+                  className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white 
+                  flex-1 relative w-full lg:min-w-[22rem] max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900`}
+                >
+                  <header className="w-full p-5 pb-0 items-center rounded gap-2 text-zinc-700 capitalize dark:text-white text-sm flex justify-between">
+                    <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">
+                      {isCurrentDay ? "Hoje" : dayjs(day).format("dddd")}
                     </span>
-                  </div>
+                    <span className="text-xs opacity-40">
+                      {dayjs(day).format("DD/MM/YYYY")}
+                    </span>
+                  </header>
+                  <section className="flex flex-col pb-9 gap-3 overflow-auto scroll-default pt-2 px-5 pr-3 flex-1 z-20 max-h-[20rem]">
+                    <div className="">
+                      <span
+                        className={`${fontFiraCode} text-xs p-1 px-2 opacity-60 rounded bg-zinc-100 dark:bg-zinc-800`}
+                      >
+                        {tasks?.length} Tasks para esse dia!
+                      </span>
+                    </div>
 
-                  {tasks?.map((task: ITask) => (
-                    <TaskItem day={day} task={task} key={`${task.id}-${day}`} />
-                  ))}
-                </section>
-              </motion.div>
-            );
-          })}
+                    {tasks?.map((task: ITask) => {
+                      const taskHidden =
+                        task?.completed?.includes(
+                          dayjs(day).format("YYYY-MM-DD")
+                        ) && !visibleConclued;
+
+                      if (taskHidden) return;
+
+                      return (
+                        <TaskItem
+                          day={day}
+                          task={task}
+                          key={`${task.id}-${day}`}
+                        />
+                      );
+                    })}
+                  </section>
+                </motion.div>
+              );
+            })}
         </div>
 
         {modal === "new" && <AddTaskModal />}

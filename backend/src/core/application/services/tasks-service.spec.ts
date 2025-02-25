@@ -2,7 +2,7 @@ import { Task } from '@core/domain/entities/task.entity';
 import { TasksRepository } from '@infra/repositories/tasks.repository';
 import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import dayjs from 'dayjs';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 import { DeleteTaskDto } from '../dtos/tasks-dtos/delete-task-dto';
 import { UpdateCompletedTaskDto } from '../dtos/tasks-dtos/update-completed-task';
@@ -94,6 +94,30 @@ describe('tasks-service', () => {
         new UnauthorizedException('Usuário não pode fazer essa ação!')
       );
     });
+
+    it('deve filtrar corretamente as datas com base nos dias da semana', async () => {
+      const taskId = '1';
+      const userId = '123';
+      const completedArray = ['2025-02-23', '2025-02-24', '2025-02-25', '2025-02-26'];
+      taskMock.userId = userId;
+      taskMock.days = [0,1,2]
+
+      const mockUpdateResult: UpdateResult = {
+        generatedMaps: [],
+        raw: [],
+        affected: 1, // Exemplo de resultado da atualização
+      };
+
+      const mapSpy = vi.spyOn(Array.prototype, 'map');
+      tasksRepositoryMock.findById.mockResolvedValueOnce(await Promise.resolve(taskMock));
+      tasksRepositoryMock.update.mockResolvedValueOnce(mockUpdateResult);
+
+      const result = await tasksService.updateArrayCompleted({ completedArray, taskId, userId });
+      expect(mapSpy).toHaveBeenCalledWith(expect.any(Function));
+      expect(tasksRepositoryMock.update).toHaveBeenCalledWith(taskId, {
+        completed: ['2025-02-23', '2025-02-24', '2025-02-25'],
+      });
+    });
   });
 
   describe('#deleteTask', () => {
@@ -183,7 +207,7 @@ describe('tasks-service', () => {
       expect(tasksRepositoryMock.update).toBeCalledTimes(1);
     });
 
-    it('shoud giva an error trying to update the task because task not exists', async () => {
+    it('should giva an error trying to update the task because task not exists', async () => {
       const userIdMock = 'USERIDMOCK';
       const updateDto = { ...taskMock, userId: userIdMock };
 

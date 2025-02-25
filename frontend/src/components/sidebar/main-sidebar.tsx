@@ -30,7 +30,9 @@ export function Sidebar() {
         <header className="flex p-2 items-center justify-between w-full">
           <div className={`flex gap-2 cursor-default`}>
             <div className="text-gray-200 bg-indigo-600 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
-              <span className={`${fontSaira} text-sm font-semibold`}>Organizze</span>
+              <span className={`${fontSaira} text-sm font-semibold`}>
+                Organizze
+              </span>
             </div>
           </div>
 
@@ -54,7 +56,7 @@ export function Sidebar() {
             data-selected={!!pathname.startsWith("/calendar")}
             className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
           >
-            <MdEditCalendar size={16}/>
+            <MdEditCalendar size={16} />
             <span className={fontFiraCode}>Week</span>
           </Link>
 
@@ -99,14 +101,21 @@ export function Sidebar() {
         </div>
 
         <section className="gap-4 pb-5 overflow-hidden flex flex-col relative h-full">
-          <div className="mt-4 w-full px-2">
+          <div className="mt-2 w-full px-2 justify-between items-center flex">
             <button
               onClick={() => createFolder()}
-              className="w-auto gap-3 px-3 h-8 flex flex-1 items-center bg-white dark:bg-zinc-900 shadow dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent text-gray-500 rounded opacity-90 hover:opacity-100"
+              className="w-auto gap-3 px-3 h-8 flex items-center bg-white dark:bg-zinc-900 border dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent text-gray-500 rounded opacity-90 hover:opacity-100"
             >
               <HiFolderPlus />
               <span className="text-sm capitalize">fold</span>
             </button>
+
+            <div
+              className="px-2 p-1 flex items-center justify-center gap-2 bg-white shadow opacity-50
+              text-xs rounded-md dark:bg-neutral-600 text-gray-500 dark:text-gray-100"
+            >
+              <span>{workspaces?.length}</span>/<span>20</span>
+            </div>
           </div>
           <div className="flex-1 flex p-2 flex-col h-full max-w-auto overflow-auto scroll-default">
             {workspaces?.[0]?.name &&
@@ -120,7 +129,10 @@ export function Sidebar() {
       <button
         data-resizing={resizing}
         onMouseDown={handler}
-        className="w-[0.1rem] overflow-visible hover:w-[0.3rem] data-[resizing=true]:bg-indigo-600 dark:data-[resizing=true]:bg-indigo-600 transition-all bg-zinc-300 opacity-0 group-hover/sidebar:opacity-100 dark:bg-zinc-800 hover:bg-indigo-500 dark:hover:bg-indigo-600 right-0 h-full absolute cursor-col-resize"
+        className="w-[0.1rem] overflow-visible hover:w-[0.3rem] data-[resizing=true]:bg-indigo-600 
+        dark:data-[resizing=true]:bg-indigo-600 transition-all bg-zinc-300 opacity-0 
+        group-hover/sidebar:opacity-100 dark:bg-zinc-800 hover:bg-indigo-500 
+        dark:hover:bg-indigo-600 right-0 h-full absolute cursor-col-resize"
       />
     </div>
   );

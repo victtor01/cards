@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: PropsLayout) {
   return (
-    <main className="w-full h-auto flex-1 flex flex-col bg-gray-50 dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 ">
+    <main className="w-full h-auto flex-1 flex flex-col bg-gradient-radial from-gray-50 to-white dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 ">
       <header className="p-2 bg-transparent z-30">
         <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
           <div className="flex flex-col gap-2">

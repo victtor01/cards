@@ -5,7 +5,7 @@ import { DashboardTasks } from "./dashboard";
 
 export default function Calendar() {
   return (
-    <div className="w-full flex-col max-w-[75rem] flex gap-2 p-5 mx-auto">
+    <div className="w-full flex-col max-w-main flex gap-2 p-5 mx-auto">
       <div className="flex gap-3">
         <div className="flex items-center gap-2 text-gray-500 text-lg font-semibold">
           <MdViewWeek />
@@ -15,7 +15,7 @@ export default function Calendar() {
       
       <DashboardTasks />
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 w-full max-w-main">
         <div className="flex items-center gap-2 text-gray-500 text-lg font-semibold">
           <MdViewWeek />
           <span className={fontSaira}>Minha semana</span>

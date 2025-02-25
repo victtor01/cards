@@ -12,7 +12,7 @@ export class CreateTaskDto {
   endAt: Date | string;
   
   @IsString()
-  startAt: string | Date;
+  startAt?: string | Date;
   
   @IsString()
   hour: string;

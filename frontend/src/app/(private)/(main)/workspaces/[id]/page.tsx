@@ -3,21 +3,46 @@
 import { DeleteWorkspace } from "@/components/modals-workspaces/delete-workspace";
 import { RenameWorkspace } from "@/components/modals-workspaces/rename-workspace";
 import { Settings } from "@/components/settings-workspace";
-import { fontFiraCode } from "@/fonts";
-import { AnimatePresence } from "framer-motion";
+import { fontFiraCode, fontSaira } from "@/fonts";
+import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { Background } from "./background";
 import { Dashboards } from "./dashboards";
 import { Files } from "./files";
 import { useWorkspace } from "./hooks";
-import { motion } from "framer-motion";
+import { BsFillCalendar3WeekFill } from "react-icons/bs";
 
 type WorkspaceProps = {
   params: {
     id: string;
   };
 };
+
+const animations = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+} satisfies MotionProps;
+
+function Week() {
+  return (
+    <div className="w-full flex flex-col gap-2 mb-2 mx-auto">
+      <header className="justify-between flex w-full items-center gap-4 rounded-lg">
+        <div className="flex gap-3 items-center cursor-default text-gray-500 font-semibold">
+          <BsFillCalendar3WeekFill />
+          <span className={fontSaira}>Semana</span>
+        </div>
+      </header>
+
+      <section className="flex gap-2 bg-white p-3 border rounded-xl">
+        <div className="flex p-2 rounded-xl"></div>
+        <div className="flex p-2 rounded-xl"></div>
+        <div className="flex p-2 rounded-xl"></div>
+        <div className="flex p-2 rounded-xl"></div>
+      </section>
+    </div>
+  );
+}
 
 export default function Workspace({ params }: WorkspaceProps) {
   const { workspace, modal, isLoading } = useWorkspace(params.id);
@@ -32,6 +57,13 @@ export default function Workspace({ params }: WorkspaceProps) {
   }
 
   const { id, name } = workspace;
+
+  const modalComponents: Record<string, JSX.Element | null> = {
+    delete: <DeleteWorkspace id={id} name={name} />,
+    rename: <RenameWorkspace id={id} name={name} />,
+  };
+
+  const modalComponent = modal ? modalComponents[modal] : null;
 
   return (
     <div className="w-full flex flex-col flex-1 gap-6 relative">
@@ -66,18 +98,16 @@ export default function Workspace({ params }: WorkspaceProps) {
       </header>
 
       <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col gap-10 pb-20 px-5 z-10"
+        initial="initial"
+        animate="animate"
+        variants={animations}
+        className="flex flex-col gap-10 px-5 z-10"
       >
         <Dashboards workspace={workspace} />
-
         <Files workspace={workspace} />
+        {/* <Week /> */}
 
-        <AnimatePresence>
-          {modal === "delete" && <DeleteWorkspace id={id} name={name} />}
-          {modal === "rename" && <RenameWorkspace id={id} name={name} />}
-        </AnimatePresence>
+        <AnimatePresence>{modalComponent}</AnimatePresence>
       </motion.section>
     </div>
   );

@@ -35,10 +35,8 @@ const useDashboardsTasks = () => {
 function DashboardTasks() {
   const { data, tasksVisible, handleTasksVisible } = useDashboardsTasks();
 
-  console.log(data);
-
   return (
-    <section className="flex gap-4 text-gray-600 dark:text-gray-300 my-2 overflow-visible">
+    <section className="flex gap-4 text-gray-600 dark:text-gray-300 my-2 overflow-visible max-w-main w-full mx-auto">
       <div className="flex p-4 bg-white flex-col dark:bg-neutral-900 shadow shadow-gray-300/40 dark:shadow-black w-full max-w-lg flex-1 rounded-xl">
         <header className="flex text-md items-center gap-2">
           <FaHourglassEnd size={15} />
@@ -50,7 +48,7 @@ function DashboardTasks() {
         </header>
         <section className="flex flex-col gap-2 rounded-lg mt-1">
           <div
-            data-lates={!!(data?.length && data?.length > 0)}
+            data-lates={data?.length && data?.length > 0}
             className={`${fontFiraCode} data-[lates=true]:text-rose-600 font-semibold text-indigo-600 
             dark:text-indigo-600 items-center gap-1 flex data-[lates=true]:dark:text-rose-600 transition-colors`}
           >
@@ -89,10 +87,10 @@ function DashboardTasks() {
                       <button className="bg-indigo-600 p-1 px-2 text-white text-xs border dark:border-zinc-700 rounded-md">
                         Concluir
                       </button>
-                      <span className="dark:text-zinc-400 cursor-default flex-1">
+                      <span className="dark:text-zinc-400 cursor-default overflow-hidden  text-ellipsis text-nowrap">
                         {name}
                       </span>
-                      <span className="dark:text-zinc-600 text-sm">
+                      <span className="dark:text-zinc-600 text-sm flex-1 text-nowrap">
                         {dayjs(date).format("DD [de] MMM, YYYY")}
                       </span>
                     </div>

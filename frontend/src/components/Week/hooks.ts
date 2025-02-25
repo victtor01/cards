@@ -7,12 +7,11 @@ import dayjs, { Dayjs } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-type ResponseTasks = { [key: string]: ITask[] }
+type ResponseTasks = { [key: string]: ITask[] };
 dayjs.locale("pt-br");
 type MdlOption = "new" | null | undefined;
 const LINK_NAME = "mdl-option";
 const DETAIL_NAME = "mdl-detail";
-
 
 const useWeek = () => {
   const router = useRouter();
@@ -70,16 +69,11 @@ const useWeek = () => {
     },
   });
 
-  const daysArray = Array.from(
-    { length: endOf.diff(startOf, "day") + 1 },
-    (_, i) => startOf.add(i, "day").format("MM/DD/YYYY")
-  );
-
   const modal: MdlOption = (searchParams.get(LINK_NAME) as MdlOption) || null;
 
   return {
     handles: { next, back, handleNow, handleVisibleConcluedItems },
-    states: { startOf, endOf, daysArray, modal, visibleConclued },
+    states: { startOf, endOf, modal, visibleConclued },
     data: { isLoading, tasks },
     params: { taskIdDetail },
     searchParams,
@@ -88,4 +82,3 @@ const useWeek = () => {
 };
 
 export { useWeek };
-

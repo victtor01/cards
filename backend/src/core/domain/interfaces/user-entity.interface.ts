@@ -1,4 +1,4 @@
-export interface UserInterface {
+export abstract class UserInterface {
   firstName: string;
   lastName: string;
   email: string;
