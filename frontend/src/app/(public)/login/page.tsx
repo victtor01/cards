@@ -60,8 +60,8 @@ export default function Page() {
         <button
           type="submit"
           disabled={isSubmitting}
-          style={{ opacity: isSubmitting ? 0.6 : 0.9 }}
-          className="w-full bg-indigo-600 p-2 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
+          data-sub={!!isSubmitting}
+          className="w-full bg-indigo-600 p-2 data-[sub=true]:opacity-50 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
         >
           {isSubmitting && <ImSpinner2 className="animate-spin" />}
           {!isSubmitting && <>Login</>}

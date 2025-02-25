@@ -11,7 +11,10 @@ import { UsersServiceInterface } from '../interfaces/users-service-interface';
 import { createUserSchema } from '../validations/users-schemas/create-user-schema';
 
 export class UsersService implements UsersServiceInterface {
-  constructor(private readonly usersRepo: UsersRepository, private readonly multer: Multer) {}
+  constructor(
+    private readonly usersRepo: UsersRepository,
+    private readonly multer: Multer
+  ) {}
 
   public async findOneByEmail(email: string): Promise<User | null> {
     const user = await this.usersRepo.findOneByEmail(email);

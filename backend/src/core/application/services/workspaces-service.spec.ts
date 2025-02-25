@@ -1,7 +1,6 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto';
 import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 import { WorkspacesService } from './workspaces-service';
@@ -12,7 +11,7 @@ vi.mock('../validations/create-workspace-schema', () => ({
   },
 }));
 
-const WorkspacesRepositoryMock = {
+export const workspacesRepositoryMock = {
   save: vi.fn(),
   findActivesByUserIdWithCards: vi.fn(),
   findOneByCodeWithWorkspacesAndCards: vi.fn(),
@@ -27,20 +26,20 @@ const WorkspacesRepositoryMock = {
 } satisfies WorkspacesRepository;
 
 describe('worksapcesServices', () => {
-  let workspaceService: WorkspacesServiceInterface;
+  let workspaceService: Partial<WorkspacesServiceInterface>;
 
   beforeEach(() => {
-    workspaceService = new WorkspacesService(WorkspacesRepositoryMock);
+    workspaceService = new WorkspacesService(workspacesRepositoryMock);
   });
 
   it('should create workspace', async () => {
-    const create = {
-      name: 'exampleOfName',
+    const create = new Workspace({
+      name: 'example',
       userId: 'userId',
-    } satisfies CreateWorkspaceDto;
+    });
 
     vi.spyOn(createWorkspaceSchema, 'parseAsync').mockResolvedValue(await Promise.resolve(create));
-    WorkspacesRepositoryMock.save.mockResolvedValue(await Promise.resolve(new Workspace(create)));
+    workspacesRepositoryMock.save.mockResolvedValue(await Promise.resolve(new Workspace(create)));
 
     const response = await workspaceService.save(create);
 
