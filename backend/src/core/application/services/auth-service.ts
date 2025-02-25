@@ -1,18 +1,15 @@
+import { Session } from '@infra/config/constants/session';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { compare } from 'bcryptjs';
 import { AuthUserDto } from '../dtos/auth-user-dto';
+import { AuthServiceInterface } from '../interfaces/auth-service-interface';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
-import { Session } from '@infra/config/constants/session';
-import { UsersServiceInterface } from '../interfaces/users-interfaces/users-service-interface';
+import { UsersServiceInterface } from '../interfaces/users-service-interface';
 
 type AuthResponse = {
   accessToken: string;
   refreshToken: string;
 };
-
-export abstract class AuthServiceInterface {
-  abstract auth({ email, password }: AuthUserDto): Promise<any>;
-}
 
 export class AuthService implements AuthServiceInterface {
   constructor(
@@ -46,7 +43,6 @@ export class AuthService implements AuthServiceInterface {
         refreshToken,
       };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException('There was an error when trying to log in!');
     }
   }

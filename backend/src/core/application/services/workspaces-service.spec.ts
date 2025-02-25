@@ -1,7 +1,7 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 import { WorkspacesService } from './workspaces-service';
 
@@ -23,7 +23,7 @@ export const workspacesRepositoryMock = {
   update: vi.fn(),
   updateMany: vi.fn(),
   delete: vi.fn(),
-} satisfies Partial<WorkspacesRepository>;
+} satisfies WorkspacesRepository;
 
 describe('worksapcesServices', () => {
   let workspaceService: Partial<WorkspacesServiceInterface>;

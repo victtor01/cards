@@ -7,7 +7,7 @@ import { CreateWorkspaceDto } from '../dtos/workspaces-dtos/create-workspace-dto
 import { RenameWorkspaceDto } from '../dtos/workspaces-dtos/rename-workspace-dto';
 import { UpdateBackgroundWorkspaceByIdDto } from '../dtos/workspaces-dtos/update-background-by-id';
 import { UpdateBackgroundWorkspaceByCodeDto } from '../dtos/workspaces-dtos/update-background-dto';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-interfaces/workspaces-service-interface';
+import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
 import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-workspace-schema';
 
 export class WorkspacesService implements WorkspacesServiceInterface {
@@ -33,6 +33,16 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return workspace;
   }
 
+  public async findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace> {
+    const workspace = await this.workspaceRepository.findOneActiveByIdWithRelations(id);
+
+    if (workspace?.userId !== userId) {
+      throw new UnauthorizedException('workspace not exists!');
+    }
+
+    return workspace;
+  }
+
   public async rename({ id, name }: RenameWorkspaceDto, userId: string): Promise<boolean> {
     const workspace = await this.findOneActiveByIdAndUser(id, userId);
 
@@ -47,6 +57,16 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     await this.workspaceRepository.update(id, { name });
 
     return true;
+  }
+
+  public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
+    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
+
+    if (workspace?.userId !== userId) {
+      throw new UnauthorizedException('workspace not exists!');
+    }
+
+    return workspace;
   }
 
   public async updateBackgroundByCode(data: UpdateBackgroundWorkspaceByCodeDto): Promise<boolean> {
@@ -91,6 +111,10 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return workspaceWithTree;
   }
 
+  public async findOneById(workspaceId: string) {
+    return await this.workspaceRepository.findOneById(workspaceId);
+  }
+  
   public async disableTree(workspaceId: string, userId: string): Promise<boolean> {
     const parent = await this.findOneById(workspaceId);
 
@@ -186,16 +210,6 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
-  public async findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace> {
-    const workspace = await this.workspaceRepository.findOneActiveByIdWithRelations(id);
-
-    if (workspace?.userId !== userId) {
-      throw new UnauthorizedException('workspace not exists!');
-    }
-
-    return workspace;
-  }
-
   public async delete(id: string, userId: string): Promise<boolean> {
     const workspace = await this.workspaceRepository.findOneById(id);
 
@@ -244,20 +258,6 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
 
     return workspaces;
-  }
-
-  public async findOneById(workspaceId: string) {
-    return await this.workspaceRepository.findOneById(workspaceId);
-  }
-
-  public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
-    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
-
-    if (workspace?.userId !== userId) {
-      throw new UnauthorizedException('workspace not exists!');
-    }
-
-    return workspace;
   }
 
   private buildTree(workspaces: Workspace[]): Workspace[] {

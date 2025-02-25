@@ -8,9 +8,7 @@ type LayoutMainProps = {
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   return (
-    <section className="flex w-full h-screen bg-white dark:bg-neutral-950">
-      <Sidebar />
-
+    <section className="flex w-full h-screen bg-gradient-radial from-gray-100 to-white dark:from-neutral-900/70 dark:via-neutral-950-400 dark:to-black">
       <ToastContainer
         position="top-right"
         autoClose={1000}
@@ -23,9 +21,12 @@ export default function LayoutMain({ children }: LayoutMainProps) {
         pauseOnHover
         theme="dark"
       />
-      <div className="flex flex-col h-screen overflow-auto flex-1 scroll-default">
+
+      <Sidebar />
+
+      <section className="flex flex-col h-screen overflow-auto flex-1 scroll-default scroll-smooth">
         {children}
-      </div>
+      </section>
     </section>
   );
 }

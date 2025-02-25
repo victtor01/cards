@@ -69,7 +69,7 @@ export const Bubble = ({ editor }: { editor: Editor }) => (
     </ButtonBubble>
     <ButtonBubble
       data-active={editor.isActive("categorize")}
-      onClick={() => editor.chain().focus().markWord().run()}
+      // onClick={() => editor.chain().focus().markWord().run()}
     >
       <FaBookmark />
     </ButtonBubble>

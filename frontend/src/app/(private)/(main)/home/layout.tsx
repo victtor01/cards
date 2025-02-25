@@ -1,8 +1,8 @@
-export default function Layout() {
+export default function Layout({ children }: { children: React.ReactNode } ) {
   return (
     <div>
       <div>
-        Teste
+        {children}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { fontFiraCode } from "@/fonts";
+import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
@@ -41,7 +42,7 @@ export const ModalToUploadBackground = ({ update }: UpdateBackgroundProps) => {
   const { file, onChangeFile, preview } = useUpdateBackground();
 
   return (
-    <div className="fixed top-0 left-0 flex w-full h-screen overflow-auto bg-black bg-opacity-10 backdrop-blur-md z-30">
+    <div className="fixed top-0 left-0 flex w-full h-screen overflow-auto bg-black bg-opacity-10 backdrop-blur-md z-40">
       <div className="bg-white dark:bg-zinc-800 p-8 m-auto rounded w-full max-w-[30rem] flex flex-col gap-2">
         <header className="flex justify-between items-center">
           <div className={fontFiraCode}>
@@ -69,7 +70,8 @@ export const ModalToUploadBackground = ({ update }: UpdateBackgroundProps) => {
               className="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer p-4 "
             >
               {preview ? (
-                <img
+                <Image
+                  fill
                   src={preview}
                   alt="File preview"
                   className="w-full h-full object-cover rounded-lg"

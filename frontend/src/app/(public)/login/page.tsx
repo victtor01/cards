@@ -1,11 +1,11 @@
 "use client";
 
-import { fontRoboto } from "@/fonts";
+import { fontSaira } from "@/fonts";
+import Link from "next/link";
 import { FaLock } from "react-icons/fa";
+import { ImSpinner2 } from "react-icons/im";
 import { MdEmail } from "react-icons/md";
 import { useLogin } from "./hooks";
-import Link from "next/link";
-import { ImSpinner2 } from "react-icons/im";
 
 export default function Page() {
   const { form, auth } = useLogin();
@@ -15,25 +15,32 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[25rem] border p-8 mx-auto mt-20 mb-auto rounded-lg bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:bg-opacity-80 flex flex-col gap-5 z-20"
+      className="w-[99%] max-w-[28rem] shadow-lg h-[90%] rounded-none lg:h-auto p-10 m-auto lg:rounded-xl bg-white dark:border-neutral-800 dark:bg-neutral-900 flex flex-col gap-6 z-20"
     >
+      <header className="cursor-default flex items-center justify-center">
+        <h1 className={`${fontSaira} text-xl text-violet-500 font-semibold dark:text-gray-300`}>
+          Olá! Faça login para continuar!
+        </h1>
+      </header>
       <section className="w-full flex flex-col gap-3">
         <label htmlFor="email" className="w-full flex flex-col gap-1">
-          <span className="">Email</span>
-          <div className="flex w-full items-center transition-all border bg-white dark:bg-transparent dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
-            <MdEmail className="text-zinc-700 w-10" size={20} />
+          <span className={`${fontSaira} text-sm`}>Email</span>
+          <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded-md ring-indigo-600 focus-within:ring-2">
+            <MdEmail className="text-zinc-500 w-10 opacity-50" size={20} />
             <input
               type="text"
-              {...register("email")} 
+              id="email"
+              autoCapitalize="off"
+              {...register("email")}
               placeholder="jonhDoe@example.com.br"
-              className="p-2 rounded bg-transparent outline-none flex-1 "
-            /> 
+              className="p-2 bg-transparent outline-none flex-1 "
+            />
           </div>
         </label>
         <label htmlFor="password" className="w-full flex flex-col gap-1">
-          <span className="">Password</span>
-          <div className="flex w-full items-center transition-all border bg-white dark:bg-transparent dark:border-zinc-800 rounded ring-indigo-600 focus-within:ring-2">
-            <FaLock className="text-zinc-700 min-w-10" size={16} />
+        <span className={`${fontSaira} text-sm`}>Password</span>
+          <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded-md ring-indigo-600 focus-within:ring-2">
+            <FaLock className="text-zinc-500 min-w-10 opacity-50" size={16} />
             <input
               type="password"
               {...register("password")}
@@ -60,6 +67,13 @@ export default function Page() {
           {!isSubmitting && <>Login</>}
         </button>
       </footer>
+
+      <Link
+        href="#"
+        className="text-gray-500 dark:text-gray-200 opacity-90 hover:opacity-100"
+      >
+        Criar uma nova conta!
+      </Link>
     </form>
   );
 }

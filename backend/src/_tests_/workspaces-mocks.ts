@@ -1,4 +1,4 @@
-import { WorkspacesServiceInterface } from "@core/application/interfaces/workspaces-interfaces/workspaces-service-interface";
+import { WorkspacesServiceInterface } from "@core/application/interfaces/workspaces-service-interface";
 import { vi } from "vitest";
 
 export const workspaceServiceMock = {

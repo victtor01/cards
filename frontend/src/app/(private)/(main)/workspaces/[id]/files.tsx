@@ -1,13 +1,11 @@
 import LinkComponent from "@/components/link-component";
-import { fontFiraCode } from "@/fonts";
+import { fontFiraCode, fontSaira } from "@/fonts";
 import { useActionsWorkspaces } from "@/hooks/use-workspace";
 import { IWorkspace } from "@/interfaces/IWorkspace";
-import { AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
 import { IoAddCircle, IoGrid } from "react-icons/io5";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import { toast } from "react-toastify";
-import { motion } from "framer-motion";
 
 type FilesProps = {
   workspace: IWorkspace;
@@ -49,16 +47,16 @@ export function Files({ workspace }: FilesProps) {
   const { createFolderHandle, createCardHandle } = useFiles();
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <div className="w-full max-w-main mx-auto flex flex-col gap-1">
         <header className="justify-between flex w-full items-center gap-4 rounded-lg">
-          <div className="flex gap-3 items-center cursor-default px-2">
+          <div className="flex gap-3 items-center cursor-default text-gray-500 font-semibold">
             <IoGrid />
-            <span className={fontFiraCode}>Workspaces</span>
+            <span className={fontSaira}>Espaços</span>
           </div>
         </header>
 
-        <section className="flex flex-wrap w-full mt-3">
+        <section className="flex flex-wrap w-full mt-3 gap-2">
           {workspace?.workspaces?.map((workspace) => {
             const { name, background, id } = workspace;
             return (
@@ -84,13 +82,13 @@ export function Files({ workspace }: FilesProps) {
 
       <div className="w-full max-w-main mx-auto flex flex-col gap-1 mt-10">
         <header className="justify-between flex w-full items-center gap-4 rounded-lg">
-          <div className="flex gap-3 items-center cursor-default px-2">
+          <div className="flex gap-3 items-center cursor-default text-gray-500 font-semibold">
             <MdOutlineDriveFileRenameOutline />
-            <span className={fontFiraCode}>Files</span>
+            <span className={fontSaira}>Arquivos</span>
           </div>
         </header>
 
-        <section className="flex flex-wrap w-full mt-3">
+        <section className="flex flex-wrap w-full mt-3 gap-2">
           {workspace?.cards?.map((card) => {
             const { title, background, id, createdAt } = card;
             return (

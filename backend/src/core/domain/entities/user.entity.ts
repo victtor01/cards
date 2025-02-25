@@ -1,8 +1,9 @@
+import { CreateUserDto } from '@core/application/dtos/users-dtos/create-user-dto';
 import { randomUUID, UUID } from 'crypto';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInterface } from '../interfaces/user-entity.interface';
+import { Task } from './task.entity';
 import { Workspace } from './workspace.entity';
-import { CreateUserDto } from '@core/application/dtos/users-dtos/create-user-dto';
 
 @Entity({ name: 'users' })
 export class User implements UserInterface {
@@ -26,6 +27,9 @@ export class User implements UserInterface {
 
   @OneToMany(() => Workspace, (workspaces) => workspaces.user)
   workspaces: Workspace[];
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[]
 
   constructor(props: CreateUserDto, id?: UUID) {
     Object.assign(this, props);

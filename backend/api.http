@@ -4,8 +4,8 @@ POST {{HOST}}/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "firstName": "TESTES",
-  "lastName": "TESTES",
+  "firstName": "Jonh",
+  "lastName": "Doe",
   "email": "example@gmail.com",
   "password": "example"
 }
@@ -39,14 +39,19 @@ Content-Type: application/json
 
 GET {{HOST}}/workspaces HTTP/1.1
 ###
-GET {{HOST}}/workspaces/tree HTTP/1.1
-###
-PUT {{HOST}}/workspaces/disable/_a_9zq8dJpzM HTTP/1.1
-###
+
 GET {{HOST}}/workspaces/tree/577bc00a-c9eb-4f2e-a416-cc83e8d91608 HTTP/1.1
 ###
+
+GET {{HOST}}/workspaces/tree HTTP/1.1
+###
+
+PUT {{HOST}}/workspaces/disable/_a_9zq8dJpzM HTTP/1.1
+###
+
 GET {{HOST}}/workspaces/FleaLUR1w0eh HTTP/1.1
 ###
+
 DELETE {{HOST}}/workspaces/g0lK39IY1fEd HTTP/1.1
 ###
 
@@ -70,3 +75,22 @@ Content-Type: application/json
 ###
 GET {{HOST}}/cards/99G4tPfFYaXe HTTP/1.1
 Content-Type: application/json
+###
+
+# @name tasks
+
+GET {{HOST}}/tasks?startAt=2024-12-22&endAt=2024-12-28 HTTP/1.1
+
+###
+POST {{HOST}}/tasks HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "example2",
+  "endAt": null,
+  "days": [0],
+  "repeat": false
+}
+###
+
+GET {{HOST}}/tasks/lates HTTP/1.1

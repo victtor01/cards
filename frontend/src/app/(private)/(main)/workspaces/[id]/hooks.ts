@@ -48,6 +48,7 @@ export function useDashboards() {
   const { id } = useParams();
 
   const { data: latestCard } = useQuery<ICard>({
+    enabled: !!id,
     queryKey: ["card", "latest", id],
     queryFn: async () => {
       return (await api.get(`/cards/latest/${id}`)).data;

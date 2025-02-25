@@ -34,7 +34,7 @@ const firaCode = Fira_Code({
 
 const saira = Saira({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const fontSaira = saira.className;

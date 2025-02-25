@@ -9,9 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@blocknote/core": "^0.15.7",
+    "@blocknote/mantine": "^0.15.7",
+    "@blocknote/react": "^0.15.7",
     "@hookform/resolvers": "^3.9.0",
+    "@nextui-org/date-picker": "^2.1.8",
+    "@nextui-org/react": "^2.4.8",
     "@tailwindcss/typography": "^0.5.13",
     "@tanstack/react-query": "^5.51.21",
+    "@tiptap/extension-floating-menu": "^2.6.6",
     "@tiptap/extension-highlight": "^2.5.9",
     "@tiptap/extension-task-item": "^2.5.9",
     "@tiptap/extension-task-list": "^2.5.9",
@@ -19,11 +25,12 @@
     "@tiptap/react": "^2.5.9",
     "@tiptap/starter-kit": "^2.5.9",
     "axios": "^1.3.1",
+    "cookie": "^1.0.1",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.3.24",
     "jose": "^5.8.0",
-    "next": "14.2.5",
-    "nookies": "^2.5.2",
+    "js-cookie": "^3.0.5",
+    "next": "^14.2.14",
     "react": "^18",
     "react-beforeunload": "^2.6.0",
     "react-dom": "^18",
@@ -32,9 +39,11 @@
     "react-textarea-autosize": "^8.5.3",
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.5.2",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-beforeunload": "^2.1.5",

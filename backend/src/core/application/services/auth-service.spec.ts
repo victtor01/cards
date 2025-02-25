@@ -4,7 +4,7 @@ import { NotFoundException } from '@src/utils/errors';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthServiceInterface } from '../interfaces/auth-service-interface';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
-import { UsersServiceInterface } from '../interfaces/users-interfaces/users-service-interface';
+import { UsersServiceInterface } from '../interfaces/users-service-interface';
 import { AuthService } from './auth-service';
 import { UsersService } from './users-service';
 

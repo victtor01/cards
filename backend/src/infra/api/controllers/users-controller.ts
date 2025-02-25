@@ -1,5 +1,5 @@
 import { CreateUserDto } from '@core/application/dtos/users-dtos/create-user-dto';
-import { UsersServiceInterface } from '@core/application/interfaces/users-interfaces/users-service-interface';
+import { UsersServiceInterface } from '@core/application/interfaces/users-service-interface';
 import { Request, Response } from 'express';
 
 class UsersController {

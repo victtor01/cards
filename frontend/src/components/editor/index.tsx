@@ -2,11 +2,10 @@
 
 import { EditorContent } from "@tiptap/react";
 import { useEditorConfig } from "./hooks";
-import { Bubble } from "./bubble";
 
 interface EditorProps {
   content?: string | undefined;
-};
+}
 
 export function Editor({ content }: EditorProps) {
   const { editorContentRef, editor } = useEditorConfig({ content });
@@ -24,18 +23,6 @@ export function Editor({ content }: EditorProps) {
           </span>
         )}
       </EditorContent>
-
-      {editor && <Bubble editor={editor} />}
     </>
   );
 }
-
-// editor
-//   .chain()
-//   .focus()
-//   .markWord()
-//   // .toggleMark("customSpan", {
-//   //   class:
-//   //     "bg-indigo-700 p-1 px-2 rounded shadow-xl shadow-black",
-//   // })
-//   .run()

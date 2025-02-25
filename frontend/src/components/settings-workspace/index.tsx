@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { IoClose, IoSettings } from "react-icons/io5";
-import Link from "next/link";
 import { fontFiraCode } from "@/fonts";
+import Link from "next/link";
+import { useState } from "react";
+import { BiTrash } from "react-icons/bi";
+import { IoSettings } from "react-icons/io5";
 
 const useSettings = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -19,20 +20,24 @@ export const Settings = () => {
   return (
     <div className="relative">
       <button
-        data-open={!!open}
         onClick={handleOpen}
-        className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white text-lg data-[open=true]:rotate-[45deg] transition-transform"
+        className="opacity-80 hover:opacity-100 items-center flex gap-2 px-3 h-8 rounded bg-zinc-100 dark:bg-neutral-800 shadow dark:shadow-black border-l dark:border-zinc-800/90"
       >
-        <IoSettings size={20} />
+        <span
+          data-open={!!open}
+          className="data-[open=true]:rotate-[45deg] transition-transform"
+        >
+          <IoSettings size={20} />
+        </span>
       </button>
-    
+
       {open && (
-        <div className="absolute top-[100%] bg-white dark:bg-zinc-800 shadow dark:shadow-black rounded right-0 overflow-hidden">
+        <div className="absolute top-[100%] mt-5 bg-white dark:bg-zinc-900 shadow dark:shadow-black rounded right-0 overflow-hidden">
           <Link
             href="?mdw=delete"
-            className="flex text-red-600 items-center gap-2 p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+            className="flex text-red-600 items-center gap-2 p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
-            <IoClose />
+            <BiTrash />
             <span className={fontFiraCode}>Lixeira</span>
           </Link>
         </div>

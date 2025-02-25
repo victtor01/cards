@@ -1,4 +1,4 @@
-import { CardsServiceInterface } from '@core/application/interfaces/cards-interfaces/cards-service-inteface';
+import { CardsServiceInterface } from '@core/application/interfaces/cards-service-inteface';
 import { Request, Response } from 'express';
 
 export class CardsController {

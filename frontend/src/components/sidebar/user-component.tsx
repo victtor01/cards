@@ -1,13 +1,14 @@
 import { fontOpenSans } from "@/fonts";
+import { useThemeStore } from "@/hooks/use-theme";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { getUpload } from "@/utils/get-upload";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
 import { BsSoundwave } from "react-icons/bs";
-import { FaMoon } from "react-icons/fa";
+import { FaMoon, FaUser } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
-import nookies from "nookies";
 
 type UserComponentProps = {
   photoUrl: string | null;
@@ -25,15 +26,21 @@ const variantsAnimation = {
 } satisfies Variants;
 
 function useTheme() {
-  const handleTheme = async () => {
-    await GenerateSoundClick();
-
+  const storeTheme = useThemeStore();
+  const cookies = Cookies.get();
+  
+  const handleTheme = () => {
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
 
+    Cookies.set("_theme", newTheme, {
+      path: "/",
+    });
+    
+    storeTheme.setTheme(newTheme);
     htmlElement.className = newTheme;
 
-    nookies.set(null, "_theme", newTheme);
+    GenerateSoundClick();
   };
 
   return {
@@ -67,7 +74,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
       <button
         data-focus={show}
         onClick={handleShow}
-        className="overflow-hidden transition-all hover:ring-2 hover:ring-indigo-400 dark:ring-indigo-600 ring-offset-none data-[focus=true]:ring-2 relative w-10 h-10 bg-white text-zinc-500 dark:bg-zinc-800 border dark:border-zinc-700 rounded-[100%] dark:text-zinc-300 grid place-items-center opacity-90 hover:opacity-100"
+        className="overflow-hidden transition-all hover:ring-2 hover:ring-indigo-400 dark:ring-indigo-600 ring-offset-none data-[focus=true]:ring-2 relative w-10 h-10 bg-white text-zinc-300 dark:bg-zinc-800 border dark:border-zinc-700 rounded-[100%] dark:text-zinc-300 grid place-items-center opacity-90 hover:opacity-100"
       >
         {imageUser && (
           <Image
@@ -77,6 +84,10 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
             fill
             objectFit="cover"
           />
+        )}
+
+        {!imageUser && (
+          <FaUser />
         )}
       </button>
       <AnimatePresence>

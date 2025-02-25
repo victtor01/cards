@@ -35,7 +35,8 @@ export function DeleteWorkspace({ id, name }: DeleteWorkspaceProps) {
   const { handleDelete } = useDeleteWorkspace();
 
   return (
-    <Modal title="delete workspace">
+    <Modal.Container>
+      <Modal.Header title="delete workspace" />
       <section className="flex flex-col p-6 gap-10">
         <p className="text-lg">
           Are you sure you want to <span className="text-rose-600">delete</span>{" "}
@@ -51,6 +52,6 @@ export function DeleteWorkspace({ id, name }: DeleteWorkspaceProps) {
           </button>
         </footer>
       </section>
-    </Modal>
+    </Modal.Container>
   );
 }

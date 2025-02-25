@@ -63,10 +63,9 @@ const useTrash = () => {
 export function Trash() {
   const { enable, workspaces, deleteWorkspace } = useTrash();
 
-  console.log(workspaces);
-
   return (
-    <Modal title="Lixeira">
+    <Modal.Container>
+      <Modal.Header title="Lixeira" />
       <div className="flex p-5 flex-col gap-2 bg-white dark:bg-zinc-900">
         <InputSearch />
 
@@ -124,7 +123,7 @@ export function Trash() {
           </AnimatePresence>
         </section>
       </div>
-    </Modal>
+    </Modal.Container>
   );
 }
 
