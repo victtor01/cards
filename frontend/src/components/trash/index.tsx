@@ -15,7 +15,7 @@ const minutes = 1000 * 10;
 
 const useTrash = () => {
   const { data: workspaces } = useQuery<IWorkspace[]>({
-    queryFn: async () => (await api.get("/workspaces/disabled")).data,
+    queryFn: async () => (await api.get("/workspaces/find/disabled")).data,
     queryKey: ["workspaces", "trash"],
     refetchInterval: minutes,
   });

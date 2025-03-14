@@ -12,7 +12,7 @@ type MDW = "delete" | "rename" | null;
 export function useWorkspace(workspaceId: string) {
   const { data: workspace, isLoading } = useQuery<IWorkspace>({
     queryKey: ["workspaces", workspaceId],
-    queryFn: async () => (await api.get(`/workspaces/${workspaceId}`)).data,
+    queryFn: async () => (await api.get(`/workspaces/find/${workspaceId}`)).data,
   });
 
   const searchParams = useSearchParams();
@@ -32,7 +32,7 @@ export function useBackground() {
   const deleteBackground = async () => {
     const { id } = params;
 
-    await api.delete(`/workspaces/background/id/${id}`);
+    await api.delete(`/workspaces/background/${id}`);
 
     await queryClient.refetchQueries({
       queryKey: ["workspaces"],

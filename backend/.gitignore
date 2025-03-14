@@ -1,4 +1,4 @@
 /postgres
 /node_modules
 /src/uploads
-coverage/
+/coverage

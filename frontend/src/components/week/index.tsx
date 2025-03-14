@@ -44,8 +44,8 @@ function Week() {
 
   return (
     <div className="flex w-full flex-col gap-3 relative">
-      <header className="mx-auto w-full max-w-main">
-        <div className="flex-1 flex items-center scroll-hidden justify-between gap-3 overflow-auto">
+      <header className="mx-auto w-full max-w-main flex-wrap">
+        <div className="flex-1 flex items-center scroll-hidden justify-between gap-3 flex-wrap">
           <div className="flex gap-2 items-center">
             <button
               type="button"
@@ -108,7 +108,7 @@ function Week() {
           <div className="grid-image w-full h-full"></div>
         </div>
 
-        <div className="w-full relative flex flex-wrap flex-wrap px-0 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
+        <div className="w-full relative flex flex-col lg:flex-row lg:flex-wrap px-0 py-2 gap-10 scroll-hidden rounded-md dark:border-zinc-700/40">
           {tasks &&
             Object.entries(tasks)?.map(([day, tasks], index: number) => {
               const isCurrentDay =
@@ -126,7 +126,7 @@ function Week() {
                   animate={{ opacity: 1, scale: [1.5, 1] }}
                   transition={{ delay: (index + 1) / 100 }}
                   className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white 
-                  flex-1 relative w-full lg:min-w-[22rem] max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900`}
+                  flex-1 relative w-full lg:min-w-[22rem] max-w-[100%] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900`}
                 >
                   <header className="w-full p-5 pb-0 items-center rounded gap-2 text-zinc-700 capitalize dark:text-white text-sm flex justify-between">
                     <span className="cursor-default whitespace-nowrap text-base font-semibold opacity-80">

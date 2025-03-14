@@ -29,7 +29,7 @@ export function Sidebar() {
       >
         <header className="flex p-2 items-center justify-between w-full">
           <div className={`flex gap-2 cursor-default`}>
-            <div className="text-gray-200 bg-indigo-600 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
+            <div className="text-gray-500 bg-gray-200 dark:bg-zinc-900 dark:text-gray-300 p-1 px-2 text-sm flex justify-center items-center gap-2 rounded">
               <span className={`${fontSaira} text-sm font-semibold`}>
                 Organizze
               </span>

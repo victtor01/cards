@@ -74,15 +74,6 @@ export class WorkspacesController {
     response.status(200).json({ error: false });
   }
 
-  public async findOneByIdWithTree(request: Request, response: Response) {
-    const { id: userId } = request.session;
-    const { workspaceId } = request.params;
-
-    const workspace = await this.workspacesService.findOneWorkspaceWithTree(workspaceId, userId);
-
-    response.status(200).json(workspace);
-  }
-
   public async updateBackgroundByCode(request: Request, response: Response) {
     const { id: userId } = request.session;
 
@@ -150,49 +141,5 @@ export class WorkspacesController {
       error: false,
       message: 'update success!',
     });
-  }
-
-  public async getDisabled(request: Request, response: Response) {
-    const { id: userId } = request.session;
-    const workspaces = await this.workspacesService.getDisabledByUser(userId);
-
-    response.status(200).json(workspaces);
-  }
-
-  public async findWithTree(request: Request, response: Response) {
-    const { id: userId } = request.session;
-
-    const workspaces = await this.workspacesService.findByUserFormatTree(userId);
-
-    response.status(200).json(workspaces);
-  }
-
-  public async findAll(request: Request, response: Response) {
-    const { id: userId } = request.session;
-    const workspaces = await this.workspacesService.findByUserWithCards(userId);
-
-    response.status(200).json(workspaces);
-  }
-
-  public async findById(request: Request, response: Response) {
-    const { id: userId } = request.session;
-    const workspaceId = request.params.workspaceId || null;
-
-    if (!workspaceId) throw new BadRequestException('not found workspace id');
-
-    const workspace = await this.workspacesService.findOneActiveByIdAndUser(workspaceId, userId);
-
-    response.status(200).json(workspace);
-  }
-
-  public async findByCode(request: Request, response: Response) {
-    const {
-      session: { id: userId },
-      params: { code },
-    } = request;
-
-    const workspace = await this.workspacesService.findOneByCodeAndUser(code, userId);
-
-    response.status(200).json(workspace);
   }
 }

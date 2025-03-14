@@ -6,20 +6,22 @@ import { unlinkUploadFile } from '@src/utils/unlink';
 import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
 import { CreateCardDto } from '../dtos/create-card-dto';
 import { CardsServiceInterface } from '../interfaces/cards-service-inteface';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
+import { IFindWorkspacesService } from '../interfaces/find-workspaces-interface';
 import { CreateCardValidation } from '../validations/cards-schemas/create-card-schema';
 import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
 
 export class CardsService implements CardsServiceInterface {
   constructor(
     private readonly cardsRepo: CardsRepository,
-    private readonly workspacesService: WorkspacesServiceInterface
+    private readonly workspacesService: IFindWorkspacesService
   ) {}
 
   public async create(createCardDto: CreateCardDto, userId: string): Promise<Card> {
-    const { title, content, workspaceId } = await CreateCardValidation.parseAsync(
-      createCardDto
-    ).catch((err: any) => ThrowErrorInValidationSchema(err));
+    const data = await CreateCardValidation.parseAsync(createCardDto).catch((err: any) =>
+      ThrowErrorInValidationSchema(err)
+    );
+
+    const { title, content, workspaceId } = data;
 
     const workspace = await this.workspacesService.findOneById(workspaceId);
 
@@ -94,7 +96,7 @@ export class CardsService implements CardsServiceInterface {
       throw new UnauthorizedException('user does not have permission!');
     }
 
-    if (!!card?.background) {
+    if (card?.background) {
       unlinkUploadFile(card.background);
     }
 

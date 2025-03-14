@@ -1,4 +1,4 @@
-import { Week } from "@/components/Week";
+import { Week } from "@/components/week";
 import { fontFiraCode, fontSaira } from "@/fonts";
 import { MdViewWeek } from "react-icons/md";
 import { DashboardTasks } from "./dashboard";

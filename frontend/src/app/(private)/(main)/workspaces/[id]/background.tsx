@@ -23,7 +23,7 @@ const update = async ({ file, id }: any) => {
   const formData = new FormData();
   formData.append("background", file);
 
-  await api.put(`/workspaces/background/id/${id}`, formData);
+  await api.put(`/workspaces/background/${id}`, formData);
 
   await queryClient.refetchQueries({
     queryKey: ["workspaces"],

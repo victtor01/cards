@@ -13,6 +13,16 @@ import { createWorkspaceSchema } from '../validations/workspaces-schemas/create-
 export class WorkspacesService implements WorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
 
+  private async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
+    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
+
+    if (workspace?.userId !== userId) {
+      throw new UnauthorizedException('workspace not exists!');
+    }
+
+    return workspace;
+  }
+
   public async save(data: CreateWorkspaceDto): Promise<Workspace> {
     const { name, userId } = await createWorkspaceSchema
       .parseAsync(data)
@@ -22,7 +32,9 @@ export class WorkspacesService implements WorkspacesServiceInterface {
 
     const workspaceToCreate = new Workspace({ name, userId });
 
-    const workspaceParent = !!data?.parentId ? await this.findOneById(parentId) : null;
+    const workspaceParent = !!data?.parentId
+      ? await this.workspaceRepository.findOneById(parentId)
+      : null;
 
     if (workspaceParent?.id && workspaceParent?.userId === userId) {
       workspaceToCreate.parentId = parentId;
@@ -33,20 +45,10 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return workspace;
   }
 
-  public async findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace> {
+  public async rename({ id, name }: RenameWorkspaceDto, userId: string): Promise<boolean> {
     const workspace = await this.workspaceRepository.findOneActiveByIdWithRelations(id);
 
-    if (workspace?.userId !== userId) {
-      throw new UnauthorizedException('workspace not exists!');
-    }
-
-    return workspace;
-  }
-
-  public async rename({ id, name }: RenameWorkspaceDto, userId: string): Promise<boolean> {
-    const workspace = await this.findOneActiveByIdAndUser(id, userId);
-
-    if (!workspace?.id) {
+    if (!workspace?.id || workspace?.userId !== userId) {
       throw new NotFoundException('workspace not found!');
     }
 
@@ -59,23 +61,14 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
-  public async findOneByCodeAndUser(code: string, userId: string): Promise<Workspace> {
-    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
-
-    if (workspace?.userId !== userId) {
-      throw new UnauthorizedException('workspace not exists!');
-    }
-
-    return workspace;
-  }
-
   public async updateBackgroundByCode(data: UpdateBackgroundWorkspaceByCodeDto): Promise<boolean> {
     if (!data?.code) throw new BadRequestException('Params not found to udpate background!');
 
     const { code, background, userId } = data;
-    const workspace = await this.findOneByCodeAndUser(code, userId);
+    const workspace = await this.workspaceRepository.findOneByCodeWithWorkspacesAndCards(code);
 
-    if (!workspace?.id) throw new BadRequestException('workspace not found!');
+    if (!workspace?.id || userId !== workspace?.userId)
+      throw new BadRequestException('workspace not found!');
 
     await this.workspaceRepository.update(workspace.id, {
       background,
@@ -86,43 +79,14 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
-  public async findOneWorkspaceWithTree(workspaceId: string, userId: string): Promise<Workspace> {
-    const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
-
-    const rootWorkspace = workspaces.find((ws) => ws.id === workspaceId);
-    if (!rootWorkspace) throw new BadRequestException('Workspace not found');
-
-    const workspaceMap = new Map<string, Workspace>();
-    workspaces.forEach((workspace) => {
-      workspaceMap.set(workspace.id, { ...workspace, workspaces: [] });
-    });
-
-    workspaces.forEach((workspace) => {
-      if (workspace.parentId) {
-        const parentWorkspace = workspaceMap.get(workspace.parentId);
-        if (parentWorkspace) {
-          parentWorkspace.workspaces.push(workspaceMap.get(workspace.id));
-        }
-      }
-    });
-
-    const workspaceWithTree = workspaceMap.get(rootWorkspace.id);
-
-    return workspaceWithTree;
-  }
-
-  public async findOneById(workspaceId: string) {
-    return await this.workspaceRepository.findOneById(workspaceId);
-  }
-  
   public async disableTree(workspaceId: string, userId: string): Promise<boolean> {
-    const parent = await this.findOneById(workspaceId);
+    const parent = await this.workspaceRepository.findOneById(workspaceId);
 
     if (!parent?.id) {
       throw new BadRequestException('Workspace not found!');
     }
 
-    const allWorkspaces = await this.findByUserWithCards(userId);
+    const allWorkspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
     const workspacesToDisable = new Set<Workspace>([parent]);
 
     const collectChildren = (parentId: string) => {
@@ -159,17 +123,11 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return true;
   }
 
-  public async getDisabledByUser(userId: string): Promise<Workspace[]> {
-    const workspaces = await this.workspaceRepository.findDisabledByUser(userId);
-
-    return workspaces;
-  }
-
   public async updateBackgroundById(data: UpdateBackgroundWorkspaceByIdDto): Promise<boolean> {
     if (!data?.id) throw new BadRequestException('Params not found to udpate background!');
 
     const { id, background, userId } = data;
-    const workspace = await this.findOneById(id);
+    const workspace = await this.workspaceRepository.findOneById(id);
 
     if (!workspace?.id) throw new BadRequestException('workspace not found!');
 
@@ -197,7 +155,7 @@ export class WorkspacesService implements WorkspacesServiceInterface {
   }
 
   public async deleteBackgroundById(id: string, userId: string): Promise<boolean> {
-    const workspace = await this.findOneById(id);
+    const workspace = await this.workspaceRepository.findOneById(id);
 
     if (workspace?.userId !== userId) throw new UnauthorizedException('workspace not found!');
 
@@ -242,41 +200,5 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     await this.workspaceRepository.delete(id);
 
     return true;
-  }
-
-  public async findByUserFormatTree(userId: string): Promise<any> {
-    const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
-
-    if (!workspaces?.length) return [];
-
-    const build = this.buildTree(workspaces);
-
-    return build;
-  }
-
-  public async findByUserWithCards(userId: string): Promise<Workspace[]> {
-    const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
-
-    return workspaces;
-  }
-
-  private buildTree(workspaces: Workspace[]): Workspace[] {
-    const tree: Workspace[] = [];
-    const map: { [key: number]: Workspace } = {};
-
-    workspaces?.forEach((node) => {
-      map[node.id] = node;
-      node.workspaces = [];
-    });
-
-    workspaces?.forEach((node) => {
-      if (node?.parentId && map[node.parentId]) {
-        map[node.parentId].workspaces.push(node);
-      } else {
-        tree.push(node);
-      }
-    });
-
-    return tree;
   }
 }

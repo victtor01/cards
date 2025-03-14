@@ -1,5 +1,5 @@
 import DashboardCard from "@/components/workspaces";
-import { fontFiraCode, fontSaira } from "@/fonts";
+import { fontSaira } from "@/fonts";
 import { IWorkspace } from "@/interfaces/IWorkspace";
 import { useRouter } from "next/navigation";
 import { BsArrowRight } from "react-icons/bs";

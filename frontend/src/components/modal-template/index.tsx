@@ -12,11 +12,11 @@ interface ModalProps extends HTMLAttributes<HTMLDivElement> {
 const animations = {
   initial: {
     opacity: 0,
-    y: -200,
+    scale: 0.5
   },
   animate: {
     opacity: 1,
-    y: 0,
+    scale: 1
   },
 } satisfies MotionProps;
 
@@ -42,12 +42,12 @@ function ModalHeader({ title }: { title: string }) {
 
 function ModalContainer({ children, className }: ModalProps) {
   const style = twMerge(
-    "flex m-auto w-full max-w-[30rem] bg-neutral-50 dark:bg-neutral-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
+    "flex m-auto w-full overflow-hidden max-w-[30rem] bg-white dark:bg-neutral-900 rounded-xl flex-col shadow-lg dark:shadow-black h-auto",
     className
   );
 
   return (
-    <motion.div className="scroll-default flex-col flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-black/50 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
+    <motion.div className="scroll-default flex-col flex w-full h-screen fixed z-50 top-0 p-5 left-0 bg-indigo-50 dark:bg-black bg-opacity-5 dark:bg-opacity-70 backdrop-blur-sm overflow-auto">
       <motion.div
         variants={animations}
         initial="initial"

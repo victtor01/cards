@@ -9,58 +9,50 @@ import { Router } from 'express';
 import multer from 'multer';
 
 const upload = multer(config);
+class WorkspacesRoutes {
+  private readonly workspacesRoutes = Router();
+  private readonly repository = AppDataSource.getRepository(Workspace);
+  private workspacesRepository = new ImplementsWorkspacesRepository(this.repository);
+  private workspacesService = new WorkspacesService(this.workspacesRepository);
+  private workspacesController = new WorkspacesController(this.workspacesService);
 
-const workspacesRoutes = Router();
-const repository = AppDataSource.getRepository(Workspace);
-const workspacesRepository = new ImplementsWorkspacesRepository(repository);
-const workspacesService = new WorkspacesService(workspacesRepository);
-const workspacesController = new WorkspacesController(workspacesService);
+  public setup(): Router {
+    this.workspacesRoutes.use(sessionMiddleware);
+    this.setRoutes();
+    return this.workspacesRoutes;
+  }
 
-workspacesRoutes.use(sessionMiddleware);
+  private setRoutes(): void {
+    this.workspacesRoutes.post('/', (req, res) => this.workspacesController.create(req, res));
 
-{
-  workspacesRoutes.post('/', (req, res) => workspacesController.create(req, res));
-  workspacesRoutes.get('/', (req, res) => workspacesController.findAll(req, res));
-  workspacesRoutes.get('/tree', (req, res) => workspacesController.findWithTree(req, res));
-  workspacesRoutes.get('/disabled', (req, res) => workspacesController.getDisabled(req, res));
-  workspacesRoutes.get('/code/:code', (req, res) => workspacesController.findByCode(req, res));
+    this.workspacesRoutes.put('/:workspaceId', (req, res) =>
+      this.workspacesController.rename(req, res)
+    );
 
-  workspacesRoutes.put('/disable/:workspaceId', (req, res) =>
-    workspacesController.disableTree(req, res)
-  );
+    this.workspacesRoutes.delete('/:workspaceId', (req, res) =>
+      this.workspacesController.delete(req, res)
+    );
 
-  workspacesRoutes.put('/enable/:workspaceId', (req, res) =>
-    workspacesController.enable(req, res)
-  );
+    this.workspacesRoutes.put('/disable/:workspaceId', (req, res) =>
+      this.workspacesController.disableTree(req, res)
+    );
 
-  workspacesRoutes.get('/tree/:workspaceId', (req, res) =>
-    workspacesController.findOneByIdWithTree(req, res)
-  );
+    this.workspacesRoutes.put('/enable/:workspaceId', (req, res) =>
+      this.workspacesController.enable(req, res)
+    );
+
+    this.workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>
+      this.workspacesController.updateBackgroundByCode(req, res)
+    );
+
+    this.workspacesRoutes.delete('/background/id/:id', (req, res) =>
+      this.workspacesController.deleteBackgroundById(req, res)
+    );
+
+    this.workspacesRoutes.put('/background/id/:id', upload.single('background'), (req, res) =>
+      this.workspacesController.updateBackgroundById(req, res)
+    );
+  }
 }
 
-{
-  workspacesRoutes.get('/:workspaceId', (req, res) => workspacesController.findById(req, res));
-  workspacesRoutes.delete('/:workspaceId', (req, res) => workspacesController.delete(req, res));
-  workspacesRoutes.put('/:workspaceId', (req, res) => workspacesController.rename(req, res));
-}
-
-{
-  workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>
-    workspacesController.updateBackgroundByCode(req, res)
-  );
-
-  workspacesRoutes.delete('/background/code/:code', (req, res) =>
-    workspacesController.deleteBackgroundByCode(req, res)
-  );
-
-  workspacesRoutes.delete('/background/id/:id', (req, res) =>
-    workspacesController.deleteBackgroundById(req, res)
-  );
-
-  workspacesRoutes.put('/background/id/:id', upload.single('background'), (req, res) =>
-    workspacesController.updateBackgroundById(req, res)
-  );
-}
-
-export { workspacesRoutes, workspacesService };
-
+export { WorkspacesRoutes };

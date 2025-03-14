@@ -32,7 +32,7 @@ export function useSidebar() {
   const { data: workspaces } = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: async () => {
-      return (await api.get("/workspaces/tree")).data;
+      return (await api.get("/workspaces/find/tree")).data;
     },
   });
 
