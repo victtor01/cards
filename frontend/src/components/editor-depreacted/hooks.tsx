@@ -1,4 +1,5 @@
 import { useEditor } from "@tiptap/react";
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef } from "react";
 import Document from "@tiptap/extension-document";
@@ -7,16 +8,28 @@ import Paragraph from "@tiptap/extension-paragraph";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import Text from "@tiptap/extension-text";
-
+import { all, createLowlight } from 'lowlight'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
 interface useEditorConfigProps {
   content?: string | null;
 }
+
+const lowlight = createLowlight(all)
+
+lowlight.register('html', html)
+lowlight.register('css', css)
+lowlight.register('js', js)
+lowlight.register('ts', ts)
 
 export const useEditorConfig = ({ content = null }: useEditorConfigProps) => {
   const editorContentRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: [
+      CodeBlockLowlight,
       StarterKit.configure({
         heading: {
           levels: [1, 2, 3],

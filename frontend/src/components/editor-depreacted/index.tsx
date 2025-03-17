@@ -7,13 +7,14 @@ interface EditorProps {
   content?: string | undefined;
 }
 
+
 export function Editor({ content }: EditorProps) {
   const { editorContentRef, editor } = useEditorConfig({ content });
-
   return (
     <>
       <EditorContent
         ref={editorContentRef}
+        lang="pt-br"
         editor={editor}
         className="prose dark:prose-invert prose-li:p-0 max-w-[60rem] flex-1 text-lg mt-10 p-0 min-h-[30rem] relative"
       >

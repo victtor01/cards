@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Editor } from "../editor";
+import { Editor } from "../editor-depreacted";
 import { fontFiraCode, fontOpenSans } from "@/fonts";
 import { BiPhotoAlbum } from "react-icons/bi";
 
@@ -24,7 +24,7 @@ export function CreateWorkspace() {
             <span
               className={`${fontFiraCode} text-zinc-200 capitalize text-sm`}
             >
-              uplaod
+              upload
             </span>
           </button>
         </section>

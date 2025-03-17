@@ -1,3 +1,6 @@
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
+
 import { Loader } from "@/components/loader";
 import { fontFiraCode, fontRoboto } from "@/fonts";
 import { insertAlert, useEditorConfig } from "@/hooks/use-editor";
@@ -22,7 +25,7 @@ import { FileBackgroundUpdate } from "./update-background";
 import { useUpdateContentCard } from "./hooks";
 
 import { getDefaultReactSlashMenuItems, SuggestionMenuController } from "@blocknote/react";
-import { filterSuggestionItems } from "@blocknote/core";
+import { defaultBlockSchema, filterSuggestionItems } from "@blocknote/core";
 import { useUpdateTitleCard } from "@/hooks/use-update-title-card";
 
 const LENGTH_TITLE = 60;
@@ -157,7 +160,7 @@ export function EditorComponent({ card }: { card: ICard }) {
             }}
           >
             <SuggestionMenuController
-              triggerCharacter={"/"}
+              triggerCharacter={"/"} 
               getItems={async (query) =>
                 filterSuggestionItems(
                   [
