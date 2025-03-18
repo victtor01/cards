@@ -18,6 +18,25 @@ type OverdueTask = { id: UUID | string; name: string; date: string };
 export class TasksService implements TasksServiceInterface {
   constructor(private readonly tasksRepository: TasksRepository) {}
 
+  async completeTaskDay(userId: string, taskId: string, day: string): Promise<Task> {
+    const task: Task | null = await this.findOneById(taskId);
+    if (!task?.id || task.userId !== userId) {
+      throw new BadRequestException('user not have permission to update this task');
+    }
+
+    const validTask: Task | null = this.isValidTaskForDate(task, dayjs(day));
+
+    if (!validTask) {
+      throw new BadRequestException('this day not pertences to task!');
+    }
+
+    validTask.completed = [...validTask.completed, day];
+
+    await this.tasksRepository.update(task.id, validTask);
+
+    return validTask;
+  }
+
   protected async findOneById(taskId: string): Promise<Task> {
     const task = await this.tasksRepository.findById(taskId);
     if (!task?.id) throw new NotFoundException('task não existe!');
@@ -85,7 +104,9 @@ export class TasksService implements TasksServiceInterface {
     return true;
   }
 
-  public async updateArrayCompleted(updateCompletedTaskDto: UpdateCompletedTaskDto): Promise<boolean> {
+  public async updateArrayCompleted(
+    updateCompletedTaskDto: UpdateCompletedTaskDto
+  ): Promise<boolean> {
     const { completedArray, taskId, userId } = updateCompletedTaskDto;
 
     const task = await this.findOneById(taskId);
@@ -94,8 +115,8 @@ export class TasksService implements TasksServiceInterface {
       throw new UnauthorizedException('Usuário não pode fazer essa ação!');
     }
 
-    const days = task?.days?.map(day => Number(day));
-    
+    const days = task?.days?.map((day) => Number(day));
+
     const verifyDatesOfCompleted: string[] = completedArray.filter((date: string) => {
       const dayOfWeek = dayjs(date);
       return days?.includes(dayOfWeek.day() as Day);
@@ -177,12 +198,13 @@ export class TasksService implements TasksServiceInterface {
     return null;
   }
 
-  public taskPertencesToday(task: Task, currentDate: Dayjs) {
+  public taskPertencesToday(task: Task, currentDate: Dayjs): Task {
     const { days } = task;
     const daysString = days.map((day) => day.toString());
 
-    // Verifica se a tarefa pertence ao dia
-    if (!daysString.includes(currentDate.day().toString())) return null;
+    if (!daysString.includes(currentDate.day().toString())) {
+      return null;
+    }
 
     return this.isValidTaskForDate(task, currentDate);
   }
@@ -193,7 +215,6 @@ export class TasksService implements TasksServiceInterface {
     const currentDateFormatted = currentDate.format('YYYY-MM-DD');
     const taskIsCompleted = task?.completed?.includes(currentDateFormatted);
 
-    // Verifica se a tarefa pertence ao dia e não está completa
     if (!taskDays?.includes(dayOfWeek) || taskIsCompleted) return null;
 
     return this.isValidTaskForDate(task, currentDate);

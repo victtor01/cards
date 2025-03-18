@@ -66,36 +66,38 @@ const Show = ({ photoUrl }: { photoUrl: string }) => {
   const modal: Modal = (params.get("md") as Modal) || null;
 
   return (
-    <div className="bg-zinc-200 dark:bg-zinc-800 flex w-full h-[30vh] relative group/background shadow dark:shadow-black z-10">
-      <div className="w-full flex-1 flex h-full group-hover/background:dark:brightness-50 group-hover/background:brightness-[0.8] relative transition-all">
-        {image && <Image src={image} alt="photo" fill objectFit="cover" />}
-      </div>
-      <div className="w-full top-0 left-0 h-full z-10 absolute p-2 group-hover/background:backdrop-blur-md m-auto bg-transparent flex opacity-0 group-hover/background:opacity-100 transition-all">
-        <div className="flex m-auto gap-2">
-          <motion.button
-            type="button"
-            onClick={() => background.deleteBackground()}
-            whileHover={{ scale: 1.05 }}
-            className="p-2 px-4 hover:bg-zinc-200 shadow dark:hover:bg-zinc-700 bg-white text-rose-600 dark:bg-zinc-800 rounded flex items-center gap-2"
-          >
-            <IoClose />
-            <span className={fontFiraCode}>delete</span>
-          </motion.button>
-          <motion.button
-            onClick={() => router.push("?md=upload")}
-            whileHover={{ scale: 1.05 }}
-            className="p-2 px-4 hover:bg-zinc-200 shadow dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 rounded text-indigo-500 flex items-center gap-2"
-          >
-            <MdImage />
-            <span className={fontFiraCode}>update</span>
-          </motion.button>
+    <>
+      <div className="bg-zinc-200 dark:bg-zinc-800 flex w-full h-[30vh] relative group/background shadow dark:shadow-black z-10">
+        <div className="w-full flex-1 flex h-full group-hover/background:dark:brightness-50 group-hover/background:brightness-[0.8] relative transition-all">
+          {image && <Image src={image} alt="photo" fill objectFit="cover" />}
+        </div>
+        <div className="w-full top-0 left-0 h-full z-10 absolute p-2 group-hover/background:backdrop-blur-md m-auto bg-transparent flex opacity-0 group-hover/background:opacity-100 transition-all">
+          <div className="flex m-auto gap-2">
+            <motion.button
+              type="button"
+              onClick={() => background.deleteBackground()}
+              whileHover={{ scale: 1.05 }}
+              className="p-2 px-4 hover:bg-zinc-200 shadow dark:hover:bg-zinc-700 bg-white text-rose-600 dark:bg-zinc-800 rounded flex items-center gap-2"
+            >
+              <IoClose />
+              <span className={fontFiraCode}>delete</span>
+            </motion.button>
+            <motion.button
+              onClick={() => router.push("?md=upload")}
+              whileHover={{ scale: 1.05 }}
+              className="p-2 px-4 hover:bg-zinc-200 shadow dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 rounded text-indigo-500 flex items-center gap-2"
+            >
+              <MdImage />
+              <span className={fontFiraCode}>update</span>
+            </motion.button>
+          </div>
         </div>
       </div>
-
+      
       {modal === "upload" && (
         <ModalToUploadBackground update={({ file }) => update({ file, id })} />
       )}
-    </div>
+    </>
   );
 };
 

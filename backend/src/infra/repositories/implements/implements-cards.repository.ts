@@ -6,6 +6,14 @@ import { CardsRepository } from '../cards.repository';
 export class ImplementsCardsRepository implements CardsRepository {
   constructor(private readonly cardsRepo: Repository<Card>) {}
 
+  public async findAllByUser(userId: string): Promise<Card[]> {
+    return await this.cardsRepo.find({
+      where: {
+        userId,
+      },
+    });
+  }
+
   public async save(card: Card): Promise<Card> {
     return await this.cardsRepo.save(card);
   }

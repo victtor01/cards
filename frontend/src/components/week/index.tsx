@@ -43,7 +43,7 @@ function Week() {
   const now = day.isBefore(endOf) && day.isAfter(startOf);
 
   return (
-    <div className="flex w-full flex-col gap-3 relative">
+    <div className="flex w-full flex-col gap-3 relative min-h-[120vh]">
       <header className="mx-auto w-full max-w-main flex-wrap">
         <div className="flex-1 flex items-center scroll-hidden justify-between gap-3 flex-wrap">
           <div className="flex gap-2 items-center">
@@ -122,8 +122,8 @@ function Week() {
               return (
                 <motion.div
                   key={day}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: [1.5, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ delay: (index + 1) / 100 }}
                   className={`${style} rounded-xl flex gap-2 flex-col overflow-hidden shadow dark:shadow-black bg-white 
                   flex-1 relative w-full lg:min-w-[22rem] max-w-[100%] lg:max-w-[50%] min-h-[15rem] lg:min-h-none lg:h-auto dark:bg-neutral-900`}

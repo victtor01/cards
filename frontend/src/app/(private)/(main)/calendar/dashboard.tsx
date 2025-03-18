@@ -9,8 +9,10 @@ import { BsArrowRightShort } from "react-icons/bs";
 import { FaHourglassEnd } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
+import { useTask } from "@/hooks/use-task";
 
-type TaskLate = {
+export type TaskLate = {
   id: string;
   name: string;
   date: Date | string;
@@ -34,6 +36,7 @@ const useDashboardsTasks = () => {
 
 function DashboardTasks() {
   const { data, tasksVisible, handleTasksVisible } = useDashboardsTasks();
+  const { complete } = useTask();
 
   return (
     <section className="flex gap-4 text-gray-600 dark:text-gray-300 my-2 overflow-visible max-w-main w-full mx-auto">
@@ -79,12 +82,22 @@ function DashboardTasks() {
               >
                 {data?.map((taskLate: TaskLate, index: number) => {
                   const { name, date, id } = taskLate;
+                  console.log(taskLate);
                   return (
                     <div
                       key={index}
                       className={`${fontSaira} flex gap-2 items-center`}
                     >
-                      <button className="bg-indigo-600 p-1 px-2 text-white text-xs border dark:border-zinc-700 rounded-md">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          complete({
+                            id: id,
+                            dayToComplete: dayjs(date).format("YYYY-MM-DD"),
+                          })
+                        }
+                        className="bg-indigo-600 p-1 px-2 text-white text-xs border dark:border-zinc-700 rounded-md"
+                      >
                         Concluir
                       </button>
                       <span className="dark:text-zinc-400 cursor-default overflow-hidden  text-ellipsis text-nowrap">
@@ -93,6 +106,15 @@ function DashboardTasks() {
                       <span className="dark:text-zinc-600 text-sm flex-1 text-nowrap">
                         {dayjs(date).format("DD [de] MMM, YYYY")}
                       </span>
+
+                      <Link
+                        className="min-w-8 h-8 grid place-items-center border dark:border-zinc-600  rounded-md"
+                        href={`?startAt=${dayjs(date)
+                          .startOf("week")
+                          .format("YYYY-MM-DD")}`}
+                      >
+                        ir
+                      </Link>
                     </div>
                   );
                 })}
@@ -105,18 +127,6 @@ function DashboardTasks() {
             )}
           </AnimatePresence>
         </footer>
-      </div>
-
-      <div className="flex p-4 bg-white flex-col dark:bg-neutral-900/60 shadow shadow-gray-300/40 dark:shadow-black w-full max-w-lg flex-1 rounded-xl">
-        <div className="flex self-center items-center justify-center flex-1 justify-self-center text-zinc-500 font-semibold">
-          <span className={`${fontSaira} text-lg`}>Em breve...</span>
-        </div>
-      </div>
-
-      <div className="flex p-4 bg-white flex-col dark:bg-neutral-900/60 shadow shadow-gray-300/40 dark:shadow-black w-full max-w-lg flex-1 rounded-xl">
-        <div className="flex self-center items-center justify-center flex-1 justify-self-center text-zinc-500 font-semibold">
-          <span className={`${fontSaira} text-lg`}>Em breve...</span>
-        </div>
       </div>
     </section>
   );

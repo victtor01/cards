@@ -5,9 +5,10 @@ import { ITask } from "@/interfaces/ITask";
 import { useQuery } from "@tanstack/react-query";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ResponseTasks = { [key: string]: ITask[] };
+
 dayjs.locale("pt-br");
 type MdlOption = "new" | null | undefined;
 const LINK_NAME = "mdl-option";
@@ -19,9 +20,9 @@ const useWeek = () => {
 
   const startOfWeek = dayjs().startOf("week");
   const endOfWeek = dayjs().endOf("week");
+
   const startAtParam = searchParams.get("startAt") || null;
   const startAtValueInitial = startAtParam ? dayjs(startAtParam) : null;
-
   const startOfValue = startAtValueInitial?.startOf("week") || startOfWeek;
   const endOfValue = startAtValueInitial?.endOf("week") || endOfWeek;
 
@@ -31,6 +32,16 @@ const useWeek = () => {
 
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
+  useEffect(() => {
+    const startAtParam = searchParams.get("startAt") || null;
+    const startAtValueInitial = startAtParam ? dayjs(startAtParam) : null;
+    const newStartOf = startAtValueInitial?.startOf("week") || startOfWeek;
+    const newEndOf = startAtValueInitial?.endOf("week") || endOfWeek;
+
+    setStartOf(newStartOf);
+    setEndOf(newEndOf);
+  }, [searchParams]);
+
   const handleVisibleConcluedItems = () => {
     setVisibleConclued((prev) => !prev);
   };
@@ -38,13 +49,20 @@ const useWeek = () => {
   const next = () => {
     setStartOf((prev) => prev.add(1, "week"));
     setEndOf((prev) => prev.add(1, "week"));
-    router.push(`?startAt=${startOf.add(1, "week").format("YYYY-MM-DD")}`);
+    router.push(`?startAt=${startOf.add(1, "week").format("YYYY-MM-DD")}`, {
+      scroll: false,
+    });
   };
 
   const back = () => {
     setStartOf((prev) => prev.subtract(1, "week"));
     setEndOf((prev) => prev.subtract(1, "week"));
-    router.push(`?startAt=${startOf.subtract(1, "week").format("YYYY-MM-DD")}`);
+    router.push(
+      `?startAt=${startOf.subtract(1, "week").format("YYYY-MM-DD")}`,
+      {
+        scroll: false,
+      }
+    );
   };
 
   const handleNow = () => {

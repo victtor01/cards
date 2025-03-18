@@ -1,10 +1,10 @@
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { WorkspacesRepository } from '@infra/repositories/workspaces.repository';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
-import { IFindWorkspacesService } from '../interfaces/find-workspaces-interface';
+import { FindWorkspacesServiceInterface } from '../interfaces/find-workspaces-interface';
 import { WorkspaceTree } from '../utils/workspace-tree';
 
-export class FindWorkspacesService implements IFindWorkspacesService {
+export class FindWorkspacesService implements FindWorkspacesServiceInterface {
   constructor(private readonly workspaceRepository: WorkspacesRepository) {}
 
   public async findByUserWithCards(userId: string): Promise<Workspace[]> {

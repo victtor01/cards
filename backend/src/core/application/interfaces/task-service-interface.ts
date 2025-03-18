@@ -9,6 +9,7 @@ import { UpdateTaskDto } from '../dtos/tasks-dtos/update-task-dto';
 export abstract class TasksServiceInterface {
   abstract findOneByIdAndUserId(taskId: string, userId: string): Promise<Task>;
   abstract findByDate(data: FindByDateDto, userId: string): Promise<Task[]>;
+  abstract completeTaskDay(userId: string, taskId: string, day: string): Promise<Task>
   abstract updateArrayCompleted(data: UpdateCompletedTaskDto): Promise<any>;
   abstract updateTask(data: UpdateTaskDto, userId: string): Promise<boolean>;
   abstract create(data: CreateTaskDto, userId: string): Promise<Task>;

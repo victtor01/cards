@@ -64,12 +64,13 @@ export function Trash() {
   const { enable, workspaces, deleteWorkspace } = useTrash();
 
   return (
-    <Modal.Container>
+    <Modal.Container className="overflow-hidden mt-[5rem] w-full max-w-[46rem]">
       <Modal.Header title="Lixeira" />
+
       <div className="flex p-5 flex-col gap-2 bg-white dark:bg-zinc-900">
         <InputSearch />
 
-        <section className="flex flex-col gap-1 h-[12rem] relative overflow-auto border dark:bg-zinc-800 dark:shadow dark:shadow-zinc-950 dark:bg-opacity-40 dark:border-transparent rounded-xl p-1">
+        <section className="flex flex-col gap-1 h-[16rem] relative overflow-auto border dark:bg-zinc-800 dark:shadow dark:shadow-zinc-950 dark:bg-opacity-40 dark:border-transparent rounded-xl p-1">
           <AnimatePresence mode="sync">
             {!workspaces?.length && (
               <motion.div

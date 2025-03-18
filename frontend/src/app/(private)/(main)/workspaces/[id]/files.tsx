@@ -54,9 +54,16 @@ export function Files({ workspace }: FilesProps) {
             <IoGrid />
             <span className={fontSaira}>Espaços</span>
           </div>
+          <div className="p-1 px-3 bg-white dark:bg-zinc-800 dark:border-zinc-700 rounded-md border pointer-events-none">
+            <span
+              className={`${fontSaira} text-gray-500 dark:text-zinc-200`}
+            >
+              {workspace?.workspaces?.length || 0} / 20
+            </span>
+          </div>
         </header>
 
-        <section className="flex flex-wrap w-full mt-3 gap-2">
+        <section className="flex flex-wrap  w-full mt-3 gap-2">
           {workspace?.workspaces?.map((workspace) => {
             const { name, background, id } = workspace;
             return (
@@ -85,6 +92,13 @@ export function Files({ workspace }: FilesProps) {
           <div className="flex gap-3 items-center cursor-default text-gray-500 font-semibold">
             <MdOutlineDriveFileRenameOutline />
             <span className={fontSaira}>Arquivos</span>
+          </div>
+          <div className="p-1 px-3 bg-white dark:bg-zinc-800 dark:border-zinc-700 rounded-md border pointer-events-none">
+            <span
+              className={`${fontSaira} text-gray-500 dark:text-zinc-200`}
+            >
+              {workspace?.workspaces?.length || 0} / 20
+            </span>
           </div>
         </header>
 

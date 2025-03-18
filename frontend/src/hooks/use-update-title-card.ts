@@ -45,7 +45,6 @@ export const getCardAndWorkspaceId = (card: ICard) => {
   return { cardId, workspaceId };
 };
 
-
 export const getValueInput = (
   e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
 ): string => e.currentTarget.value || "";
@@ -89,22 +88,20 @@ export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
   const updateSpecificWorkspaceData = (
     queryClient: QueryClient,
     workspaceId: string,
-    cardId: string,
     card: ICard,
     value: string
   ) => {
-    return queryClient.setQueryData(
+    queryClient.setQueryData(
       ["workspaces", workspaceId],
-      (workspace: IWorkspace) => {
+      (workspace: IWorkspace | undefined) => {
         if (!workspace) return;
-        const cards = workspace.cards || null;
-        const newCards = cards?.map((cardCurrent) => {
-          if (cardCurrent.id === cardId) {
-            return { ...card, title: value };
-          }
-          return cardCurrent;
-        });
-        return { ...workspace, cards: newCards };
+
+        return {
+          ...workspace,
+          cards: workspace.cards?.map((cardCurrent) =>
+            cardCurrent.id === card.id ? { ...card, title: value } : cardCurrent
+          ),
+        };
       }
     );
   };
@@ -125,6 +122,7 @@ export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
     if (!card) return;
 
     const value = getValueInput(e);
+
     const cardIds = getCardAndWorkspaceId(card);
     if (!cardIds) return;
 
@@ -133,16 +131,13 @@ export const useUpdateTitleCard = ({ card }: useUpdateTitleCardProps) => {
     updateElementInnerHtml(cardId, value);
     setTitle(value);
 
+    if (value?.length > 0) {
+      updateCardTitle(cardId, value);
+    }
+
     await Promise.all([
-      updateCardTitle(cardId, value),
       updateWorkspaceData(queryClient, cardId, value),
-      updateSpecificWorkspaceData(
-        queryClient,
-        workspaceId,
-        cardId,
-        card,
-        value
-      ),
+      updateSpecificWorkspaceData(queryClient, workspaceId, card, value),
       updateCardData(queryClient, cardId, value),
     ]);
   };

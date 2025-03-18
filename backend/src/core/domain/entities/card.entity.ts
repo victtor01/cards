@@ -1,3 +1,6 @@
+import { CreateCardDto } from '@core/application/dtos/create-card-dto';
+import { UnauthorizedException } from '@src/utils/errors';
+import { nanoid } from 'nanoid';
 import {
   Column,
   CreateDateColumn,
@@ -7,8 +10,6 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { nanoid } from 'nanoid';
-import { CreateCardDto } from '@core/application/dtos/create-card-dto';
 import { User } from './user.entity';
 import { Workspace } from './workspace.entity';
 
@@ -44,6 +45,12 @@ export class Card {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  public validateUser(userId: string): void {
+    if (userId !== this.userId) {
+      throw new UnauthorizedException('this card does not pertences to user');
+    }
+  }
 
   constructor(data: CreateCardDto & { userId: string }, id?: string) {
     this.id = id || nanoid(12);

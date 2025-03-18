@@ -77,6 +77,56 @@ body {
   @apply dark:bg-zinc-700;
 }
 
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f8f8f8;
+  border: 2px solid #4CAF50;
+  font-size: 16px;
+  border-radius: 5px;
+  /* Bordas arredondadas */
+  color: #333;
+  /* Cor do texto */
+  cursor: pointer;
+  /* Cursor ao passar o mouse */
+  transition: border-color 0.3s ease;
+  /* Transição suave para a borda */
+}
+
+select:focus {
+  border-color: #007bff;
+  /* Altera a cor da borda ao focar */
+  outline: none;
+  /* Remove o contorno */
+}
+
+/* Customiza o option */
+option {
+  background-color: #ffffff;
+  /* Cor de fundo dos options */
+  color: #333;
+  /* Cor do texto dos options */
+  padding: 10px 20px;
+  /* Padding interno */
+  font-size: 16px;
+  /* Tamanho da fonte */
+  padding: 1rem;
+}
+
+/* Estilo para option ao passar o mouse */
+option:hover {
+  background-color: #f1f1f1;
+  /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilo para option selecionado */
+option:checked {
+  background-color: #4CAF50;
+  /* Cor de fundo do option selecionado */
+  color: white;
+  /* Cor do texto do option selecionado */
+}
 .tiptap {
   :first-child {
     margin-top: 0;

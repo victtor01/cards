@@ -6,4 +6,5 @@ export abstract class CardsRepository {
   abstract update(id: string, data: UpdateCardDto): Promise<any>;
   abstract findOneLatestUpdateByWorkspace(userId: string, workspaceId: string): Promise<Card>;
   abstract findOneById(id: string): Promise<Card>;
+  abstract findAllByUser(userId: string): Promise<Card[]>;
 }

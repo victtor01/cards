@@ -9,7 +9,7 @@ export default function AddTaskModal() {
   const { addTask } = useAddTask();
 
   return (
-    <Modal.Container className="max-w-[40rem] mt-0 mb-0 lg:mt-[5rem] lg:mb-[5rem] bg-gray-100">
+    <Modal.Container className="max-w-[40rem] mt-0 mb-0 lg:mt-[5rem] lg:mb-[5rem] bg-white h-auto">
       <FormTask.Container handleSubmit={addTask}>
         <FormTask.Header>
           <Link
@@ -23,7 +23,7 @@ export default function AddTaskModal() {
         <FormTask.Footer>
           <button
             type="submit"
-            className="bg-indigo-600 text-white opacity-90 hover:opacity-100 p-2 text-base px-3 rounded shadow-md"
+            className="bg-indigo-600 px-5 text-white opacity-90 hover:opacity-100 p-2 text-base rounded shadow-md"
           >
             Go
           </button>

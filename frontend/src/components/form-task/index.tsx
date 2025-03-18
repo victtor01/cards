@@ -11,7 +11,7 @@ import { BsCalendar3EventFill } from "react-icons/bs";
 import { CgCheck } from "react-icons/cg";
 import { FaBookmark } from "react-icons/fa";
 import { FaRepeat } from "react-icons/fa6";
-import { IoCalendarNumberSharp } from "react-icons/io5";
+import { IoCalendarNumberSharp, IoClose } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
 import { PiTextAlignLeftFill } from "react-icons/pi";
 import { SlOptionsVertical } from "react-icons/sl";
@@ -20,6 +20,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { twMerge } from "tailwind-merge";
 import InputTime from "../input-time";
 import { useFormTask, useFormTaskAction, verifyInputTypeTime } from "./hooks";
+import { BiCheck } from "react-icons/bi";
 
 interface FormTaskBaseProps extends HtmlHTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode | null;
@@ -122,7 +123,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
           <TextareaAutosize
             maxLength={255}
             id="description"
-            className={`bg-white dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
+            className={`bg-white border dark:bg-neutral-800/60 dark:border-zinc-700/60 w-full placeholder:text-opacity-55 resize-none text-md text-gray-600 font-semibold dark:text-zinc-300 max-h-[15rem] p-3 min-h-[6rem] outline-none rounded-lg`}
             placeholder="Descrição..."
             {...register("description")}
           />
@@ -135,35 +136,38 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         <div className="w-6">
           <SlOptionsVertical />
         </div>
-        <span className="">Opções</span>
+        <span>Opções</span>
       </div>
 
-      <div className="flex mr-5  gap-2 ml-[2.5rem] p-2 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
-        <label htmlFor="repeat" className="flex items-center gap-2">
+      <div className="flex mr-5 border ml-[2.5rem] divide-y divide-zinc-200 divide-zinc-600/80 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
+        <label htmlFor="defineHourState" className="flex items-center gap-2 p-2">
           <div className="flex-1 flex gap-2 items-center px-2">
-            <TbClockHour12Filled />
             <span className="text-md">Definir horário</span>
           </div>
 
           <button
             type="button"
-            id="repeat"
+            id="defineHourState"
             data-selected={defineHourState}
             onClick={handleDefineHour}
-            className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg data-[selected=true]:justify-end overflow-hidden"
+            className="w-[4.2rem] h-[2.2rem] px-[0.1rem] ring-2 ring-gray-200 dark:ring-zinc-800 flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-full data-[selected=true]:justify-end overflow-hidden"
           >
             <motion.div
               layout
               data-selected={defineHourState}
               transition={{ type: "spring", duration: 0.1 }}
-              className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50 data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-            />
+              className="w-[2rem] h-[2rem] bg-indigo-600 rounded-full dark:shadow-black border-l border-zinc-200/50 
+              data-[selected=false]:bg-zinc-300 dark:data-[selected=false]:bg-zinc-700 transition-colors grid place-items-center
+              data-[selected=true]:text-white"
+            >
+              {defineHourState && <BiCheck />}
+              {!defineHourState && <IoClose />}
+            </motion.div>
           </button>
         </label>
 
-        <label htmlFor="repeat" className="flex items-center gap-2">
+        <label htmlFor="repeat" className="flex items-center gap-2 p-2">
           <div className="flex-1 flex gap-2 items-center px-2">
-            <FaRepeat />
             <span className="text-md">Repetir semanalmente.</span>
           </div>
 
@@ -177,16 +181,19 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
                   type="button"
                   data-selected={!!field.value}
                   onClick={() => field.onChange(!!field.value ? false : true)}
-                  className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-lg
-                      data-[selected=true]:justify-end overflow-hidden"
+                  className="w-[4.2rem] h-[2.2rem] px-[0.1rem] ring-2 ring-gray-200 dark:ring-zinc-800 flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-full data-[selected=true]:justify-end overflow-hidden"
                 >
                   <motion.div
                     layout
                     data-selected={!!field.value}
                     transition={{ type: "spring", duration: 0.1 }}
-                    className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
-                        data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-                  />
+                    className="w-[2rem] h-[2rem] bg-indigo-600 rounded-full dark:shadow-black border-l border-zinc-200/50 
+                    data-[selected=false]:bg-zinc-300 dark:data-[selected=false]:bg-zinc-700 transition-colors grid place-items-center
+                    data-[selected=true]:text-white"
+                  >
+                    {!!field?.value && <BiCheck />}
+                    {!field?.value && <IoClose />}
+                  </motion.div>
                 </button>
               );
             }}
@@ -194,9 +201,8 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         </label>
 
         {repeatWatch && (
-          <div className="flex items-center">
-            <div className=" flex-1 flex gap-2 items-center px-2 w-14">
-              <CgCheck size={30} />
+          <div className="flex items-center p-2">
+            <div className=" flex-1 flex gap-2 items-center px-2">
               <span className="text-md">Data de termino</span>
             </div>
 
@@ -204,16 +210,19 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               type="button"
               data-selected={dateOfFinishState}
               onClick={handleDateOfFinish}
-              className="w-[4.2rem] h-[2.2rem] px-[0.1rem] flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-lg
-                  data-[selected=true]:justify-end overflow-hidden"
+              className="w-[4.2rem] h-[2.2rem] px-[0.1rem] ring-2 ring-gray-200  dark:ring-zinc-800 flex items-center bg-zinc-200 dark:bg-zinc-800 rounded-full data-[selected=true]:justify-end overflow-hidden"
             >
               <motion.div
                 layout
                 data-selected={dateOfFinishState}
                 transition={{ type: "spring", duration: 0.1 }}
-                className="w-[2rem] h-[2rem] bg-indigo-600 rounded-md shadow-lg shadow-zinc-600 dark:shadow-black border-l border-zinc-400/50
-                  data-[selected=false]:bg-zinc-400 dark:data-[selected=false]:bg-zinc-700 transition-colors"
-              />
+                className="w-[2rem] h-[2rem] bg-indigo-600 rounded-full dark:shadow-black border-l border-zinc-200/50 
+                data-[selected=false]:bg-zinc-300 dark:data-[selected=false]:bg-zinc-700 transition-colors grid place-items-center
+                data-[selected=true]:text-white"
+              >
+                {!!dateOfFinishState && <BiCheck />}
+                {!dateOfFinishState && <IoClose />}
+              </motion.div>
             </button>
           </div>
         )}
@@ -325,7 +334,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
                 required
                 autoComplete="off"
                 {...register("startAt")}
-                className="p-2 bg-white dark:bg-zinc-800 flex-1 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+                className="p-2 bg-white dark:bg-zinc-800 border dark:border-zinc-700 flex-1 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               />
             </div>
           </label>
@@ -348,7 +357,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
               required
               {...register("endAt")}
               autoComplete="off"
-              className="p-2 bg-white dark:bg-zinc-800 flex-1 lg:ml-0 ml-5 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
+              className="p-2 bg-white border dark:border-zinc-700 dark:bg-zinc-800 flex-1 lg:ml-0 ml-5 ring-0 focus:ring-2 ring-indigo-400 dark:ring-indigo-600 transition-shadow rounded-md outline-none"
               placeholder="Terminar projeto..."
             />
           </label>

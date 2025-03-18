@@ -1,4 +1,4 @@
-import { IFindWorkspacesService } from '@core/application/interfaces/find-workspaces-interface';
+import { FindWorkspacesServiceInterface } from '@core/application/interfaces/find-workspaces-interface';
 import { FindWorkspacesService } from '@core/application/services/find-workspaces-service';
 import { Workspace } from '@core/domain/entities/workspace.entity';
 import { FindWorkspacesController } from '@infra/api/controllers/find-workspaces-controller';
@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 
 export class SetupFindWorkspacesRoutes {
   private readonly findWorkspacesRoutes: Router = Router();
-  private readonly findWorkspacesService: IFindWorkspacesService;
+  private readonly findWorkspacesService: FindWorkspacesServiceInterface;
   private readonly findWorkspacesController: FindWorkspacesController;
 
   constructor() {

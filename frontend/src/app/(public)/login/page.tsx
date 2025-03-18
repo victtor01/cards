@@ -15,10 +15,12 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit(auth)}
-      className="w-[99%] max-w-[28rem] shadow-lg h-[90%] rounded-none lg:h-auto p-10 m-auto lg:rounded-xl bg-white dark:border-neutral-800 dark:bg-neutral-900 flex flex-col gap-6 z-20"
+      className="w-[99%] max-w-[28rem] border h-[90%] rounded-none lg:h-auto p-10 m-auto lg:rounded-xl bg-white dark:border-neutral-800 dark:bg-neutral-900 flex flex-col gap-6 z-20"
     >
       <header className="cursor-default flex items-center justify-center">
-        <h1 className={`${fontSaira} text-xl text-violet-500 font-semibold dark:text-gray-300`}>
+        <h1
+          className={`${fontSaira} text-xl text-violet-500 font-semibold dark:text-gray-300`}
+        >
           Olá! Faça login para continuar!
         </h1>
       </header>
@@ -38,7 +40,7 @@ export default function Page() {
           </div>
         </label>
         <label htmlFor="password" className="w-full flex flex-col gap-1">
-        <span className={`${fontSaira} text-sm`}>Password</span>
+          <span className={`${fontSaira} text-sm`}>Password</span>
           <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded-md ring-indigo-600 focus-within:ring-2">
             <FaLock className="text-zinc-500 min-w-10 opacity-50" size={16} />
             <input
@@ -61,10 +63,10 @@ export default function Page() {
           type="submit"
           disabled={isSubmitting}
           data-sub={!!isSubmitting}
-          className="w-full bg-indigo-600 p-2 data-[sub=true]:opacity-50 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
+          className="w-full bg-indigo-600 p-2 py-3 data-[sub=true]:opacity-50 rounded opacity-90 grid place-items-center hover:opacity-100 text-white"
         >
           {isSubmitting && <ImSpinner2 className="animate-spin" />}
-          {!isSubmitting && <>Login</>}
+          Login
         </button>
       </footer>
 

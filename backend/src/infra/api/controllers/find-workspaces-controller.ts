@@ -1,9 +1,9 @@
-import { IFindWorkspacesService } from '@core/application/interfaces/find-workspaces-interface';
+import { FindWorkspacesServiceInterface } from '@core/application/interfaces/find-workspaces-interface';
 import { BadRequestException } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
 export class FindWorkspacesController {
-  constructor(private readonly findWorkspaces: IFindWorkspacesService) {}
+  constructor(private readonly findWorkspaces: FindWorkspacesServiceInterface) {}
 
   public async findById(request: Request, response: Response) {
     const { id: userId } = request.session;

@@ -1,18 +1,21 @@
 import { ITask } from "@/interfaces/ITask";
 import { motion } from "framer-motion";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { CgCheck } from "react-icons/cg";
 import { api } from "@/api";
 import { queryClient } from "@/providers/query-client";
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fontFiraCode } from "@/fonts";
+import { useTask } from "@/hooks/use-task";
 dayjs.locale("pt-br");
 
 type AllTasksForDayProps = {
   task: ITask;
   day: string;
 };
+
+type GetDiffInDaysProps = string | Date | null;
 
 const DETAIL_NAME = "mdl-detail";
 
@@ -21,39 +24,32 @@ const useTaskItem = () => {
   const searchParams = useSearchParams();
   const taskIdDetail = searchParams.get(DETAIL_NAME);
 
-  const addOrRemoveDate = (task: ITask, date: string) => {
-    const includesInCompleted = task?.completed?.includes(date) || null;
-    const prevTasks = task?.completed || [];
-    const newArray = includesInCompleted
-      ? prevTasks.filter((datePrev) => datePrev !== date)
-      : [...prevTasks, date];
-
-    return newArray;
-  };
-
-  const completeTask = async (task: ITask, date: string) => {
-    try {
-      const arrayToConclude = addOrRemoveDate(task, date);
-      await api.put(`/tasks/completed/${task.id}`, { arrayToConclude });
-      await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    } catch (error) {
-      toast.error("Houve um erro ao tentar atualizar task!");
-    }
-  };
-
   const openDetail = (taskId: string) => {
     router.push(`?${DETAIL_NAME}=${taskId}`);
   };
 
   return {
-    completeTask,
     openDetail,
     params: { taskIdDetail },
   };
 };
 
+const getDiffInDays = (
+  start?: GetDiffInDaysProps,
+  end?: GetDiffInDaysProps
+): number | null => {
+  if (!start || !end) {
+    return null;
+  }
+
+  return dayjs(end, "YYYY-MM-DD")
+    .add(1, "day")
+    .diff(dayjs(start, "YYYY-MM-DD"), "day");
+};
+
 const TaskItem = (props: AllTasksForDayProps) => {
-  const { completeTask, openDetail, params } = useTaskItem();
+  const { openDetail, params } = useTaskItem();
+  const { completeOfRemoveTask } = useTask();
   const { taskIdDetail } = params;
   const { task, day } = props;
 
@@ -62,12 +58,7 @@ const TaskItem = (props: AllTasksForDayProps) => {
   const completed =
     task?.completed?.includes(dayjs(day).format("YYYY-MM-DD")) || false;
 
-  const diffInDays =
-    !!task.startAt && !!task.endAt
-      ? dayjs(task.endAt, "YYYY-MM-DD")
-          .add(1, "day")
-          .diff(dayjs(task.startAt, "YYYY-MM-DD"), "day")
-      : null;
+  const diffInDays: number | null = getDiffInDays(task.startAt, task.endAt);
 
   const diffWeekFormat = diffInDays !== null ? Math.ceil(diffInDays / 7) : null;
 
@@ -80,8 +71,6 @@ const TaskItem = (props: AllTasksForDayProps) => {
           );
         }, 0)
       : 0;
-
-  console.log(task);
 
   const percentage =
     !!task.completed?.length && quantityOfTasks
@@ -102,7 +91,9 @@ const TaskItem = (props: AllTasksForDayProps) => {
     >
       <div className="flex gap-3 w-full">
         <button
-          onClick={() => completeTask(task, dayjs(day).format("YYYY-MM-DD"))}
+          onClick={() =>
+            completeOfRemoveTask(task, dayjs(day).format("YYYY-MM-DD"))
+          }
           type="button"
           data-completed={completed}
           className="min-w-6 min-h-4 text-white bg-zinc-200 dark:bg-zinc-900 data-[completed=true]:bg-indigo-600 

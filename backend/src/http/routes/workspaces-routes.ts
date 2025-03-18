@@ -41,15 +41,11 @@ class WorkspacesRoutes {
       this.workspacesController.enable(req, res)
     );
 
-    this.workspacesRoutes.put('/background/code/:code', upload.single('background'), (req, res) =>
-      this.workspacesController.updateBackgroundByCode(req, res)
-    );
-
-    this.workspacesRoutes.delete('/background/id/:id', (req, res) =>
+    this.workspacesRoutes.delete('/background/:id', (req, res) =>
       this.workspacesController.deleteBackgroundById(req, res)
     );
 
-    this.workspacesRoutes.put('/background/id/:id', upload.single('background'), (req, res) =>
+    this.workspacesRoutes.put('/background/:id', upload.single('background'), (req, res) =>
       this.workspacesController.updateBackgroundById(req, res)
     );
   }

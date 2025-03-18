@@ -1,6 +1,6 @@
 import { Workspace } from "@core/domain/entities/workspace.entity";
 
-export abstract class IFindWorkspacesService {
+export abstract class FindWorkspacesServiceInterface {
   abstract findByUserWithCards(userId: string): Promise<Workspace[]>;
   abstract findByUserFormatTree(userId: string): Promise<Workspace[]>;
 		abstract findOneActiveByIdAndUser(id: string, userId: string): Promise<Workspace>;

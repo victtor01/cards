@@ -105,7 +105,6 @@ export default function Workspace({ params }: WorkspaceProps) {
       >
         <Dashboards workspace={workspace} />
         <Files workspace={workspace} />
-        {/* <Week /> */}
 
         <AnimatePresence>{modalComponent}</AnimatePresence>
       </motion.section>

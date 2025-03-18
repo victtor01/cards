@@ -31,12 +31,14 @@ import { useUpdateTitleCard } from "@/hooks/use-update-title-card";
 const LENGTH_TITLE = 60;
 export function EditorComponent({ card }: { card: ICard }) {
   const content = card?.content || null;
+  
   const { title, onChangeTitle } = useUpdateTitleCard({ card });
   const { editor, ...styles } = useEditorConfig({ content });
   const { loading, updateContent } = useUpdateContentCard({ card, editor });
   const { onScroll, refToHeader, fixed } = styles;
   const { theme } = useThemeStore((store) => store);
   const router = useRouter();
+
   const image = !!card?.background ? getUpload(card?.background) : null;
   const defaultTheme = theme === "dark" ? darkDefaultTheme : lightDefaultTheme;
 

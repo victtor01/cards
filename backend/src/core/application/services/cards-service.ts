@@ -6,15 +6,17 @@ import { unlinkUploadFile } from '@src/utils/unlink';
 import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
 import { CreateCardDto } from '../dtos/create-card-dto';
 import { CardsServiceInterface } from '../interfaces/cards-service-inteface';
-import { IFindWorkspacesService } from '../interfaces/find-workspaces-interface';
+import { FindWorkspacesServiceInterface } from '../interfaces/find-workspaces-interface';
 import { CreateCardValidation } from '../validations/cards-schemas/create-card-schema';
 import { updateCardValidation } from '../validations/cards-schemas/update-card-schema';
 
 export class CardsService implements CardsServiceInterface {
   constructor(
     private readonly cardsRepo: CardsRepository,
-    private readonly workspacesService: IFindWorkspacesService
+    private readonly findWorkspacesServiceInterface: FindWorkspacesServiceInterface
   ) {}
+
+  private readonly MAX_TOTAL_OF_CARDS: number = 200;
 
   public async create(createCardDto: CreateCardDto, userId: string): Promise<Card> {
     const data = await CreateCardValidation.parseAsync(createCardDto).catch((err: any) =>
@@ -23,20 +25,26 @@ export class CardsService implements CardsServiceInterface {
 
     const { title, content, workspaceId } = data;
 
-    const workspace = await this.workspacesService.findOneById(workspaceId);
+    const workspace = await this.findWorkspacesServiceInterface.findOneById(workspaceId);
 
     if (workspace?.userId !== userId) {
       throw new UnauthorizedException('you don`t permission to create this card');
     }
 
-    const cardToCreate = new Card({
+    const quantityOfCards: Card[] = await this.cardsRepo.findAllByUser(userId);
+
+    if (quantityOfCards?.length > this.MAX_TOTAL_OF_CARDS) {
+      throw new BadRequestException('maximum number of cards exceeded');
+    }
+
+    const cardToCreate: Card = new Card({
       workspaceId,
       content,
       userId,
       title,
     });
 
-    const card = await this.cardsRepo.save(cardToCreate);
+    const card: Card = await this.cardsRepo.save(cardToCreate);
 
     return card;
   }
@@ -44,11 +52,8 @@ export class CardsService implements CardsServiceInterface {
   public async findOneLatestUpdate(userId: string, workspaceId: string): Promise<Card> {
     if (!userId) throw new BadRequestException('params not found!');
 
-    const card = await this.cardsRepo.findOneLatestUpdateByWorkspace(userId, workspaceId);
-
-    if (card?.userId !== userId) {
-      throw new UnauthorizedException('card not found!');
-    }
+    const card: Card = await this.cardsRepo.findOneLatestUpdateByWorkspace(userId, workspaceId);
+    card.validateUser(userId);
 
     return card;
   }
@@ -56,17 +61,14 @@ export class CardsService implements CardsServiceInterface {
   public async findOneByIdAndUser(cardId: string, userId: string): Promise<Card> {
     if (!cardId || !userId) throw new BadRequestException('params not found!');
 
-    const card = await this.cardsRepo.findOneById(cardId);
-
-    if (card?.userId !== userId) {
-      throw new UnauthorizedException('card not found!');
-    }
+    const card: Card = await this.cardsRepo.findOneById(cardId);
+    card.validateUser(userId);
 
     return card;
   }
 
   public async update(cardId: string, userId: string, data: UpdateCardDto): Promise<any> {
-    const card = await this.findOneByIdAndUser(cardId, userId);
+    const card: Card | null = await this.findOneByIdAndUser(cardId, userId);
 
     if (!card) {
       throw new BadRequestException('card not found!');

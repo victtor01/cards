@@ -2,6 +2,7 @@ import { FindByDateDto } from '@core/application/dtos/tasks-dtos/find-by-date-dt
 import { UpdateTaskDto } from '@core/application/dtos/tasks-dtos/update-task-dto';
 import { TasksServiceInterface } from '@core/application/interfaces/task-service-interface';
 import { STATUS } from '@infra/config/constants/status';
+import { BadRequestException } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
 export class TasksController {
@@ -21,6 +22,20 @@ export class TasksController {
     const task = await this.tasksService.findOneByIdAndUserId(taskId, userId);
 
     return response.status(STATUS.OK).json(task);
+  }
+
+  public async completeTask(req: Request, res: Response) {
+    const { session, params } = req;
+    const { body } = req;
+
+    if (!params?.taskId || !body?.day) {
+      throw new BadRequestException('taskId not found');
+    }
+
+    const updated = await this.tasksService
+    .completeTaskDay(session.id, params.taskId, body?.day);
+
+    return res.status(STATUS.OK).json(updated);
   }
 
   public async updateCompletedArray(req: Request, res: Response) {

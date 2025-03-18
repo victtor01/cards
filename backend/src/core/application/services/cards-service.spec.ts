@@ -3,7 +3,7 @@ import { CardsRepository } from '@infra/repositories/cards.repository';
 import { UnauthorizedException } from '@src/utils/errors';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { CreateCardDto } from '../dtos/create-card-dto';
-import { WorkspacesServiceInterface } from '../interfaces/workspaces-service-interface';
+import { FindWorkspacesServiceInterface } from '../interfaces/find-workspaces-interface';
 import { CardsService } from './cards-service';
 
 const cardsRepositoryMock = {
@@ -11,15 +11,19 @@ const cardsRepositoryMock = {
   update: vi.fn(),
   findOneLatestUpdateByWorkspace: vi.fn(),
   findOneById: vi.fn(),
+  findAllByUser: vi.fn(),
 } satisfies CardsRepository;
 
 describe('CardsService', () => {
   let cardsService: CardsService;
-  let workspacesService: WorkspacesServiceInterface;
+  let findWorksapcesService: FindWorkspacesServiceInterface;
 
   beforeEach(() => {
-    workspacesService = { findOneById: vi.fn() } as unknown as WorkspacesServiceInterface;
-    cardsService = new CardsService(cardsRepositoryMock, workspacesService);
+    findWorksapcesService = { findOneById: vi.fn() } as unknown as FindWorkspacesServiceInterface;
+    
+    cardsService = new CardsService(
+      cardsRepositoryMock, 
+      findWorksapcesService);
   });
 
   it('should create a card', async () => {
@@ -39,7 +43,7 @@ describe('CardsService', () => {
     const mockWorkspace = { userId: 'user-id' };
     const userId = 'user-id';
 
-    (workspacesService.findOneById as Mock).mockResolvedValue(mockWorkspace);
+    (findWorksapcesService.findOneById as Mock).mockResolvedValue(mockWorkspace);
     cardsRepositoryMock.save.mockResolvedValue(mockCard);
 
     const result = await cardsService.create(createCardDto, userId);
@@ -54,10 +58,11 @@ describe('CardsService', () => {
       content: 'Test content',
       workspaceId: 'workspace-id',
     };
+
     const userId = 'user-id';
     const mockWorkspace = { userId: 'another-user-id' };
 
-    (workspacesService.findOneById as Mock).mockResolvedValue(mockWorkspace);
+    (findWorksapcesService.findOneById as Mock).mockResolvedValue(mockWorkspace);
 
     await expect(cardsService.create(createCardDto, userId)).rejects.toThrow(UnauthorizedException);
   });
