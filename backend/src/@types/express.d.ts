@@ -1,4 +1,3 @@
-import { User } from "@core/domain/entities/user.entity";
 import { Session } from "@infra/config/constants/session";
 
 declare global {

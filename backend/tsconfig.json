@@ -1,18 +1,5 @@
 {
   "compilerOptions": {
-    // "target": "es6",
-    // "lib": ["es5", "es6", "es2023"],
-    // "rootDir": "./src/",
-    // "module": "commonJS",
-    // "baseUrl": "./",
-    // "emitDecoratorMetadata": true,
-    // "experimentalDecorators": true,
-    // "moduleResolution": "node",
-    // "sourceMap": true,
-    // "esModuleInterop": true,
-    // "strictPropertyInitialization": false,
-    // "forceConsistentCasingInFileNames": true,
-    
     "rootDir": "./src/",
     "module": "commonjs",
     "declaration": true,
@@ -31,23 +18,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-
-    // "sourceMap": true,
-    // "target": "es2018",
-    // "lib": ["es5", "es6", "ES2018"],
-    // "experimentalDecorators": true,
-    // "emitDecoratorMetadata": true,
-    // "module": "commonjs",
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "allowJs": true,
-    // "outDir": "./dist",
-    // "esModuleInterop": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "strict": true,
-    // "noImplicitAny": true,
-    // "strictPropertyInitialization": false,
-
     "paths": {
       "@core/*": ["./src/core/*"],
       "@infra/*": ["./src/infra/*"],

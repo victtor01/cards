@@ -12,9 +12,9 @@ const upload = multer(config);
 class WorkspacesRoutes {
   private readonly workspacesRoutes = Router();
   private readonly repository = AppDataSource.getRepository(Workspace);
-  private workspacesRepository = new ImplementsWorkspacesRepository(this.repository);
-  private workspacesService = new WorkspacesService(this.workspacesRepository);
-  private workspacesController = new WorkspacesController(this.workspacesService);
+  private readonly workspacesRepository = new ImplementsWorkspacesRepository(this.repository);
+  private readonly workspacesService = new WorkspacesService(this.workspacesRepository);
+  private readonly workspacesController = new WorkspacesController(this.workspacesService);
 
   public setup(): Router {
     this.workspacesRoutes.use(sessionMiddleware);

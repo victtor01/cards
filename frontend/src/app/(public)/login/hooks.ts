@@ -1,7 +1,9 @@
 import { api } from "@/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -18,19 +20,20 @@ export function useLogin() {
     resolver: zodResolver(loginSchema),
   });
 
-  const auth = async ({ email, password }: LoginInterface) => {
-    try {
-      const res = await api.post("/auth", { email, password });
+  const auth = useMutation({
+    mutationFn: async ({ email, password }: LoginInterface) => {
+      await api.post("/auth", { email, password });
+    },  
+    
+    onSuccess: () => {
+      router.push("/home")
+      toast("Login feito");
+    },
 
-      if (res.data.error) {
-        throw new Error("credentials incorrect!");
-      }
-
-      router.push("/home");
-    } catch (error) {
-      alert("erro");
-    }
-  };
+    onError: () => {
+      toast("Credenciais incorretas");
+    },
+  });
 
   return {
     auth,

@@ -27,6 +27,9 @@ export class Card {
   @Column({ type: 'text', nullable: true })
   background: string;
 
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  publicId: string;
+
   @Column({ type: 'varchar' })
   userId: string;
 
@@ -52,8 +55,9 @@ export class Card {
     }
   }
 
-  constructor(data: CreateCardDto & { userId: string }, id?: string) {
+  constructor(data: CreateCardDto & { userId: string }, id?: string, publicId?: string) {
     this.id = id || nanoid(12);
+    this.publicId = publicId || nanoid(12);
     Object.assign(this, data);
   }
 }

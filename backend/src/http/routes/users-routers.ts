@@ -11,6 +11,7 @@ import multer from 'multer';
 const usersRoutes = Router();
 
 const upload = multer(config);
+
 const usersRepository = new ImplementsUsersRepository(AppDataSource.getRepository(User));
 const usersService = new UsersService(usersRepository, upload);
 const usersController = new UsersController(usersService);

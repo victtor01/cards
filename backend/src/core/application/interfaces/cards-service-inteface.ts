@@ -8,4 +8,5 @@ export abstract class CardsServiceInterface {
   abstract updateBackground(id: string, userId: string, background: string): Promise<boolean>;
   abstract findOneByIdAndUser(id: string, userId: string): Promise<Card>;
   abstract findOneLatestUpdate(userId: string, workspaceId: string): Promise<Card>;
+  abstract publish(userId: string, cardId: string): Promise<void>;
 }

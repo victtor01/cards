@@ -23,6 +23,22 @@ export class WorkspacesService implements WorkspacesServiceInterface {
     return workspace;
   }
 
+  public async publish(id: string, userId: string): Promise<boolean> {
+    const workspace: Workspace = await this.workspaceRepository.findOneById(id);
+
+    if (!workspace?.id) {
+      throw new NotFoundException('Workspace not exists!');
+    }
+
+    const isOwner = workspace.isOwner(userId);
+
+    if (!isOwner) throw new BadRequestException('workspace not belongs to you!');
+
+    await this.workspaceRepository.update(id, { isPublic: true });
+
+    return true;
+  }
+
   public async save(data: CreateWorkspaceDto): Promise<Workspace> {
     const { name, userId } = await createWorkspaceSchema
       .parseAsync(data)

@@ -8,7 +8,6 @@ export class FindWorkspacesController {
   public async findById(request: Request, response: Response) {
     const { id: userId } = request.session;
     const workspaceId = request.params.workspaceId || null;
-
     if (!workspaceId) throw new BadRequestException('not found workspace id');
 
     const workspace = await this.findWorkspaces.findOneActiveByIdAndUser(workspaceId, userId);

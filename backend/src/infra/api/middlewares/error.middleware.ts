@@ -24,7 +24,7 @@ export function ErrorMiddleware(
 
   logger.error(`houve um erro: ${message}`);
 
-  return res.status(statusCode).json({
+  res.status(statusCode).json({
     statusCode,
     errorText,
     message,

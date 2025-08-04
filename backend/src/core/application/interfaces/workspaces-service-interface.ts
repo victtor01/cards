@@ -14,4 +14,5 @@ export abstract class WorkspacesServiceInterface {
   abstract rename(data: RenameWorkspaceDto, userId: string): Promise<any>;
   abstract disableTree(id: string, userId: string): Promise<boolean>;
   abstract delete(id: string, userId: string): Promise<boolean>;
+  abstract publish(id: string, userId: string): Promise<boolean>;
 }

@@ -43,6 +43,9 @@ export class Workspace {
   @JoinColumn({ name: 'parentId' })
   public parent: Workspace;
 
+  @Column({ type: "boolean", default: false })
+  public isPublic?: boolean = false;
+
   @OneToMany(() => Workspace, (workspace) => workspace.parent, {
     onDelete: 'SET NULL',
   })
@@ -51,10 +54,14 @@ export class Workspace {
   @OneToMany(() => Card, (card) => card.workspace)
   cards: Card[];
 
-  
+  public isOwner (userId: string): boolean {
+    return userId === this?.userId || userId === this?.user?.id;
+  }
+
   constructor(props: CreateWorkspaceDto, id?: string) {
     Object.assign(this, props);
     this.code = nanoid(12);
     this.id = id || nanoid(12);
   }
+
 }

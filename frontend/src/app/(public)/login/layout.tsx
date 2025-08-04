@@ -1,5 +1,7 @@
 import { fontSaira } from "@/fonts";
 import { Metadata } from "next";
+import { SiSendgrid } from "react-icons/si";
+import { ToastContainer } from "react-toastify";
 
 type PropsLayout = {
   children: React.ReactNode;
@@ -12,27 +14,24 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: PropsLayout) {
   return (
-    <main className="w-full h-auto flex-1 flex flex-col bg-gradient-radial from-gray-50 to-white dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 ">
-      <header className="p-2 bg-transparent z-30">
-        <div className="flex justify-between mx-auto max-w-main items-center dark:text-zinc-300">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <h1 className={`${fontSaira} text-2xl text-indigo-500 font-semibold`}>Organizze</h1>
-            </div>
-          </div>
-          <div className="flex text-zinc-500 dark:text-zinc-200">
-            <button
-              className={`${fontSaira} bg-indigo-600 text-white rounded hover:shadow-lg dark:text-white transition-all p-2 px-3 opacity-90 hover:opacity-100 capitalize`}
-            >
-              Criar nova conta!
-            </button>
-          </div>
+    <main
+      className={`w-full h-auto flex-1 flex flex-col bg-gradient-radial from-gray-50 to-white dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950 `}
+    >
+      <ToastContainer theme="dark" hideProgressBar autoClose={1000}/>
+      <header className="p-2 flex flex-col items-center mt-10 bg-transparent z-30">
+        <div className="w-14 h-14 bg-gray-800 rounded-lg border-2 border-indigo-500/50 shadow-xl grid place-items-center text-indigo-300 shadow-indigo-300 dark:shadow-indigo-500/50">
+          <SiSendgrid />
+        </div>
+
+        <div className="text-3xl mt-5 text-gray-700 dark:text-gray-200">
+          <span className={fontSaira}>Bem vindo de volta</span>
         </div>
       </header>
 
-      <section className="flex flex-1 w-[95%] mx-auto relative">
+      <section className="flex w-[95%] mt-5 mx-auto relative">
         {children}
       </section>
+
       <div className="fixed top-0 left-0 w-full h-screen overflow-hidden">
         <div className="grid-image"></div>
       </div>

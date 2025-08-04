@@ -1,8 +1,9 @@
 import { Card } from '@core/domain/entities/card.entity';
 import { CardsRepository } from '@infra/repositories/cards.repository';
-import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { unlinkUploadFile } from '@src/utils/unlink';
+import { nanoid } from 'nanoid';
 import { UpdateCardDto } from '../dtos/cards-dtos/update-card-dto';
 import { CreateCardDto } from '../dtos/create-card-dto';
 import { CardsServiceInterface } from '../interfaces/cards-service-inteface';
@@ -17,6 +18,22 @@ export class CardsService implements CardsServiceInterface {
   ) {}
 
   private readonly MAX_TOTAL_OF_CARDS: number = 200;
+
+  public async publish(userId: string, cardId: string): Promise<void> {
+    const card: Card = await this.cardsRepo.findOneById(cardId);
+
+    if (!card?.id) {
+      throw new NotFoundException('Card não encontrado!');
+    }
+
+    if (card?.userId !== userId) {
+      throw new BadRequestException('Card não pertence ao usuário');
+    }
+
+    await this.cardsRepo.update(cardId, {
+      publicId: nanoid(12),
+    });
+  }
 
   public async create(createCardDto: CreateCardDto, userId: string): Promise<Card> {
     const data = await CreateCardValidation.parseAsync(createCardDto).catch((err: any) =>
@@ -53,6 +70,9 @@ export class CardsService implements CardsServiceInterface {
     if (!userId) throw new BadRequestException('params not found!');
 
     const card: Card = await this.cardsRepo.findOneLatestUpdateByWorkspace(userId, workspaceId);
+
+    if (!card?.id) throw new NotFoundException('Card not found!');
+
     card.validateUser(userId);
 
     return card;

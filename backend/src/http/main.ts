@@ -12,9 +12,9 @@ import path from 'path';
 import routes from './routes';
 
 class Bootstrap {
-  private port = 9000;
+  private static port = 9000;
 
-  public async start() {
+  public static async start() {
     try {
       await AppDataSource.initialize();
       const app = express();
@@ -44,6 +44,4 @@ class Bootstrap {
   }
 }
 
-const bootstrap = new Bootstrap();
-
-bootstrap.start();
+Bootstrap.start();
