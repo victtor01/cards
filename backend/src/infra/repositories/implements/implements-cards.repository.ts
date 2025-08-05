@@ -6,6 +6,12 @@ import { CardsRepository } from '../cards.repository';
 export class ImplementsCardsRepository implements CardsRepository {
   constructor(private readonly cardsRepo: Repository<Card>) {}
 
+  public async findByCode(code: string): Promise<Card> {
+    return await this.cardsRepo.findOne({
+      where: { publicId: code },
+    });
+  }
+
   public async findAllByUser(userId: string): Promise<Card[]> {
     return await this.cardsRepo.find({
       where: {
@@ -25,8 +31,11 @@ export class ImplementsCardsRepository implements CardsRepository {
     });
   }
 
-  public async update(id: string, { title, content, background }: UpdateCardDto): Promise<any> {
-    return await this.cardsRepo.update(id, { title, content, background });
+  public async update(
+    id: string,
+    { title, content, background, publicId }: UpdateCardDto
+  ): Promise<any> {
+    return await this.cardsRepo.update(id, { title, content, background, publicId });
   }
 
   public async findOneById(id: string): Promise<Card> {

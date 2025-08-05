@@ -7,4 +7,5 @@ export abstract class CardsRepository {
   abstract findOneLatestUpdateByWorkspace(userId: string, workspaceId: string): Promise<Card>;
   abstract findOneById(id: string): Promise<Card>;
   abstract findAllByUser(userId: string): Promise<Card[]>;
+  abstract findByCode(code: string): Promise<Card>;
 }

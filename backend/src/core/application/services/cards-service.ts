@@ -1,6 +1,7 @@
 import { Card } from '@core/domain/entities/card.entity';
 import { CardsRepository } from '@infra/repositories/cards.repository';
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@src/utils/errors';
+import logger from '@src/utils/logger';
 import { ThrowErrorInValidationSchema } from '@src/utils/throw-error-validation-schema';
 import { unlinkUploadFile } from '@src/utils/unlink';
 import { nanoid } from 'nanoid';
@@ -19,8 +20,20 @@ export class CardsService implements CardsServiceInterface {
 
   private readonly MAX_TOTAL_OF_CARDS: number = 200;
 
+  public async findByPublicCode(code: string): Promise<Card> {
+    const card: Card = await this.cardsRepo.findByCode(code).catch((err) => {
+      logger.error('Houve um erro ao tentar pegar o card no [findByPublicCode]', err);
+      return null;
+    });
+
+    return card;
+  }
+
   public async publish(userId: string, cardId: string): Promise<void> {
-    const card: Card = await this.cardsRepo.findOneById(cardId);
+    const card = await this.cardsRepo.findOneById(cardId).catch((err) => {
+      logger.error('Houve um erro ao tentar buscar o card', err);
+      return null;
+    });
 
     if (!card?.id) {
       throw new NotFoundException('Card não encontrado!');

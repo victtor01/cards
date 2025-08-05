@@ -9,4 +9,5 @@ export abstract class CardsServiceInterface {
   abstract findOneByIdAndUser(id: string, userId: string): Promise<Card>;
   abstract findOneLatestUpdate(userId: string, workspaceId: string): Promise<Card>;
   abstract publish(userId: string, cardId: string): Promise<void>;
+  abstract findByPublicCode(code: string): Promise<Card>;
 }

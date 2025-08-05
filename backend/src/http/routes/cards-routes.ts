@@ -18,28 +18,40 @@ export class SetupCardsRoutes {
 
   constructor() {
     const cardsRepository = new ImplementsCardsRepository(AppDataSource.getRepository(Card));
-    const workspacesRepository = new ImplementsWorkspacesRepository(
-      AppDataSource.getRepository(Workspace)
-    );
-
+    const workspaceRepository = AppDataSource.getRepository(Workspace);
+    const workspacesRepository = new ImplementsWorkspacesRepository(workspaceRepository);
     const findWorkspacesService = new FindWorkspacesService(workspacesRepository);
     const cardsService = new CardsService(cardsRepository, findWorkspacesService);
+
     this.cardsController = new CardsController(cardsService);
+
     this.upload = multer(config);
   }
 
   public setup(): Router {
-    this.cardsRoutes.use(sessionMiddleware);
-
-    this.setRoutes();
+    this.setPublicRoutes();
+    this.setStaticRoutes();
+    this.setDynamicRoutes();
 
     return this.cardsRoutes;
   }
 
-  private setRoutes(): void {
+  private setPublicRoutes() {
+    this.cardsRoutes.get('/publish/:code', (req, res) =>
+      this.cardsController.findByPublicCode(req, res)
+    );
+  }
+
+  private setStaticRoutes() {
+    this.cardsRoutes.use(sessionMiddleware);
     this.cardsRoutes.post('/', (req, res) => this.cardsController.create(req, res));
+    this.cardsRoutes.post('/publish', (req, res) => this.cardsController.publish(req, res));
+  }
+
+  private setDynamicRoutes() {
     this.cardsRoutes.get('/:cardId', (req, res) => this.cardsController.findOneById(req, res));
     this.cardsRoutes.put('/:cardId', (req, res) => this.cardsController.update(req, res));
+
     this.cardsRoutes.get('/latest/:workspaceId', (req, res) =>
       this.cardsController.findOneLatestUpdate(req, res)
     );

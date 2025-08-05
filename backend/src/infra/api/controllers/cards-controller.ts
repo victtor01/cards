@@ -1,4 +1,5 @@
 import { CardsServiceInterface } from '@core/application/interfaces/cards-service-inteface';
+import { NotFoundException } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
 export class CardsController {
@@ -13,6 +14,20 @@ export class CardsController {
     return response.status(201).json({
       title: created.title,
     });
+  }
+
+  public async findByPublicCode(request: Request, response: Response) {
+    const { params } = request;
+
+    const code = params?.code;
+
+    if (!code) {
+      throw new NotFoundException('Código faltando na requisição');
+    }
+
+    const card = await this.cardsService.findByPublicCode(code);
+    
+    response.status(200).json(card)
   }
 
   public async update(request: Request, response: Response) {
@@ -59,5 +74,16 @@ export class CardsController {
     const card = await this.cardsService.findOneByIdAndUser(params.cardId, userId);
 
     response.status(200).json(card);
+  }
+
+  public async publish(request: Request, response: Response) {
+    const { session, body } = request;
+
+    const { id: userId } = session;
+    const { cardId } = body;
+
+    await this.cardsService.publish(userId, cardId);
+
+    response.status(200).json({ publish: true });
   }
 }
