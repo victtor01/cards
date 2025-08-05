@@ -29,6 +29,7 @@
     "@tiptap/starter-kit": "^2.5.9",
     "axios": "^1.3.1",
     "cookie": "^1.0.1",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.3.24",
     "jose": "^5.8.0",

@@ -1,5 +1,4 @@
 import { api } from "@/api";
-import { TaskLate } from "@/app/(private)/(main)/calendar/dashboard";
 import { ITask } from "@/interfaces/ITask";
 import { queryClient } from "@/providers/query-client";
 import { toast } from "react-toastify";
@@ -34,20 +33,12 @@ const useTask = () => {
   const complete = async (props: PropsToConclude) => {
     const { id, dayToComplete } = props;
 
-    const res = await api.put<ITask | null>(`/tasks/complete/${id}`, {
+    await api.put<ITask | null>(`/tasks/complete/${id}`, {
       day: dayToComplete,
     });
 
     await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-
-    queryClient.setQueriesData({ queryKey: ["tasks", "lates"] }, (data) => {
-      const array: TaskLate[] = data as TaskLate[];
-      return [
-        ...array?.filter(
-          (data: TaskLate) => data?.id !== id && data?.date !== dayToComplete
-        ),
-      ];
-    });
+    await queryClient.invalidateQueries({ queryKey: ["tasks", "lates"] });
   };
 
   return {

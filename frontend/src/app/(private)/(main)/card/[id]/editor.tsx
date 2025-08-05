@@ -8,30 +8,33 @@ import { useThemeStore } from "@/hooks/use-theme";
 import { ICard } from "@/interfaces/ICard";
 import { getUpload } from "@/utils/get-upload";
 import "@blocknote/core/fonts/inter.css";
-import "@blocknote/mantine/style.css";
 import {
   BlockNoteView,
   darkDefaultTheme,
   lightDefaultTheme,
 } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaCheck } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
-import { MdPublish } from "react-icons/md";
 import TextareaAutosize from "react-textarea-autosize";
-import { FileBackgroundUpdate } from "./update-background";
 import { useUpdateContentCard } from "./hooks";
+import { FileBackgroundUpdate } from "./update-background";
 
-import { getDefaultReactSlashMenuItems, SuggestionMenuController } from "@blocknote/react";
-import { defaultBlockSchema, filterSuggestionItems } from "@blocknote/core";
+import { PublishButton } from "@/components/cards-components/publish-button";
 import { useUpdateTitleCard } from "@/hooks/use-update-title-card";
+import { filterSuggestionItems } from "@blocknote/core";
+import {
+  getDefaultReactSlashMenuItems,
+  SuggestionMenuController,
+} from "@blocknote/react";
 
 const LENGTH_TITLE = 60;
 export function EditorComponent({ card }: { card: ICard }) {
   const content = card?.content || null;
-  
+
   const { title, onChangeTitle } = useUpdateTitleCard({ card });
   const { editor, ...styles } = useEditorConfig({ content });
   const { loading, updateContent } = useUpdateContentCard({ card, editor });
@@ -102,13 +105,8 @@ export function EditorComponent({ card }: { card: ICard }) {
           >
             Lixeira
           </button>
-          <button
-            type="button"
-            className="p-1 px-2 text-base bg-gradient-45 from-violet-500 to-indigo-600 rounded text-white opacity-95 hover:shadow-lg hover:shadow-indigo-600/50 hover:opacity-100 dark:text-zinc-100 flex items-center gap-2"
-          >
-            <MdPublish />
-            <span className={fontFiraCode}>Publicar</span>
-          </button>
+
+          <PublishButton cardId={card.id} code={card.publicId}></PublishButton>
         </div>
       </header>
 
@@ -162,7 +160,7 @@ export function EditorComponent({ card }: { card: ICard }) {
             }}
           >
             <SuggestionMenuController
-              triggerCharacter={"/"} 
+              triggerCharacter={"/"}
               getItems={async (query) =>
                 filterSuggestionItems(
                   [

@@ -4,5 +4,6 @@ export interface ICard {
   workspaceId: string;
   content: string;
   createdAt?: string | null;
+  publicId?: string | null;
   background: string | null | undefined;
 }

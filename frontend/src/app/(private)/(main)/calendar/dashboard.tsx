@@ -5,7 +5,7 @@ import { fontFiraCode, fontSaira } from "@/fonts";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { BsArrowRightShort } from "react-icons/bs";
+import { BsArrowLeft, BsArrowRight, BsArrowRightShort } from "react-icons/bs";
 import { FaHourglassEnd } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
@@ -82,7 +82,6 @@ function DashboardTasks() {
               >
                 {data?.map((taskLate: TaskLate, index: number) => {
                   const { name, date, id } = taskLate;
-                  console.log(taskLate);
                   return (
                     <div
                       key={index}
@@ -96,7 +95,7 @@ function DashboardTasks() {
                             dayToComplete: dayjs(date).format("YYYY-MM-DD"),
                           })
                         }
-                        className="bg-indigo-600 p-1 px-2 text-white text-xs border dark:border-zinc-700 rounded-md"
+                        className="bg-indigo-600 p-1 px-3 text-white text-sm rounded-full"
                       >
                         Concluir
                       </button>
@@ -106,14 +105,15 @@ function DashboardTasks() {
                       <span className="dark:text-zinc-600 text-sm flex-1 text-nowrap">
                         {dayjs(date).format("DD [de] MMM, YYYY")}
                       </span>
-
                       <Link
-                        className="min-w-8 h-8 grid place-items-center border dark:border-zinc-600  rounded-md"
+                        className="min-w-8 h-8 grid place-items-center dark:border-zinc-600"
                         href={`?startAt=${dayjs(date)
                           .startOf("week")
                           .format("YYYY-MM-DD")}`}
                       >
-                        ir
+                        <span className={`${fontSaira} font-semibold`}>
+                          <BsArrowRight/>
+                        </span>
                       </Link>
                     </div>
                   );

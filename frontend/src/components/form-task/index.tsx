@@ -139,7 +139,7 @@ function FormTaskSection({ children }: FormTaskBaseProps) {
         <span>Opções</span>
       </div>
 
-      <div className="flex mr-5 border ml-[2.5rem] divide-y divide-zinc-200 divide-zinc-600/80 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
+      <div className="flex mr-5 border ml-[2.5rem] divide-y divide-zinc-100 dark:divide-zinc-600/80 flex-col text-zinc-500 dark:text-zinc-400 bg-white rounded-md dark:bg-neutral-800/60 dark:border-zinc-700/60">
         <label htmlFor="defineHourState" className="flex items-center gap-2 p-2">
           <div className="flex-1 flex gap-2 items-center px-2">
             <span className="text-md">Definir horário</span>
