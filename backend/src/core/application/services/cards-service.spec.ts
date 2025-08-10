@@ -1,6 +1,6 @@
 import { Card } from '@core/domain/entities/card.entity';
 import { CardsRepository } from '@infra/repositories/cards.repository';
-import { UnauthorizedException } from '@src/utils/errors';
+import { NotFoundException, UnauthorizedException } from '@src/utils/errors';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { CreateCardDto } from '../dtos/create-card-dto';
 import { FindWorkspacesServiceInterface } from '../interfaces/find-workspaces-interface';
@@ -12,6 +12,7 @@ const cardsRepositoryMock = {
   findOneLatestUpdateByWorkspace: vi.fn(),
   findOneById: vi.fn(),
   findAllByUser: vi.fn(),
+  findByCode: vi.fn(),
 } satisfies CardsRepository;
 
 describe('CardsService', () => {
@@ -20,10 +21,8 @@ describe('CardsService', () => {
 
   beforeEach(() => {
     findWorksapcesService = { findOneById: vi.fn() } as unknown as FindWorkspacesServiceInterface;
-    
-    cardsService = new CardsService(
-      cardsRepositoryMock, 
-      findWorksapcesService);
+
+    cardsService = new CardsService(cardsRepositoryMock, findWorksapcesService);
   });
 
   it('should create a card', async () => {
@@ -32,7 +31,7 @@ describe('CardsService', () => {
       content: 'Test content',
       workspaceId: 'workspace-id',
     };
-    
+
     const mockCard = new Card({
       title: 'Test',
       content: 'Test content',
@@ -65,5 +64,32 @@ describe('CardsService', () => {
     (findWorksapcesService.findOneById as Mock).mockResolvedValue(mockWorkspace);
 
     await expect(cardsService.create(createCardDto, userId)).rejects.toThrow(UnauthorizedException);
+  });
+
+  describe('#supress', () => {
+    it('should throw error when card not found', async () => {
+      const userId = 'USERID';
+      const cardId = 'NOT_FOUND';
+
+      (cardsRepositoryMock.findOneById as Mock).mockResolvedValue(null);
+
+      await expect(cardsService.supress(userId, cardId)).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw erro when card not belongs to user', async () => {
+      const userId = 'USER_ID';
+      const cardId = 'CARD_ID';
+
+      const mockCard = new Card({
+        title: 'Test',
+        content: 'Test content',
+        workspaceId: 'workspace-id',
+        userId: 'user-id',
+      });
+
+      (cardsRepositoryMock.findOneById as Mock).mockResolvedValue(mockCard);
+
+      await expect(cardsService.supress(userId, cardId)).rejects.toThrow(UnauthorizedException);
+    });
   });
 });

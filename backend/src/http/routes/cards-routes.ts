@@ -51,6 +51,7 @@ export class SetupCardsRoutes {
   private setDynamicRoutes() {
     this.cardsRoutes.get('/:cardId', (req, res) => this.cardsController.findOneById(req, res));
     this.cardsRoutes.put('/:cardId', (req, res) => this.cardsController.update(req, res));
+    this.cardsRoutes.put('/supress/:cardId', (req, res) => this.cardsController.supress(req, res));
 
     this.cardsRoutes.get('/latest/:workspaceId', (req, res) =>
       this.cardsController.findOneLatestUpdate(req, res)

@@ -26,8 +26,22 @@ export class CardsController {
     }
 
     const card = await this.cardsService.findByPublicCode(code);
-    
-    response.status(200).json(card)
+
+    response.status(200).json(card);
+  }
+
+  public async supress(request: Request, response: Response) {
+    const { params, session } = request;
+    const { id: userId } = session;
+    const cardId = params?.cardId;
+
+    if (!cardId) {
+      throw new NotFoundException('Código faltando na requisição');
+    }
+
+    await this.cardsService.supress(userId, cardId);
+
+    response.status(200).json({ publicId: null });
   }
 
   public async update(request: Request, response: Response) {

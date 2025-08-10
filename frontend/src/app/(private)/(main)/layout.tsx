@@ -26,7 +26,6 @@ export default function LayoutMain({ children }: LayoutMainProps) {
 
       <Sidebar />
       <MenuButton />
-
       <section className="flex flex-col h-screen overflow-auto flex-1 scroll-default scroll-smooth">
         {children}
       </section>

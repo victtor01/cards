@@ -1,6 +1,8 @@
 import { FindWorkspacesServiceInterface } from '@core/application/interfaces/find-workspaces-interface';
 import { BadRequestException } from '@src/utils/errors';
+import { removeNulls } from '@src/utils/remove-nulls';
 import { Request, Response } from 'express';
+import { WorkspaceMapper } from '../mappers/workspace-mapper';
 
 export class FindWorkspacesController {
   constructor(private readonly findWorkspaces: FindWorkspacesServiceInterface) {}
@@ -12,7 +14,9 @@ export class FindWorkspacesController {
 
     const workspace = await this.findWorkspaces.findOneActiveByIdAndUser(workspaceId, userId);
 
-    response.status(200).json(workspace);
+    const workspaceResponse = WorkspaceMapper.toResponse(workspace);
+
+    response.status(200).json(removeNulls(workspaceResponse));
   }
 
   public async getDisabled(request: Request, response: Response) {
@@ -54,6 +58,6 @@ export class FindWorkspacesController {
 
     const workspace = await this.findWorkspaces.findOneWorkspaceWithTree(workspaceId, userId);
 
-    response.status(200).json(workspace);
+    response.status(200).json(WorkspaceMapper.toResponse(workspace));
   }
 }

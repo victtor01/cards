@@ -44,10 +44,10 @@ export class Card {
   workspace: Workspace;
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: string;
+  updatedAt: Date;
 
   public validateUser(userId: string): void {
     if (userId !== this.userId) {

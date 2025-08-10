@@ -25,9 +25,9 @@ class UsersController {
 
     await this.usersService.save({
       firstName,
+      password,
       lastName,
       email,
-      password,
     });
 
     return response.status(200).json({

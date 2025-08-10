@@ -10,7 +10,6 @@ import { useLogin } from "./hooks";
 export default function Page() {
   const { form, auth } = useLogin();
   const { handleSubmit, formState, register } = form;
-  const { isSubmitting } = formState;
 
   return (
     <form
@@ -64,7 +63,7 @@ export default function Page() {
       </footer>
 
       <Link
-        href="#"
+        href="/signup"
         className="text-gray-500 dark:text-gray-200 opacity-90 hover:opacity-100"
       >
         Criar uma nova conta!

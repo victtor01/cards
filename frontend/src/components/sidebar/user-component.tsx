@@ -1,14 +1,18 @@
 import { fontOpenSans } from "@/fonts";
 import { useThemeStore } from "@/hooks/use-theme";
+import { queryClient } from "@/providers/query-client";
 import { GenerateSoundClick } from "@/utils/generate-sound-click";
 import { getUpload } from "@/utils/get-upload";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
-import Cookies from 'js-cookie';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsSoundwave } from "react-icons/bs";
 import { FaMoon, FaUser } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { TbDoorExit } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 
 type UserComponentProps = {
   photoUrl: string | null;
@@ -25,10 +29,32 @@ const variantsAnimation = {
   },
 } satisfies Variants;
 
+function useSession() {
+  const router = useRouter();
+
+  const logout = () => {
+    queryClient.clear();
+    const cookies = Cookies.get();
+
+    if (Object.entries(cookies).length > 0) {
+      Object.entries(cookies)?.map(([key]) => {
+        Cookies.remove(key);
+      });
+    }
+
+    toast.success("Fim da sessão!");
+
+    router.push("/login");
+  };
+
+  return {
+    logout,
+  };
+}
+
 function useTheme() {
   const storeTheme = useThemeStore();
-  const cookies = Cookies.get();
-  
+
   const handleTheme = () => {
     const htmlElement = document.getElementsByTagName("html")[0];
     const newTheme = htmlElement.className === "dark" ? "light" : "dark";
@@ -36,7 +62,7 @@ function useTheme() {
     Cookies.set("_theme", newTheme, {
       path: "/",
     });
-    
+
     storeTheme.setTheme(newTheme);
     htmlElement.className = newTheme;
 
@@ -66,6 +92,7 @@ function useUserComponent() {
 export function UserComponent({ photoUrl }: UserComponentProps) {
   const { show, handleShow } = useUserComponent();
   const { handleTheme } = useTheme();
+  const { logout } = useSession();
 
   const imageUser = getUpload(photoUrl);
 
@@ -86,9 +113,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
           />
         )}
 
-        {!imageUser && (
-          <FaUser />
-        )}
+        {!imageUser && <FaUser />}
       </button>
       <AnimatePresence>
         {show && (
@@ -113,7 +138,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
                 className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700"
               >
                 <FaMoon />
-                <span>Handle Theme</span>
+                <span>Mudar tema</span>
               </button>
 
               <button className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700">
@@ -124,6 +149,14 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
               <button className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700">
                 <BsSoundwave />
                 Sons
+              </button>
+
+              <button
+                type="button"
+                onClick={logout}
+                className="flex gap-2 items-center whitespace-nowrap opacity-80 hover:opacity-100 hover:bg-zinc-200 p-2 dark:hover:bg-zinc-700"
+              >
+                <TbDoorExit /> Sair
               </button>
             </div>
           </motion.div>

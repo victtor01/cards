@@ -10,4 +10,5 @@ export abstract class CardsServiceInterface {
   abstract findOneLatestUpdate(userId: string, workspaceId: string): Promise<Card>;
   abstract publish(userId: string, cardId: string): Promise<void>;
   abstract findByPublicCode(code: string): Promise<Card>;
+  abstract supress(userId: string, cardId: string): Promise<void>;
 }

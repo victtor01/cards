@@ -82,7 +82,7 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: #f8f8f8;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   font-size: 16px;
   border-radius: 5px;
   /* Bordas arredondadas */
@@ -122,7 +122,7 @@ option:hover {
 
 /* Estilo para option selecionado */
 option:checked {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   /* Cor de fundo do option selecionado */
   color: white;
   /* Cor do texto do option selecionado */
@@ -301,3 +301,16 @@ option:checked {
 .alert-icon[data-alert-icon-type="success"] {
   color: #0bc10b
 } */
+
+.bg-more-gradients {
+  background-size: 100% 100%;
+  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-image: radial-gradient(
+      50% 50% at 50% 50%,
+      #6366f1 0%,
+      #4f46e550 70%
+    ),
+    radial-gradient(40% 40% at 70% 30%, #a78bfa 10%, #4f46e530 70%),
+    radial-gradient(30% 30% at 30% 70%, #8b5cf6 15%, #4f46e520 70%),
+    linear-gradient(135deg, #6366f1 20%, #8b5cf6 80%);
+}

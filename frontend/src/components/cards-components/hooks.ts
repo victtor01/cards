@@ -11,7 +11,12 @@ export const useCardPublish = () => {
 
   const publishMutation = useMutation({
     mutationFn: async (cardId: string) => {
-      console.log("teste");
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("OK");
+        }, 1000);
+      });
+
       const updated = await api.post("/cards/publish", {
         cardId,
       });
@@ -21,7 +26,7 @@ export const useCardPublish = () => {
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["cards"],
+        queryKey: ["card"],
       });
 
       toast.success("Publicado com sucesso!");
@@ -62,4 +67,35 @@ export const useCardPublish = () => {
     handleCopy,
     isCopied,
   };
+};
+
+export const useCardSupress = () => {
+  const supressMutation = useMutation({
+    mutationFn: async (cardId: string) => {
+      const updated = await api.put(`/cards/supress/${cardId}`);
+      return updated;
+    },
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["card"],
+      });
+
+      toast.success("Privado com sucesso!");
+    },
+
+    onError: (err: unknown) => {
+      if (err instanceof AxiosError) {
+        toast.error(
+          err?.response?.data?.message || "Houve um erro interno no servidor!"
+        );
+      } else {
+        toast.error("Houve um erro desconhecido!");
+      }
+    },
+  });
+
+  return {
+    supressMutation
+  }
 };

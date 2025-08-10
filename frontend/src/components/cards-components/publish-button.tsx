@@ -4,7 +4,8 @@ import { AnimatePresence, AnimationProps, motion } from "framer-motion";
 import { useState } from "react";
 import { LuCopy, LuCopyCheck } from "react-icons/lu";
 import { MdPublish } from "react-icons/md";
-import { useCardPublish } from "./hooks";
+import { useCardPublish, useCardSupress } from "./hooks";
+import { Loader } from "../loader";
 
 type PublishButtonProps = { cardId: string; code?: string | null };
 
@@ -18,6 +19,7 @@ export const PublishButton = ({ cardId, code }: PublishButtonProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const modalRef = useClickOutside<HTMLDivElement>(() => setOpen(false));
   const { publishMutation, isCopied, handleCopy } = useCardPublish();
+  const { supressMutation } = useCardSupress();
 
   return (
     <div ref={modalRef}>
@@ -68,11 +70,14 @@ export const PublishButton = ({ cardId, code }: PublishButtonProps) => {
               <footer className="flex gap-4 items-center">
                 <button
                   type="button"
-                  onClick={async () =>
-                    await publishMutation.mutateAsync(cardId)
-                  }
-                  className="bg-indigo-500 text-indigo-50 rounded-lg shadow-lg hover:shadow-xl shadow-indigo-500/40 hover:shadow-indigo-500/50 transition-all border-t border-r border-indigo-400 p-2 px-4"
+                  disabled={publishMutation.isPending}
+                  onClick={() => publishMutation.mutateAsync(cardId)}
+                  data-isloading={!!publishMutation.isPending}
+                  className="data-[isloading=true]:opacity-60 data-[isloading=true]:pointer-events-none data-[isloading=true]:cursor-default flex items-center gap-4 bg-indigo-500 text-indigo-50 rounded-lg shadow-lg hover:shadow-xl shadow-indigo-500/40 hover:shadow-indigo-500/50 transition-all border-t border-r border-indigo-400 p-2 px-4"
                 >
+                  {publishMutation.isPending && (
+                    <Loader className="w-4 h-4 border-white" />
+                  )}
                   <span
                     className={`${fontSaira} font-semibold text-indigo-100 hover:text-white transition-all`}
                   >
@@ -82,7 +87,11 @@ export const PublishButton = ({ cardId, code }: PublishButtonProps) => {
                 </button>
 
                 {code && (
-                  <button className={`${fontSaira} font-semibold`}>
+                  <button
+                    type="button"
+                    onClick={() => supressMutation.mutateAsync(cardId)}
+                    className={`${fontSaira} font-semibold`}
+                  >
                     Limpar
                   </button>
                 )}

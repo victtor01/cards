@@ -10,7 +10,6 @@ import { useParams, useSearchParams } from "next/navigation";
 type MDW = "delete" | "rename" | null;
 
 export function useWorkspace(workspaceId: string) {
-
   const { data: workspace, isLoading } = useQuery<IWorkspace>({
     queryKey: ["workspaces", workspaceId],
     queryFn: async () => (await api.get(`/workspaces/find/${workspaceId}`)).data,
@@ -20,6 +19,8 @@ export function useWorkspace(workspaceId: string) {
 
   const modal = (searchParams.get("mdw") as MDW) || null;
 
+  console.log(workspace);
+  
   return {
     modal,
     workspace,

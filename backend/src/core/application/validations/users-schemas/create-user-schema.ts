@@ -10,5 +10,5 @@ export const createUserSchema = z.object({
     .min(3, { message: "lastname field requires a minimum of 6 characters!" })
     .transform((dt) => dt.toLowerCase()),
   email: z.string().email({ message: "the email format is invalid!" }),
-  password: z.string().min(6, { message: "password field is required!" }),
+  password: z.string({ message: "password is required!" }).min(6, { message: "password length is minimal 6!" }),
 });
