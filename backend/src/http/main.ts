@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import 'express-async-errors';
 import 'reflect-metadata';
 
@@ -10,6 +14,7 @@ import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import routes from './routes';
+
 
 class Bootstrap {
   private static port = 9000;
@@ -27,7 +32,7 @@ class Bootstrap {
 
       app.use(
         cors({
-          origin: ['http://10.220.0.8:3000', 'http://localhost:3000'],
+          origin: [process.env.FRONTEND_URL],
           credentials: true,
         })
       );

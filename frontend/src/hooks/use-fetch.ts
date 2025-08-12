@@ -12,7 +12,7 @@ export async function useFetch({ url }: Props) {
   const accessToken = await getCookie("__access_token");
   const refreshToken = await getCookie("__refresh_token");
 
-  const res = await fetch(`http://localhost:9000/${url}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/${url}`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
