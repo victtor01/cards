@@ -11,6 +11,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      POSTGRES_DB: cards_saas
 
 volumes:
   postgresql:

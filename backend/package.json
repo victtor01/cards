@@ -10,7 +10,9 @@
     "test": "vitest --watch",
     "build": "tsc && tsc-alias",
     "start": "node dist/http/main.js",
-    "dev": "tsx watch src/http/main.ts | pino-pretty -C"
+    "dev": "tsx watch src/http/main.ts | pino-pretty -C",
+    "db:migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/infra/database/index.ts",
+    "db:migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d src/infra/database/index.ts"
   },
   "keywords": [],
   "author": "",
