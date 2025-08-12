@@ -3,7 +3,7 @@ import { useSidebar, Workspace } from "@/hooks/use-sidebar";
 import { useActionsWorkspaces } from "@/hooks/use-workspace";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFiles } from "react-icons/bs";
 import { CgFileAdd } from "react-icons/cg";
 import { FaFolder, FaFolderOpen } from "react-icons/fa";
@@ -18,6 +18,7 @@ type WorkspaceLinkProps = {
   id: string;
   name: string;
   code: string;
+  setOpen?: () => void;
   workspaces: Workspace[];
   cards: Card[];
 };
@@ -28,7 +29,7 @@ const classNameIfSelected = (selected: boolean) =>
     : "hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-900 opacity-70 hover:opacity-100";
 
 export function WorkspaceLink(props: WorkspaceLinkProps) {
-  const { id, name, workspaces, cards } = props;
+  const { id, name, workspaces, cards, setOpen: openParent } = props;
   const link = `/workspaces/${id}`;
 
   const pathname = usePathname();
@@ -36,17 +37,36 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
   const { createFile, createFolder } = useActionsWorkspaces();
 
   const selected = pathname.startsWith(link);
-  const style = classNameIfSelected(selected);
 
-  const [open, setOpen] = useState<boolean>(selected);
+  // --- ALTERAÇÕES PRINCIPAIS AQUI ---
 
+  // 1. Verifica se algum card filho está selecionado
+  const isAnyCardSelected =
+    cards?.some((card) => pathname.startsWith(`/card/${card.id}`)) ?? false;
+
+  // 2. A "ramificação" está selecionada se o workspace ou um de seus cards estiverem ativos
+  const isBranchSelected = selected || isAnyCardSelected;
+
+  // 3. O estado 'open' agora considera a seleção do workspace OU de um card filho
+  const [open, setOpen] = useState<boolean>(isBranchSelected);
+
+  // O 'handleOpen' também usa a nova lógica
   const handleOpen = () => {
-    if (selected) {
+    if (isBranchSelected) {
       setOpen((prev) => !prev);
     } else {
+      redirectTo(link);
       setOpen(true);
     }
   };
+
+  useEffect(() => {
+    if (isBranchSelected && openParent) {
+      openParent();
+    }
+  }, [isBranchSelected, openParent]);
+
+  const style = classNameIfSelected(selected);
 
   return (
     <div className="flex flex-col min-w-[9rem] w-auto text-base">
@@ -102,7 +122,14 @@ export function WorkspaceLink(props: WorkspaceLinkProps) {
         className="data-[open=false]:max-h-[0px] max-h-[30rem] data-[open=false]:opacity-0 data-[open=false]:pointer-events-none transition-all flex pt-1 gap-1 ml-[0.1rem] pl-1 border-l-2 border-transparent group-hover/sidebar:border-zinc-300 dark:group-hover/sidebar:border-zinc-800 dark:border-transparent border-opacity-70 flex-nowrap flex-col"
       >
         {workspaces?.map((workspace) => (
-          <WorkspaceLink key={workspace.id} {...workspace} />
+          <WorkspaceLink
+            setOpen={() => {
+              setOpen(true);
+              if (openParent) openParent();
+            }}
+            key={workspace.id}
+            {...workspace}
+          />
         ))}
 
         {cards?.map((card) => {

@@ -28,8 +28,8 @@ export const PublishButton = ({ cardId, code }: PublishButtonProps) => {
         onClick={() => setOpen((prev) => !prev)}
         className="p-1 px-2 z-20 relative text-base bg-gradient-45 from-violet-500 to-indigo-600 rounded text-white opacity-95 hover:shadow-lg hover:shadow-indigo-600/50 hover:opacity-100 dark:text-zinc-100 flex items-center gap-2"
       >
-        <MdPublish />
-        <span className={fontFiraCode}>Publicar</span>
+        <MdPublish className="w-6 h-6"/>
+        <span className={`${fontFiraCode} lg:flex hidden`}>Publicar</span>
       </button>
 
       <AnimatePresence>
@@ -39,7 +39,7 @@ export const PublishButton = ({ cardId, code }: PublishButtonProps) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex p-6 flex-col bg-white dark:bg-zinc-900 max-w-md rounded-lg right-4 shadow-xl mt-2 w-full absolute top-[100%]"
+            className="flex p-6 flex-col bg-white dark:bg-zinc-900 max-w-md rounded-lg right-4 shadow-xl mt-2 flex-1 absolute top-[100%]"
           >
             <div className="flex justify-between items-center">
               <h2

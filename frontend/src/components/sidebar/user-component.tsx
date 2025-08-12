@@ -122,7 +122,7 @@ export function UserComponent({ photoUrl }: UserComponentProps) {
             initial={"initial"}
             animate={"animate"}
             exit={"initial"}
-            className="absolute z-[20] flex flex-col left-[150%] border dark:border-zinc-700 top-[0.5rem] items-center before:content-[''] before:w-[96%] before:rounded-t-xl before:h-1 before:absolute before:bottom-[100%]  before:bg-indigo-600 w-auto h-auto bg-zinc-100 text-gray-600 rounded shadow-xl dark:shadow-black dark:bg-zinc-800 dark:text-zinc-400"
+            className="absolute z-[20] flex flex-col left-12 border dark:border-zinc-700 top-[0.5rem] items-center before:content-[''] before:w-[96%] before:rounded-t-xl before:h-1 before:absolute before:bottom-[100%]  before:bg-indigo-600 w-auto h-auto bg-zinc-100 text-gray-600 rounded shadow-xl dark:shadow-black dark:bg-zinc-800 dark:text-zinc-400"
           >
             <div className="flex flex-col text-sm divide-y-2 divide-zinc-100 dark:divide-zinc-700 overflow-hidden rounded">
               <div className="cursor-default w-full">

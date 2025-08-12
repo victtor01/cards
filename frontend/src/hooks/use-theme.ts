@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { create } from "zustand";
 
 type ThemeStore = {
@@ -7,8 +8,7 @@ type ThemeStore = {
 
 const useThemeStore = create<ThemeStore>((set) => ({
   setTheme: (newTheme) => set(() => ({ theme: newTheme })),
-  theme: "light",
+  theme: Cookies.get("_theme") || "light",
 }));
 
 export { useThemeStore };
-

@@ -302,15 +302,44 @@ option:checked {
   color: #0bc10b
 } */
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .bg-more-gradients {
+  /* Garante que o pseudo-elemento se posicione corretamente */
+  position: relative;
+  /* Isola o z-index para evitar que o ::before vaze para trás de outros elementos */
+  isolation: isolate;
+}
+
+/* Criamos a camada de fundo com o pseudo-elemento ::before */
+.bg-more-gradients::before {
+  /* Conteúdo vazio é obrigatório para o pseudo-elemento aparecer */
+  content: '';
+
+  /* Posiciona o ::before exatamente sobre o container pai */
+  position: absolute;
+  inset: 0; /* (atalho para top: 0; right: 0; bottom: 0; left: 0;) */
+
+  /* Coloca o ::before ATRÁS do conteúdo do container */
+  z-index: -1;
+
+  /* MOVEMOS O BACKGROUND E A ANIMAÇÃO PARA CÁ */
   background-size: 100% 100%;
-  background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  background-position: 0px 0px, 0px 0px;
   background-image: radial-gradient(
-      50% 50% at 50% 50%,
-      #6366f1 0%,
-      #4f46e550 70%
+      circle at 15% 15%,
+      #8b5cf633 0%,
+      transparent 25%
     ),
-    radial-gradient(40% 40% at 70% 30%, #a78bfa 10%, #4f46e530 70%),
-    radial-gradient(30% 30% at 30% 70%, #8b5cf6 15%, #4f46e520 70%),
-    linear-gradient(135deg, #6366f1 20%, #8b5cf6 80%);
+    radial-gradient(circle at 85% 85%, #6366f133 0%, transparent 25%);
+
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out forwards;
 }

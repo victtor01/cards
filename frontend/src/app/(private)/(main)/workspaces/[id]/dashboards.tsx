@@ -25,7 +25,7 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
         </div>
       </header>
 
-      <div className="w-full flex justify-between gap-6 mx-auto">
+      <div className="w-full flex justify-between gap-6 mx-auto lg:flex-row flex-col">
         <DashboardCard.Container title="Total de documentos">
           <div className="text-lg mt-2 font-semibold flex">
             <span className="text-violet-500 w-5">{workspaceLength || 0}</span>{" "}

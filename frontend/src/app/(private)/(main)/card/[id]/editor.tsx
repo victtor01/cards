@@ -74,7 +74,7 @@ export function EditorComponent({ card }: { card: ICard }) {
               maxLength={LENGTH_TITLE}
               onChange={onChangeTitle}
               placeholder="This is my new project..."
-              className="bg-transparent outline-none text-zinc-600 dark:text-zinc-100 font-semibold placeholder:text-zinc-600 text-lg w-auto flex-1 transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
+              className="bg-transparent outline-none text-zinc-600 dark:text-zinc-100 font-semibold placeholder:text-zinc-600 text-lg w-auto w-full transition-all focus:ring-1 p-1 px-2 rounded focus:ring-zinc-200 dark:ring-zinc-800"
             />
 
             <span className="text-zinc-400 text-sm opacity-0 group-focus-within/title:opacity-100">
@@ -118,7 +118,7 @@ export function EditorComponent({ card }: { card: ICard }) {
 
       <FileBackgroundUpdate />
 
-      <div className="flex mx-auto w-full flex-col max-w-[70rem] mt-10 px-10">
+      <div className="flex mx-auto w-full flex-col max-w-[70rem] mt-10 lg:px-10 pl-2">
         <div className="w-full px-1 hover:opacity-100 opacity-0 delay-[1.4s] hover:delay-0 flex">
           <span className="w-[3rem]" />
           <Link

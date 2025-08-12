@@ -23,8 +23,8 @@ export default function Layout({ children }: PropsLayout) {
           <SiSendgrid />
         </div>
 
-        <div className="text-3xl mt-5 text-gray-700 dark:text-gray-200">
-          <span className={fontSaira}>Bem vindo de volta</span>
+        <div className="text-3xl mt-5 text-gray-700 font-semibold dark:text-gray-200">
+          <span className={fontSaira}>Login</span>
         </div>
       </header>
 

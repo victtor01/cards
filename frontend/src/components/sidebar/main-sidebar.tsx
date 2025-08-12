@@ -13,13 +13,80 @@ import { Trash } from "../trash";
 import { UserComponent } from "./user-component";
 import { WorkspaceLink } from "./workspace";
 
+export const UtilsSidebar = () => {
+  const pathname = usePathname();
+  const trashOpen = "trash" === useSearchParams().get("md");
+  const router = useRouter();
+
+  return (
+    <div className="flex w-full p-2 flex-col gap-2">
+      <Link
+        href={"/home"}
+        data-selected={!!pathname.startsWith("/home")}
+        className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
+      >
+        <FaHome size={16} />
+        <span className={fontFiraCode}>Home</span>
+      </Link>
+
+      <Link
+        href={"/calendar"}
+        data-selected={!!pathname.startsWith("/calendar")}
+        className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
+      >
+        <MdEditCalendar size={16} />
+        <span className={fontFiraCode}>Week</span>
+      </Link>
+
+      <div className="relative">
+        <button
+          type="button"
+          data-open={trashOpen}
+          onClick={() => router.push("?md=trash")}
+          className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 dark:data-[open=true]:text-indigo-500 dark:data-[open=true]:opacity-100 data-[open=true]:text-indigo-600 data-[open=true]:opacity-100"
+        >
+          <div className="flex gap-2 items-center">
+            <FaTrash size={12} />
+            <span className={fontFiraCode}>Trash</span>
+          </div>
+        </button>
+
+        {trashOpen && <Trash />}
+      </div>
+
+      <Link
+        href={"#"}
+        className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
+      >
+        <div className="flex gap-2 items-center">
+          <BiSearch size={16} />
+          <span className={fontFiraCode}>Search</span>
+        </div>
+
+        <div className="grid place-items-center px-2 text-xs bg-white text-zinc-600 rounded p-1 font-semibold dark:bg-zinc-900 dark:text-zinc-100 border dark:border-zinc-800">
+          <span className={fontRoboto}>Ctr + K</span>
+        </div>
+      </Link>
+    </div>
+  );
+};
+
+export const ButtonToCreateFold = () => {
+  const { createFolder } = useActionsWorkspaces();
+  return (
+    <button
+      onClick={() => createFolder()}
+      className="w-auto gap-3 px-3 h-8 flex items-center bg-white dark:bg-zinc-900 border-dashed dark:border-zinc-600 border dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent text-gray-500 rounded opacity-90 hover:opacity-100"
+    >
+      <HiFolderPlus />
+      <span className="text-sm capitalize">fold</span>
+    </button>
+  );
+};
+
 export function Sidebar() {
   const { workspaces, i } = useSidebar();
-  const { createFolder } = useActionsWorkspaces();
   const { size, resizing, handler } = useResize();
-  const trashOpen = "trash" === useSearchParams().get("md");
-  const pathname = usePathname();
-  const router = useRouter();
 
   return (
     <div className="flex group/sidebar relative">
@@ -40,57 +107,7 @@ export function Sidebar() {
         </header>
 
         <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900" />
-
-        <div className="flex w-full p-2 flex-col gap-2">
-          <Link
-            href={"/home"}
-            data-selected={!!pathname.startsWith("/home")}
-            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
-          >
-            <FaHome size={16} />
-            <span className={fontFiraCode}>Home</span>
-          </Link>
-
-          <Link
-            href={"/calendar"}
-            data-selected={!!pathname.startsWith("/calendar")}
-            className="flex items-center gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 data-[selected=true]:dark:text-indigo-500 data-[selected=true]:text-indigo-600 data-[selected=true]:opacity-100"
-          >
-            <MdEditCalendar size={16} />
-            <span className={fontFiraCode}>Week</span>
-          </Link>
-
-          <div className="relative">
-            <button
-              type="button"
-              data-open={trashOpen}
-              onClick={() => router.push("?md=trash")}
-              className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100 dark:data-[open=true]:text-indigo-500 dark:data-[open=true]:opacity-100 data-[open=true]:text-indigo-600 data-[open=true]:opacity-100"
-            >
-              <div className="flex gap-2 items-center">
-                <FaTrash size={12} />
-                <span className={fontFiraCode}>Trash</span>
-              </div>
-            </button>
-
-            {trashOpen && <Trash />}
-          </div>
-
-          <Link
-            href={"#"}
-            className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
-          >
-            <div className="flex gap-2 items-center">
-              <BiSearch size={16} />
-              <span className={fontFiraCode}>Search</span>
-            </div>
-
-            <div className="grid place-items-center px-2 text-xs bg-white text-zinc-600 rounded p-1 font-semibold dark:bg-zinc-900 dark:text-zinc-100 border dark:border-zinc-800">
-              <span className={fontRoboto}>Ctr + K</span>
-            </div>
-          </Link>
-        </div>
-
+        <UtilsSidebar />
         <div className="w-full h-1 bg-zinc-200 bg-opacity-60 dark:bg-zinc-900" />
 
         <div className={`${fontFiraCode} px-2 flex justify-between mt-1`}>
@@ -102,13 +119,7 @@ export function Sidebar() {
 
         <section className="gap-4 pb-5 overflow-hidden flex flex-col relative h-full">
           <div className="mt-2 w-full px-2 justify-between items-center flex">
-            <button
-              onClick={() => createFolder()}
-              className="w-auto gap-3 px-3 h-8 flex items-center bg-white dark:bg-zinc-900 border dark:text-zinc-200 dark:hover:text-white justify-center bg-transparent text-gray-500 rounded opacity-90 hover:opacity-100"
-            >
-              <HiFolderPlus />
-              <span className="text-sm capitalize">fold</span>
-            </button>
+            <ButtonToCreateFold />
 
             <div
               className="px-2 p-1 flex items-center justify-center gap-2 bg-white shadow opacity-50

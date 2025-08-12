@@ -115,7 +115,7 @@ export function DetailsTasks({ taskId }: DetailsTasksProps) {
   const componentsOfLinks: Record<PageState, React.ReactNode> = {
     edit: <Form task={task} updateTask={updateTask} />,
     comments: <div className="flex flex-1"></div>,
-    files: <div></div>,
+    files: <div className="flex flex-1"></div>,
   };
 
   const render = componentsOfLinks[page];

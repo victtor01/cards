@@ -14,20 +14,20 @@ export default function Page() {
   return (
     <form
       onSubmit={handleSubmit((data) => auth.mutate(data))}
-      className="w-[99%] max-w-[25rem] border h-[90%] rounded-none lg:h-auto p-10 m-auto lg:rounded-xl bg-white dark:border-neutral-800 dark:bg-neutral-900 flex flex-col gap-6 z-20"
+      className="w-[90%] max-w-[25rem] border h-auto p-10 m-auto rounded-xl bg-white dark:border-neutral-800 dark:bg-neutral-900 flex flex-col gap-6 z-20"
     >
       <section className="w-full flex flex-col gap-3">
         <label htmlFor="email" className="w-full flex flex-col gap-1">
           <span className={`${fontOpenSans} text-base`}>Email</span>
           <div className="flex w-full items-center transition-all border bg-white dark:bg-zinc-800 dark:border-zinc-800 rounded-md ring-indigo-600 focus-within:ring-2">
-            <MdEmail className="text-zinc-500 w-10 opacity-50" size={20} />
+            <MdEmail className="text-zinc-500 min-w-10 opacity-50" size={20} />
             <input
               type="text"
               id="email"
               autoCapitalize="off"
               {...register("email")}
-              placeholder="jonhDoe@example.com.br"
-              className="p-2 bg-transparent outline-none flex-1 "
+              placeholder="jonhDoe@example.com"
+              className="p-2 bg-transparent outline-none w-full"
             />
           </div>
         </label>
@@ -55,7 +55,7 @@ export default function Page() {
           type="submit"
           disabled={auth.isPending}
           data-sub={!!auth.isPending}
-          className="w-full bg-indigo-600 p-2 flex items-center justify-center py-3 data-[sub=true]:opacity-50 rounded-lg gap-2 opacity-90 hover:opacity-100 text-white"
+          className="w-full bg-indigo-600 font-semibold p-2 flex items-center justify-center py-3 data-[sub=true]:opacity-50 rounded-lg gap-2 opacity-90 hover:opacity-100 text-white"
         >
           {auth.isPending && <ImSpinner2 className="animate-spin" />}
           Login
