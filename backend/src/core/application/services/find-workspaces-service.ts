@@ -41,14 +41,17 @@ export class FindWorkspacesService implements FindWorkspacesServiceInterface {
   }
 
   public async findOneWorkspaceWithTree(workspaceId: string, userId: string): Promise<Workspace> {
-    const workspaces = await this.workspaceRepository.findActivesByUserIdWithCards(userId);
+    const workspaces: Workspace[] = await this.workspaceRepository.findActivesByUserIdWithCards(
+      userId
+    );
 
     const rootWorkspace = workspaces.find((ws) => ws.id === workspaceId);
     if (!rootWorkspace) throw new BadRequestException('Workspace not found');
 
     const workspaceMap = new Map<string, Workspace>();
     workspaces.forEach((workspace) => {
-      workspaceMap.set(workspace.id, { ...workspace, workspaces: [] });
+      workspace.workspaces = [];
+      workspaceMap.set(workspace.id, workspace);
     });
 
     workspaces.forEach((workspace) => {

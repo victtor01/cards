@@ -6,4 +6,6 @@ export const cardsRepositoryMock = {
   update: vi.fn(),
   findOneLatestUpdateByWorkspace: vi.fn(),
   findOneById: vi.fn(),
+  findAllByUser: vi.fn(),
+  findByCode: vi.fn(),
 } satisfies CardsRepository;
