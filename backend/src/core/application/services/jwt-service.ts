@@ -11,9 +11,13 @@ const cookiesConfig = {
 };
 
 export class JwtService implements JwtServiceInterface {
-  
   private verifyJWT = async (token: string) => await jwtVerify<Session>(token, secret);
-  private configCookie = { httpOnly: true, secure: false } satisfies CookieOptions;
+  private configCookie = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    partitioned: true,
+  } satisfies CookieOptions;
 
   public async signJWT({ payload, expiresIn }: { payload: any; expiresIn: string }) {
     return await new SignJWT(payload)

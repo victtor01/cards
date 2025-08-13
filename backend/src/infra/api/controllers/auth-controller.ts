@@ -13,7 +13,12 @@ export class AuthController {
       password,
     });
 
-    const configCookie = { httpOnly: true, secure: false } satisfies CookieOptions;
+    const configCookie = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      partitioned: true,
+    } satisfies CookieOptions;
 
     response.cookie('__access_token', auth.accessToken, configCookie);
     response.cookie('__refresh_token', auth.refreshToken, configCookie);
