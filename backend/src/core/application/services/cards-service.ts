@@ -22,12 +22,12 @@ export class CardsService implements CardsServiceInterface {
 
   public async supress(userId: string, cardId: string): Promise<void> {
     const card: Card = await this.cardsRepo.findOneById(cardId)?.catch((err) => {
-      logger.error('Houve um erro ao tentar pegar o card no [findByPublicCode]', err);
+      logger.error({ err }, 'Houve um erro ao tentar pegar o card no [findByPublicCode]');
       return null;
     });
 
-    if(!card?.id) {
-      throw new NotFoundException("Card not found!");
+    if (!card?.id) {
+      throw new NotFoundException('Card not found!');
     }
 
     card.validateUser(userId);
@@ -37,7 +37,7 @@ export class CardsService implements CardsServiceInterface {
 
   public async findByPublicCode(code: string): Promise<Card> {
     const card: Card = await this.cardsRepo.findByCode(code).catch((err) => {
-      logger.error('Houve um erro ao tentar pegar o card no [findByPublicCode]', err);
+      logger.error({ err }, 'Houve um erro ao tentar pegar o card no [findByPublicCode]');
       return null;
     });
 
@@ -46,7 +46,7 @@ export class CardsService implements CardsServiceInterface {
 
   public async publish(userId: string, cardId: string): Promise<void> {
     const card = await this.cardsRepo.findOneById(cardId).catch((err) => {
-      logger.error('Houve um erro ao tentar buscar o card', err);
+      logger.error({ err }, 'Houve um erro ao tentar buscar o card');
       return null;
     });
 

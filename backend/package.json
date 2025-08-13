@@ -8,7 +8,7 @@
     "format:fix": "eslint . --ext .ts --fix",
     "test:coverage": "vitest --coverage",
     "test": "vitest --watch",
-    "build": "tsc && tsc-alias && ls",
+    "build": "tsc && tsc-alias",
     "start": "node dist/http/main.js",
     "dev": "tsx watch src/http/main.ts | pino-pretty -C",
     "db:migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/infra/database/index.ts",
@@ -32,7 +32,6 @@
     "eslint": "^8.57.0",
     "globals": "^15.8.0",
     "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.5.4",
@@ -40,6 +39,7 @@
     "vitest": "^3.0.7"
   },
   "dependencies": {
+    "tsc-alias": "^1.8.16",
     "@types/multer": "^1.4.11",
     "@types/pino": "^7.0.5",
     "bcryptjs": "^2.4.3",

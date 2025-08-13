@@ -44,7 +44,7 @@ class Bootstrap {
         logger.info('Servidor iniciado com sucesso!');
       });
     } catch (err) {
-      logger.error('Erro ao tentar conectar ao banco de dados!', err);
+      logger.error({ err }, 'Erro ao tentar conectar ao banco de dados!');
     }
   }
 }
