@@ -20,8 +20,8 @@ export class AuthController {
       partitioned: true,
     } satisfies CookieOptions;
 
-    response.cookie('accessToken', auth.accessToken, configCookie);
-    response.cookie('refreshToken', auth.refreshToken, configCookie);
+    response.cookie('__access_token', auth.accessToken, configCookie);
+    response.cookie('__refresh_token', auth.refreshToken, configCookie);
 
     return response.json(auth);
   }
