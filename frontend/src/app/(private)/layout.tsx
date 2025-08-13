@@ -16,22 +16,31 @@ export default async function Layout({ children }: LayoutProps) {
   const accessToken = cookiesStore.get("__access_token")?.value;
   const refreshToken = cookiesStore.get("__refresh_token")?.value;
 
+  if (!accessToken) {
+    redirect("/");
+  }
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/mine`, {
-      credentials: "include",
-      headers: {
-        Cookie: `__access_token=${accessToken}; __refresh_token=${refreshToken}`,
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/mine`,
+      {
+        cache: "no-store",
+        headers: {
+          Cookie: `__access_token=${accessToken};__refresh_token=${refreshToken}`,
+        },
+      }
+    );
 
-    const responseJSON = await res.json();
-
-    if (responseJSON.firstName) {
-      return children;
+    if (res.ok) {
+      const responseJSON = await res.json();
+      if (responseJSON.firstName) {
+        return children;
+      }
     }
 
-    throw new Error();
+    throw new Error("Sessão inválida ou expirada.");
   } catch (error) {
-    redirect("/");
+    console.log(error);
+    redirect("/login");
   }
 }

@@ -1,5 +1,6 @@
 import { CreateUserDto } from '@core/application/dtos/users-dtos/create-user-dto';
 import { UsersServiceInterface } from '@core/application/interfaces/users-service-interface';
+import { User } from '@core/domain/entities/user.entity';
 import { Request, Response } from 'express';
 
 class UsersController {
@@ -40,7 +41,7 @@ class UsersController {
       session: { id: userId },
     } = request;
 
-    const informations = await this.usersService.findOneById(userId);
+    const informations: User = await this.usersService.findOneById(userId);
 
     return response.status(200).json({
       firstName: informations.firstName,

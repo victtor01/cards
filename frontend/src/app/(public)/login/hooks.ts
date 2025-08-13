@@ -22,10 +22,11 @@ export function useLogin() {
 
   const auth = useMutation({
     mutationFn: async ({ email, password }: LoginInterface) => {
-      await api.post("/auth", { email, password });
+      return await api.post("/auth", { email, password });
     },  
     
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("RECEBENDO A DATA", data);
       router.push("/home")
       toast("Login feito");
     },
