@@ -15,10 +15,9 @@ import express from 'express';
 import path from 'path';
 import routes from './routes';
 
-
 class Bootstrap {
-  private static port = 9000;
-
+  private static port = process.env.PORT || 9000;
+  
   public static async start() {
     try {
       await AppDataSource.initialize();
