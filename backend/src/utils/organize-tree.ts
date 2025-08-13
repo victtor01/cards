@@ -1,4 +1,3 @@
-import { Card } from "@core/domain/entities/card.entity";
 import { Workspace } from "@core/domain/entities/workspace.entity";
 
 function mapWorkspacesById(workspaces: Workspace[]): Map<string, Workspace> {
