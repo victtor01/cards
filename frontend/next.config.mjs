@@ -11,7 +11,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cardsfrontend.vercel.app",
+        hostname: "cards-e8la.onrender.com",
         pathname: "/uploads/**",
         port: "10000",
       },
