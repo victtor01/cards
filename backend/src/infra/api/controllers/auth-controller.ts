@@ -16,11 +16,11 @@ export class AuthController {
     const configCookie = {
       httpOnly: true,
       secure: true,
-      //  domain: "cardsfrontend.vercel.app",
-      // sameSite: 'none',
-      // partitioned: true,
-      sameSite: 'lax',
+      sameSite: 'none',
+      partitioned: true,
+      domain: 'cardsfrontend.vercel.app',
       path: '/',
+      // sameSite: 'lax',
     } satisfies CookieOptions;
 
     response.cookie('__access_token', auth.accessToken, configCookie);
