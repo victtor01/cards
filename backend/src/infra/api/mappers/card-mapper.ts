@@ -26,6 +26,7 @@ export class CardMapper {
     return {
       id: card?.id,
       title: card?.title,
+      background: card?.background,
       publicId: card?.publicId,
     };
   }
