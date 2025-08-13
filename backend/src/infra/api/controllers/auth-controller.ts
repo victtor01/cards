@@ -1,5 +1,6 @@
 import { AuthServiceInterface } from '@core/application/interfaces/auth-service-interface';
-import { CookieOptions, Request, Response } from 'express';
+import { configCookie } from '@infra/config/constants/cookies';
+import { Request, Response } from 'express';
 
 export class AuthController {
   constructor(private readonly authService: AuthServiceInterface) {}
@@ -12,19 +13,6 @@ export class AuthController {
       email,
       password,
     });
-
-    const configCookie = {
-      httpOnly: true,
-      secure: true,
-      path: '/',
-      sameSite: 'lax',
-      // httpOnly: true,
-      // secure: true,
-      // sameSite: 'none',
-      // partitioned: true,
-      // domain: 'cardsfrontend.vercel.app',
-      // path: '/',
-    } satisfies CookieOptions;
 
     response.cookie('__access_token', auth.accessToken, configCookie);
     response.cookie('__refresh_token', auth.refreshToken, configCookie);

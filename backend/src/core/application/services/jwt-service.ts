@@ -1,7 +1,8 @@
+import { configCookie } from '@infra/config/constants/cookies';
 import { JwtConfig, secret } from '@infra/config/constants/jwt';
 import { Session } from '@infra/config/constants/session';
 import { BadRequestException, UnauthorizedException } from '@src/utils/errors';
-import { CookieOptions, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { jwtVerify, JWTVerifyResult, SignJWT } from 'jose';
 import { JwtServiceInterface } from '../interfaces/jwt-service-interface';
 
@@ -12,18 +13,6 @@ const cookiesConfig = {
 
 export class JwtService implements JwtServiceInterface {
   private verifyJWT = async (token: string) => await jwtVerify<Session>(token, secret);
-  private configCookie = {
-    httpOnly: true,
-    secure: true,
-    path: '/',
-    sameSite: 'lax',
-    // httpOnly: true,
-    // secure: true,
-    // sameSite: 'none',
-    // partitioned: true,
-    // domain: 'cardsfrontend.vercel.app',
-    // path: '/',
-  } satisfies CookieOptions;
 
   public async signJWT({ payload, expiresIn }: { payload: any; expiresIn: string }) {
     return await new SignJWT(payload)
@@ -60,7 +49,7 @@ export class JwtService implements JwtServiceInterface {
     const session = await this.verifyJWT(__access_token)
       .catch(async () => {
         const newToken = await this.renewTokenWithPassportOrThrowError(__refresh_token);
-        response.cookie(cookiesConfig.accessToken, newToken, this.configCookie);
+        response.cookie(cookiesConfig.accessToken, newToken, configCookie);
 
         const payload = await this.verifyJWT(newToken);
 
