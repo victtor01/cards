@@ -2,18 +2,17 @@
   "name": "backend-saas-cards",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "main.ts",
   "scripts": {
     "format": "eslint . --ext .ts",
     "format:fix": "eslint . --ext .ts --fix",
     "test:coverage": "vitest --coverage",
     "test": "vitest --watch",
-    "build": "tsup src --format cjs --out-dir dist",
-    "start": "node dist/http/main.cjs",
+    "build": "tsc",
+    "start": "node dist/http/main.js",
     "dev": "tsx watch src/http/main.ts",
-    "db:migrate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/infra/database/index.ts",
-    "db:migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d src/infra/database/index.ts"
+    "db:migrate": "tsx ./node_modules/typeorm/cli.js migration:run -d src/infra/database/index.ts",
+    "db:migration:generate": "tsx ./node_modules/typeorm/cli.js migration:generate -d src/infra/database/index.ts"
   },
   "keywords": [],
   "author": "",

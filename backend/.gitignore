@@ -3,3 +3,5 @@
 /src/uploads
 /coverage
 .env
+/dist
+/tsconfig.tsbuildinfo

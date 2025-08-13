@@ -2,7 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "rootDir": "./src/",
-    "module": "commonjs",
+    "module": "NodeNext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
