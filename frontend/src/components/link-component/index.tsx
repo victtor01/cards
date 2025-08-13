@@ -25,6 +25,8 @@ const LinkComponent = (props: Props) => {
   const backgroundImage = getUpload(background);
   const router = useRouter();
 
+  console.log("background", backgroundImage)
+  
   return (
     <button
       onClick={() => router.push(href || "#")}
