@@ -15,10 +15,14 @@ export class JwtService implements JwtServiceInterface {
   private configCookie = {
     httpOnly: true,
     secure: true,
-    // domain: "cardsfrontend.vercel.app",
-    sameSite: 'none',
-    partitioned: true,
-    path: "/"
+    path: '/',
+    sameSite: 'lax',
+    // httpOnly: true,
+    // secure: true,
+    // sameSite: 'none',
+    // partitioned: true,
+    // domain: 'cardsfrontend.vercel.app',
+    // path: '/',
   } satisfies CookieOptions;
 
   public async signJWT({ payload, expiresIn }: { payload: any; expiresIn: string }) {
