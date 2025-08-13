@@ -40,7 +40,7 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
         <DashboardCard.Container title="Continue de onde você parou">
           <div className="text-lg mt-2">
             {!latestCard?.id && (
-              <span className="text-zinc-500">Crie seu primeiro FILE.</span>
+              <span className="text-zinc-500">Não há nenhum card.</span>
             )}
 
             {latestCard?.id && (
@@ -64,7 +64,7 @@ export const Dashboards = ({ workspace }: DashBoardProps) => {
 
         <DashboardCard.Container title="Ações recentes">
           <div className="text-lg mt-2 text-zinc-300">
-            <span className="text-zinc-500">No recents actions...</span>
+            <span className="text-zinc-500">Sem nenhuma ação recente...</span>
           </div>
         </DashboardCard.Container>
       </div>

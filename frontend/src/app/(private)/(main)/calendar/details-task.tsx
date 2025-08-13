@@ -72,7 +72,7 @@ function NavBar({ page, handlePage, children }: LinksProps) {
 
 
   return (
-    <section className="flex py-4 flex-col min-w-[15rem] gap-2 px-4 border-l-2 bg-gray-50 dark:bg-zinc-800 dark:border-zinc-800">
+    <section className="flex py-4 flex-col min-w-[15rem] gap-2 px-4 border-l-2 bg-gray-50 dark:bg-zinc-900 rounded-xl dark:border-zinc-800">
       <Link
         href={"?"}
         className="w-8 h-8 bg-white shadow hover:shadow-lg transition justify-self-end self-end grid place-items-center rounded opacity-90 hover:opacity-100 dark:bg-zinc-800"
@@ -121,7 +121,7 @@ export function DetailsTasks({ taskId }: DetailsTasksProps) {
   const render = componentsOfLinks[page];
 
   return (
-    <Modal.Container className="flex flex-row w-full max-w-[70rem] mt-[4rem]">
+    <Modal.Container className="flex flex-row gap-4 w-full max-w-[70rem] mt-[4rem]">
       {render}
 
       <NavBar page={page} handlePage={handlePage}>

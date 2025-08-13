@@ -9,7 +9,7 @@ type ContainerProps = {
 } & BaseProps
 
 const Container = ({ children, title }: ContainerProps) => (
-  <div className="bg-white shadow dark:bg-neutral-900 p-3 w-full lg:max-w-[20rem] rounded-md dark:shadow-black">
+  <div className="bg-white shadow dark:bg-zinc-900 p-3 w-full lg:max-w-[20rem] rounded-md dark:shadow-black">
     <header className="text-md text-zinc-600 dark:text-zinc-300">
       <h1 className={fontFiraCode}>
         {title}

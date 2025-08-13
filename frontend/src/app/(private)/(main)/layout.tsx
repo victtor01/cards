@@ -9,7 +9,7 @@ type LayoutMainProps = {
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   return (
-    <section className="flex w-full h-screen bg-gradient-radial from-gray-100 to-white dark:from-neutral-900/70 dark:via-neutral-950-400 dark:to-black">
+    <section className="flex w-full h-screen bg-gradient-radial from-gray-100 to-white dark:bg-zinc-950 dark:from-zinc-900/50 dark:via-zinc-900/50 dark:to-zinc-900/50">
       <ToastContainer
         position="top-center"
         autoClose={1000}

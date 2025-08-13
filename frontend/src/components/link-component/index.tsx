@@ -28,7 +28,7 @@ const LinkComponent = (props: Props) => {
   return (
     <button
       onClick={() => router.push(href || "#")}
-      className="w-full max-w-[12rem] rotate-x transition-all relative text-left shadow group/link mb-2 opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-white hover:shadow-xl dark:bg-neutral-900 dark:shadow-black"
+      className="rotate-x 2xl:w-full 2xl:max-w-[10rem] transition-all relative text-left shadow group/link mb-2 opacity-90 hover:opacity-100 h-auto overflow-hidden rounded-lg bg-white hover:shadow-xl dark:bg-zinc-900/60 dark:shadow-black"
     >
       <div className="absolute top-[-1.5rem] left-[30%] z-20 opacity-80 translate-x-[-50%] dark:bg-zinc-700 transition-all bg-gray-200 w-0 h-0 group-hover/link:w-[60%] group-hover/link:h-16 blur-xl rotate-[45deg]"/>
 
