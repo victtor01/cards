@@ -1,3 +1,7 @@
+import { Card } from '@core/domain/entities/card.entity';
+import { Task } from '@core/domain/entities/task.entity';
+import { User } from '@core/domain/entities/user.entity';
+import { Workspace } from '@core/domain/entities/workspace.entity';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: false,
   logging: false,
-  entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
+  entities: [User, Card, Task, Workspace],
   migrations: [__dirname + '/migrations/*.{js,ts}'],
   subscribers: [],
 });
