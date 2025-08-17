@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { RxReset } from "react-icons/rx";
 import { toast } from "react-toastify";
-import { Modal } from "../modal-template";
+import { Modal } from "../modal-base";
 
 const minutes = 1000 * 10;
 
@@ -64,67 +64,68 @@ export function Trash() {
   const { enable, workspaces, deleteWorkspace } = useTrash();
 
   return (
-    <Modal.Container className="overflow-hidden mt-[5rem] w-full max-w-[46rem]">
-      <Modal.Header title="Lixeira" />
+    <Modal.container>
+      <Modal.box className="p-4 gap-2">
+        <Modal.header title="Lixeira" />
 
-      <div className="flex p-5 flex-col gap-2 bg-white dark:bg-zinc-900">
-        <InputSearch />
-
-        <section className="flex flex-col gap-1 h-[16rem] relative overflow-auto border dark:bg-zinc-800 dark:shadow dark:shadow-zinc-950 dark:bg-opacity-40 dark:border-transparent rounded-xl p-1">
-          <AnimatePresence mode="sync">
-            {!workspaces?.length && (
-              <motion.div
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-zinc-500 flex flex-1 w-full h-full top-0 left-0 items-center justify-center text-center absolute"
-              >
-                Nenhum item na lixeira
-              </motion.div>
-            )}
-
-            {workspaces?.map((workspace: IWorkspace) => {
-              const quantityOfWorkspace = workspace?.workspaces?.length || 0;
-              const quantityOfCards = workspace?.cards?.length || 0;
-              const total = quantityOfWorkspace + quantityOfCards;
-              return (
+        <div className="flex flex-col gap-2 bg-white dark:bg-zinc-900">
+          <section className="flex flex-col gap-1 h-[16rem] relative overflow-auto border dark:bg-zinc-800 dark:bg-opacity-40 dark:border-transparent rounded-xl p-1">
+            <AnimatePresence mode="sync">
+              {!workspaces?.length && (
                 <motion.div
-                  exit={{ scale: 0.8, opacity: 0 }}
-                  transition={{ type: "spring", duration: 0.4 }}
-                  key={workspace.id}
-                  className="rounded flex justify-between items-center p-1 "
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="text-zinc-500 flex flex-1 w-full h-full top-0 left-0 items-center justify-center text-center absolute"
                 >
-                  <div className="cursor-default flex gap-2 text-zinc-500 dark:text-zinc-200 items-center">
-                    <span className="font-semibold px-2">
-                      {workspace?.name}
-                    </span>
-                    <div className="flex p-1 px-2 opacity-50 bg-zinc-100 shadow dark:bg-zinc-700 rounded">
-                      <div className="font-semibold text-xs">
-                        {total} documents
+                  Nenhum item na lixeira
+                </motion.div>
+              )}
+
+              {workspaces?.map((workspace: IWorkspace) => {
+                const quantityOfWorkspace = workspace?.workspaces?.length || 0;
+                const quantityOfCards = workspace?.cards?.length || 0;
+                const total = quantityOfWorkspace + quantityOfCards;
+                
+                return (
+                  <motion.div
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ type: "spring", duration: 0.4 }}
+                    key={workspace.id}
+                    className="rounded flex justify-between items-center p-1 "
+                  >
+                    <div className="cursor-default flex gap-2 text-zinc-500 dark:text-zinc-200 items-center">
+                      <span className="font-semibold px-2">
+                        {workspace?.name}
+                      </span>
+                      <div className="flex p-1 px-2 opacity-50 bg-zinc-100 shadow dark:bg-zinc-700 rounded">
+                        <div className="font-semibold text-xs">
+                          {total} documents
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => deleteWorkspace(workspace.id)}
-                      className="w-8 h-8 bg-zinc-100 dark:bg-zinc-800 border dark:border-zinc-800 text-zinc-500 grid place-items-center rounded opacity-90 hover:opacity-100"
-                    >
-                      <IoClose />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => enable(workspace.id)}
-                      className="w-12 h-8 bg-indigo-600 rounded-md text-white grid place-items-center opacity-90 hover:opacity-100"
-                    >
-                      <RxReset size={16} />
-                    </button>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </section>
-      </div>
-    </Modal.Container>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => deleteWorkspace(workspace.id)}
+                        className="w-8 h-8 bg-zinc-100 dark:bg-zinc-800 border dark:border-zinc-800 text-zinc-500 grid place-items-center rounded opacity-90 hover:opacity-100"
+                      >
+                        <IoClose />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => enable(workspace.id)}
+                        className="w-12 h-8 bg-indigo-600 rounded-md text-white grid place-items-center opacity-90 hover:opacity-100"
+                      >
+                        <RxReset size={16} />
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </section>
+        </div>
+      </Modal.box>
+    </Modal.container>
   );
 }
 
