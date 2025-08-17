@@ -20,6 +20,22 @@ export class CardsService implements CardsServiceInterface {
 
   private readonly MAX_TOTAL_OF_CARDS: number = 200;
 
+  public async searchCards(userId: string, name: string): Promise<Card[]> {
+    if(!name || !userId) {
+      throw new BadRequestException("Dados faltando para busca!");
+    }
+
+    return await this.cardsRepo.findAllByName(name, userId)?.catch(err => {
+      logger.error(err);
+      throw new BadRequestException("Erro interno no servidor!");
+    });
+  }
+  
+  public async searchPublicCards(userId: string, name: string): Promise<Card[]> {
+    return [];
+  }
+
+
   public async supress(userId: string, cardId: string): Promise<void> {
     const card: Card = await this.cardsRepo.findOneById(cardId)?.catch((err) => {
       logger.error({ err }, 'Houve um erro ao tentar pegar o card no [findByPublicCode]');

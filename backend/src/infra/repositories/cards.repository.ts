@@ -8,4 +8,6 @@ export abstract class CardsRepository {
   abstract findOneById(id: string): Promise<Card>;
   abstract findAllByUser(userId: string): Promise<Card[]>;
   abstract findByCode(code: string): Promise<Card>;
+  abstract findPublicsByName(name: string): Promise<Card[]>;
+  abstract findAllByName(name: string, userId: string): Promise<Card[]>;
 }

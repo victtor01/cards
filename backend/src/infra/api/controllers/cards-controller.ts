@@ -1,9 +1,22 @@
 import { CardsServiceInterface } from '@core/application/interfaces/cards-service-inteface';
+import { Card } from '@core/domain/entities/card.entity';
+import { STATUS } from '@infra/config/constants/status';
 import { NotFoundException } from '@src/utils/errors';
 import { Request, Response } from 'express';
+import { CardMapper } from '../mappers/card-mapper';
 
 export class CardsController {
   constructor(private readonly cardsService: CardsServiceInterface) {}
+
+  public async findAllByName(request: Request, response: Response) {
+    const { session, body } = request;
+    const { id: userId } = session;
+    const { title } = body;
+
+    const cards: Card[] = await this.cardsService.searchCards(userId, title);
+
+    return response.status(STATUS.OK).json(cards?.map(CardMapper.toSimpleResponse));
+  }
 
   public async create(request: Request, response: Response) {
     const { body, session } = request;

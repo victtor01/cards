@@ -12,11 +12,14 @@ import { MdEditCalendar, MdSpaceDashboard } from "react-icons/md";
 import { Trash } from "../trash";
 import { UserComponent } from "./user-component";
 import { WorkspaceLink } from "./workspace";
+import { useModalAction } from "../modal-layout";
 
 export const UtilsSidebar = () => {
   const pathname = usePathname();
   const trashOpen = "trash" === useSearchParams().get("md");
   const router = useRouter();
+
+  const openSearch = useModalAction("search")
 
   return (
     <div className="flex w-full p-2 flex-col gap-2">
@@ -54,8 +57,9 @@ export const UtilsSidebar = () => {
         {trashOpen && <Trash />}
       </div>
 
-      <Link
-        href={"#"}
+      <button
+        type="button"
+        onClick={openSearch}
         className="flex items-center justify-between gap-2 text-black dark:text-zinc-300 opacity-70 hover:opacity-100"
       >
         <div className="flex gap-2 items-center">
@@ -66,7 +70,7 @@ export const UtilsSidebar = () => {
         <div className="grid place-items-center px-2 text-xs bg-white text-zinc-600 rounded p-1 font-semibold dark:bg-zinc-900 dark:text-zinc-100 border dark:border-zinc-800">
           <span className={fontRoboto}>Ctr + K</span>
         </div>
-      </Link>
+      </button>
     </div>
   );
 };

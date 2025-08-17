@@ -24,7 +24,7 @@ export default function Page() {
             <input
               type="text"
               id="email"
-              autoCapitalize="off"
+              autoCapitalize="none"
               {...register("email")}
               placeholder="jonhDoe@example.com"
               className="p-2 bg-transparent outline-none w-full"

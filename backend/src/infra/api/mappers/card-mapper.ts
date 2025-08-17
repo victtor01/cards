@@ -20,7 +20,7 @@ export class CardMapper {
     };
   }
 
-  public static toSimpleResponse(card: Card): CardResponse {
+  public static toSimpleResponse(card: Card): CardResponse & { contentLength: number } {
     if (!card) return null;
 
     return {
@@ -28,6 +28,7 @@ export class CardMapper {
       title: card?.title,
       background: card?.background,
       publicId: card?.publicId,
+      contentLength: card?.content?.length || 0,
     };
   }
 }

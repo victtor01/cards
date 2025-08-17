@@ -5,12 +5,11 @@ import {
   insertOrUpdateBlock,
   locales,
 } from "@blocknote/core";
-import { useCreateBlockNote } from "@blocknote/react";
-import { useRef, useState } from "react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
+import { useCreateBlockNote } from "@blocknote/react";
+import { useRef, useState } from "react";
 import { RiAlertFill } from "react-icons/ri";
-import { boolean } from "zod";
 interface useEditorConfigProps {
   content?: string | null;
   editable?: boolean;

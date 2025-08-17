@@ -46,6 +46,7 @@ export class SetupCardsRoutes {
     this.cardsRoutes.use(sessionMiddleware);
     this.cardsRoutes.post('/', (req, res) => this.cardsController.create(req, res));
     this.cardsRoutes.post('/publish', (req, res) => this.cardsController.publish(req, res));
+    this.cardsRoutes.post('/search', (req, res) => this.cardsController.findAllByName(req, res));
   }
 
   private setDynamicRoutes() {

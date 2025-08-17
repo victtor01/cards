@@ -11,4 +11,6 @@ export abstract class CardsServiceInterface {
   abstract publish(userId: string, cardId: string): Promise<void>;
   abstract findByPublicCode(code: string): Promise<Card>;
   abstract supress(userId: string, cardId: string): Promise<void>;
+  abstract searchCards(userId: string, name: string): Promise<Card[]>;
+  abstract searchPublicCards(userId: string, name: string): Promise<Card[]>;
 }
